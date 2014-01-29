@@ -1,5 +1,6 @@
 import random
 from uniform import Uniform
+from functions import *
 
 class StratRandom():
 
@@ -7,6 +8,9 @@ class StratRandom():
         self.tm = tm
         self.im = Uniform(tm)
         self.pos = 0
+
+    def compute_mi(self):
+        return missing_information(self.tm, self.im)
 
     def step(self):
         states = [x for x in range(self.tm.M)]

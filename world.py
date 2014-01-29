@@ -17,6 +17,10 @@ class World:
         node = self.nodes[s]
         return node.take_action(a)
 
+    def get_prob(self, a, s, ns):
+        node = self.nodes[s]
+        return 1.0 / (a+1) if ns in node.actions[a] else 0
+
     def display(self):
         i = 1
         for node in self.nodes:

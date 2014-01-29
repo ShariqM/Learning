@@ -18,6 +18,10 @@ class Uniform:
         node = self.nodes[s]
         return node.take_action(a)
 
+    def get_prob(self, a, s, ns):
+        # TODO fixme
+        return 1.0 / self.M # Uniform
+
     def display(self):
         i = 1
         for node in self.nodes:

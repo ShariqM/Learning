@@ -1,0 +1,5 @@
+# Code for Learning and exploration in action-perception loops
+# by Daniel Y. Little and Friedrich T. Sommer
+
+# Example use
+python runner.py

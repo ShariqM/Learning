@@ -1,0 +1,14 @@
+123world.py -
+- Inputs: N, M. N = |S|. M = |A|.
+- subclass of Model, so we can compare internal models with the real model
+
+
+
+
+In the paper
+-There are initial distributions we start with that undergo bayesian update to
+approach the real model
+-- These are built individually for each world (pg.3 bottom of left column)
+-- I guess I'll try uniform and see what happens...
+-There is also a method for creating the real model. (Appendix A2)
+

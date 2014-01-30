@@ -13,22 +13,21 @@ class Uniform:
         # Assume a uniform distribution...
         self.nodes = [UniformNode(self.M, self.N) for i in range(self.N)]
 
-    # Do I need this ?
-    def take_action(s, a):
-        node = self.nodes[s]
-        return node.take_action(a)
-
     def get_prob(self, a, s, ns):
-        # TODO fixme
-        return 1.0 / self.M # Uniform
+        return self.nodes[s].get_prob(a, ns)
+
+    # Update model given the data
+    def update(self, a, s, ns):
+        return self.nodes[s].update(a, ns)
 
     def display(self):
         i = 1
+        print "*** Uniform (Internal) Model ***"
         for node in self.nodes:
-            print "------%d-------" % i
+            print "\t%d."% i
             ia = 0
             for a in node.actions:
-                print "\t(%d)-->" % ia, a
+                print "\t\t(%d)-->" % ia, a
                 ia = ia + 1
             print "\n\n"
             i = i + 1

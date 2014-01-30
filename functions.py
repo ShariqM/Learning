@@ -4,7 +4,9 @@ import math
 def kl_divergence(tm, im, a, s):
     klsum = 0
     for ns in range(1, tm.N + 1):
-        true_over_internal = tm.get_prob(a, s, ns) / im.get_prob(a, s, ns)
+        im_prob = im.get_prob(a, s, ns)
+        im_prob = .01 if im_prob == 0 else im_prob # don't divide by 0...
+        true_over_internal = tm.get_prob(a, s, ns) / im_prob
         if true_over_internal > 0: # is this right?
             klsum += tm.get_prob(a, s, ns) * math.log(true_over_internal, 2)
 

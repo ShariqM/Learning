@@ -17,5 +17,9 @@ class StratRandom():
         action = random.sample(states, 1)[0]
         oldpos = self.pos
         self.pos = self.tm.take_action(self.pos, action)
+        self.im.update(action, oldpos, self.pos)
         print "%d-->%d" % (oldpos, self.pos)
+
+    def display(self):
+        self.im.display()
 

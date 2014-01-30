@@ -18,11 +18,11 @@ class World:
         return node.take_action(a)
 
     def get_prob(self, a, s, ns):
-        node = self.nodes[s]
-        return 1.0 / (a+1) if ns in node.actions[a] else 0
+        return self.nodes[s].get_prob(a, ns)
 
     def display(self):
         i = 1
+        print "*** 123World (Real) Model ***"
         for node in self.nodes:
             print "------%d-------" % i
             ia = 0

@@ -1,12 +1,12 @@
 import random
-from uniform import Uniform
+from dirichlet import Dirichlet
 from functions import *
 
 class StratRandom():
 
     def __init__(self, tm):
         self.tm = tm
-        self.im = Uniform(tm)
+        self.im = Dirichlet(tm)
         self.pos = 0
 
     def compute_mi(self):
@@ -18,7 +18,6 @@ class StratRandom():
         oldpos = self.pos
         self.pos = self.tm.take_action(self.pos, action)
         self.im.update(action, oldpos, self.pos)
-        print "%d-->%d" % (oldpos, self.pos)
 
     def display(self):
         self.im.display()

@@ -1,7 +1,7 @@
 """
     123World represents the probability distribution of a specific test environment.
     Its scope is limited to returning new states given a current state and an
-    action. For example, it keeps to state about a user of the environment.
+    action. For example, it keeps no state about a user of the environment.
 """
 
 from worldnode import WorldNode
@@ -27,7 +27,8 @@ class World:
             print "------%d-------" % i
             ia = 0
             for a in node.actions:
-                print "\t(%d)-->" % ia, a
+                print "\t\t(%d)-->" % ia, [node.get_prob(ia, ns) for ns in
+                range(self.N)]
                 ia = ia + 1
             print "\n\n"
             i = i + 1

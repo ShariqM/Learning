@@ -21,12 +21,9 @@ class WorldNode:
     def find_target(self, action, pabsorb, pnormal, r):
         for to in range(1, self.N):
             x = pabsorb + ((to) * pnormal)
-            #print self.N - 1, " ", x, " ", r, " ", action, self.actions[action]
-            print x, " ", r
             if x - r >= 0.0:
                 if to in self.actions[action]: # dupe
                     return False
-                print "Adding ", to
                 self.actions[action].append(to)
                 return True
         x = 1 / 0
@@ -44,14 +41,12 @@ class WorldNode:
             nodes_left = action + 1
             while nodes_left > 0:
                 r = round(random.random(), 2)
-                print "r=%f, pabsorb=%f, pnormal=%f" % (r, pabsorb, pnormal)
                 if r < pabsorb:
                     if absorber in self.actions[action]: # dupe
                         continue # try again
-                    print "Adding absorber", absorber
                     self.actions[action].append(absorber)
                 else:
-                    if not self.find_target(action, pabsorb, pnormal, r):
+                    if not self.find_target(action, pabsorb, pnormal, r): # dupe
                         continue # try again
                 nodes_left -= 1
 

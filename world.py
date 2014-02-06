@@ -24,7 +24,7 @@ class World:
         i = 1
         print "*** 123World (Real) Model ***"
         for node in self.nodes:
-            print "------%d-------" % i
+            print "\t%d."% i
             ia = 0
             for a in node.actions:
                 print "\t\t(%d)-->" % ia, [node.get_prob(ia, ns) for ns in
@@ -32,3 +32,6 @@ class World:
                 ia = ia + 1
             print "\n\n"
             i = i + 1
+
+    def is_affected_by(self, a, s):
+        return False

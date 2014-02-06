@@ -1,3 +1,7 @@
+"""
+    A World node determines the probability of entering new node given an action
+"""
+
 import random
 import math
 

@@ -1,3 +1,7 @@
+"""
+    An agent whos exploration strategy is to choose an action at random
+"""
+
 import random
 from dirichlet import Dirichlet
 from functions import *
@@ -17,8 +21,11 @@ class StratRandom():
         action = random.sample(states, 1)[0]
         oldpos = self.pos
         self.pos = self.tm.take_action(self.pos, action)
+
+        orig = self.compute_mi()
         self.im.update(action, oldpos, self.pos)
+        new = self.compute_mi()
 
     def display(self):
-        self.im.display()
+        self.im.display("Random")
 

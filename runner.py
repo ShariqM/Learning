@@ -12,6 +12,7 @@ from functions import *
 import sys
 
 # Setup arguments for controlling states, actions, steps
+defaults = [10,3,100]
 levels = [[5,3,50],
           [10,3,100],
           [20,3,1000]]
@@ -25,12 +26,12 @@ parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
 parser.add_argument("-l", "--level", dest="level", default=0, type=int,
                   help='Run at a certain complexity level.\n%s\n%s\n%s\nUsing this argument overrides all other options.'
                        % (msgs[0], msgs[1], msgs[2]))
-parser.add_argument("-n", "--states", dest="states", default=10, type=int,
-                  help="Number of unique states")
-parser.add_argument("-m", "--actions", dest="actions", default=3, type=int,
-                  help="Number of unique actions")
-parser.add_argument("-s", "--steps", dest="steps", default=100, type=int,
-                  help="Number of steps to run")
+parser.add_argument("-n", "--states", dest="states", default=defaults[0], type=int,
+                  help="Number of unique states (default: %d)" % defaults[0])
+parser.add_argument("-m", "--actions", dest="actions", default=defaults[1], type=int,
+                  help="Number of unique actions (default: %d)" % defaults[1])
+parser.add_argument("-s", "--steps", dest="steps", default=defaults[2], type=int,
+                  help="Number of steps to run (default: %d)" % defaults[2])
 parser.add_argument("-v", "--verbose", dest="verbose", default=False, type=bool,
                   help="Print more information (unsupported at the moment)")
 args = parser.parse_args()

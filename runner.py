@@ -11,6 +11,7 @@ from stratunembodied import StratUnembodied
 from functions import *
 import sys
 
+# Setup arguments for controlling states, actions, steps
 levels = [[5,3,50],
           [10,3,100],
           [20,3,1000]]
@@ -34,6 +35,7 @@ parser.add_argument("-v", "--verbose", dest="verbose", default=False, type=bool,
                   help="Print more information (unsupported at the moment)")
 args = parser.parse_args()
 
+# Initialize world according to arguments
 if args.level:
     l = args.level - 1
     w = World(levels[l][0], levels[l][1])
@@ -51,6 +53,7 @@ su_data = []
 
 initial_mi = sr.compute_mi()
 
+# Step through for all models
 while steps > 0:
     sr_mi = sr.compute_mi()
     sr_data.append(sr_mi)
@@ -64,10 +67,12 @@ while steps > 0:
         print "(Random_MI=%f, Unembodied_MI=%f)" % (sr_mi, su_mi)
     steps = steps - 1
 
+# Display text data for each model
 w.display()
 sr.display()
 su.display()
 
+# Generate Graphs
 try:
     import matplotlib.pyplot as plt
     plt.xlabel('Time (steps)')

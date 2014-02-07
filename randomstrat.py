@@ -7,13 +7,14 @@ from dirichlet import Dirichlet
 from bayesworld import *
 from functions import *
 
-class StratRandom():
+class RandomStrat():
 
-    def __init__(self, tm, alpha):
+    def __init__(self, tm, color):
         self.tm = tm
         self.im = BayesWorld(tm)
         self.pos = 0
         self.name = "Random"
+        self.color = color
 
     def compute_mi(self):
         return missing_information(self.tm, self.im)

@@ -6,15 +6,15 @@ import string
 from optparse import OptionParser
 import argparse
 from world import World
-from randomstrat import StratRandom
-from unembodiedstrat import StratUnembodied
-from embodiedstrat import StratEmbodied
+from randomstrat import *
+from unembodiedstrat import *
+from embodiedstrat import *
 from functions import *
 import sys
 
 # Setup arguments for controlling states, actions, steps
 defaults = [10,3,100]
-levels = [[3,3,100],
+levels = [[3,3,200],
           [10,3,500],
           [20,3,1000]]
 msgs = ["(0) - Use values from -n, -m, -s"]
@@ -50,12 +50,9 @@ ssteps = steps = args.steps
 step_points = [x for x in range(1, steps+1)]
 alpha = args.alpha
 
-strats = [StratRandom(w, alpha), StratUnembodied(w, alpha)]
-strats_data = [[],[]]
-          #StratEmbodied(w, alpha)]
-#strats = [StratRandom(w, alpha), StratUnembodied(w, alpha),
-          #StratEmbodied(w, alpha)]
-#strats_data = [[],[],[]]
+strats = [RandomStrat(w, '-r'), UnembodiedStrat(w, '-k'),
+          EmbodiedStrat(w, '-g')]
+strats_data = [[],[],[]]
 
 initial_mi = strats[0].compute_mi()
 
@@ -77,9 +74,8 @@ while steps > 0:
 
 # Display text data for each model
 w.display()
-#for strat in strats:
-    #strat.display()
-strats[1].display()
+for strat in strats:
+    strat.display()
 
 # Generate Graphs
 try:
@@ -98,15 +94,15 @@ text_x = ssteps * 0.82
 base_y = initial_mi * 0.9
 text_y = initial_mi * 0.885
 diff_y = initial_mi * 0.05
-plt.text(base_x, base_y, '____')
-plt.text(text_x, text_y, 'Unembodied')
+#plt.text(base_x, base_y, '____')
+#plt.text(text_x, text_y, 'Unembodied')
 
-plt.text(base_x, base_y - diff_y, '____', color='red')
-plt.text(text_x, text_y - diff_y, 'Random')
+#plt.text(base_x, base_y - diff_y, '____', color='red')
+#plt.text(text_x, text_y - diff_y, 'Random')
 
-plt.plot(step_points, strats_data[0], '-r,')
-plt.plot(step_points, strats_data[1], '-k')
-#plt.plot(step_points, strats_data[2], '-g')
+for i in range(len(strats)):
+    plt.plot(step_points, strats_data[i], strats[i].color, label=strats[i].name)
+
+plt.legend(bbox_to_anchor=(0.65, 0.85), loc=2, borderaxespad=0.)
 
 plt.show()
-

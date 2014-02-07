@@ -8,13 +8,14 @@ from dirichlet import Dirichlet
 from bayesworld import *
 from functions import *
 
-class StratEmbodied():
+class EmbodiedStrat():
 
-    def __init__(self, tm, alpha):
+    def __init__(self, tm, color):
         self.tm = tm
         self.im = BayesWorld(tm)
         self.pos = 0
         self.name = "Embodied"
+        self.color = color
 
     def compute_mi(self):
         return missing_information(self.tm, self.im)
@@ -30,6 +31,7 @@ class StratEmbodied():
                 max_gain = pig
                 best_a = a
 
+        print "(a=%d, s=%d)" % (best_a, self.pos)
         ns = self.tm.take_action(self.pos, best_a)
         self.im.update(best_a, self.pos, ns)
         self.pos = ns

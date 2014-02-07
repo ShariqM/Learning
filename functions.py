@@ -27,9 +27,6 @@ def kl_divergence(tm, im, a, s, debug=False):
         true_over_internal = tm.get_prob(a, s, ns) / im_prob
         if true_over_internal > 0:
             x = tm.get_prob(a, s, ns) * math.log(true_over_internal, 2)
-            #if debug:
-                #print "ns=%d tm=%f im=%f kl=%d" %(ns, tm.get_prob(a, s, ns),
-                            #im.get_prob(a, s, ns), x)
             klsum += tm.get_prob(a, s, ns) * math.log(true_over_internal, 2)
 
     return klsum
@@ -45,19 +42,11 @@ def missing_information(tm, im):
     return misum
 
 # This could be optimized, we recalculate alot, would be a little messy.
-def predicted_information_gain(tm, im, a, s):
+def predicted_information_gain(im, a, s):
     pig = 0
-    #print "\nFor (%d, %d)" % (a,s)
     for ns in range(im.N):
         imm = Hypothetical(im, a, s, ns)
-        #print "\tunscaled gain[%d]: " % ns, kl_divergence(imm, im, a, s)
-        #print "\tscaled gain[%d]: " % ns, im.get_prob(a, s, ns) * kl_divergence(imm, im, a, s)
         pig += im.get_prob(a, s, ns) * kl_divergence(imm, im, a, s)
-        #if pig > 25:
-            #print "debug time"
-            #kl_divergence(imm, im, a, s, True)
-
-
 
     return pig
 

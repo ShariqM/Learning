@@ -48,15 +48,11 @@ class BayesWorldNode:
         return r if r > 0 else 0.0
 
     def get_sprob(self, a, ns):
-        return "(%d/%d)" % (self.data[a][ns] + 1, self.total_obs[a] + self.N)
+        return "obs=%f" % (self.data[a][ns])
 
     def update(self, a, ns):
         if not self.data[a][ns]:
             self.T[a] = self.T[a] + 1
-            #print "gained a T"
-        else:
-            #print "didn't gain a T"
-            pass
         self.data[a][ns] += 1
 
     # Used to undo hypothetical updates
@@ -64,5 +60,5 @@ class BayesWorldNode:
         if self.data[a][ns] == 1:
             self.T[a] -= 1
             if self.T[a] < 0:
-                raise Exception("FOO!")
+                raise Exception("T should never be negative")
         self.data[a][ns] -= 1

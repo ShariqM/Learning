@@ -1,18 +1,18 @@
 """
-    A prior dirichlet distribution that is going to
+    A prior bayesworld distribution that is going to
     move towards a real model through bayesian updates.
 """
 
-from dirichletnode import DirichletNode
+from bayesworldnode import BayesWorldNode
 import random
 
-class Dirichlet(object):
+class BayesWorld(object):
 
-    def __init__(self, tm, alpha):
+    def __init__(self, tm):
         self.N = tm.N
         self.M = tm.M
         # Start with a uniform distribution
-        self.nodes = [DirichletNode(self.M, self.N, i, alpha) for i in range(self.N)]
+        self.nodes = [BayesWorldNode(self.M, self.N, i) for i in range(self.N)]
         self.mid = random.random()
         self.moves = 0
 
@@ -31,7 +31,7 @@ class Dirichlet(object):
 
     def display(self, strat):
         i = 1
-        print "*** %s Dirichlet (Internal) Model ***" % strat
+        print "*** %s BayesWorld (Internal) Model ***" % strat
         for node in self.nodes:
             print "\t%d."% i
             ia = 0

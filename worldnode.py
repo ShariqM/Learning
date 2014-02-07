@@ -4,13 +4,8 @@
 
 import random
 import math
+from functions import *
 
-
-# Compute N choose R
-def choose(n, r):
-    num = math.factorial(n)
-    den = float(math.factorial(r) * math.factorial(n-r))
-    return num / den
 
 class WorldNode:
 

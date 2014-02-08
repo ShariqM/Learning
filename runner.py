@@ -35,6 +35,8 @@ parser.add_argument("-s", "--steps", dest="steps", default=defaults[2], type=int
                   help="Number of steps to run (default: %d)" % defaults[2])
 parser.add_argument("-a", "--alpha", dest="alpha", default=1.0, type=float,
                   help="Alpha value for Dirichlet distribution (default: 1.0)")
+parser.add_argument("-p", "--prior", dest="prior", default=0, type=int,
+                  help="Prior Distribution\n(0) - Bayes specific to 123World\n(1) - Dirichlet distribution\n (default: 0)")
 parser.add_argument("-v", "--verbose", dest="verbose", default=False, type=bool,
                   help="Print more information (unsupported at the moment)")
 args = parser.parse_args()
@@ -48,10 +50,12 @@ if args.level: # Override M, N, S
 w = World(args.states, args.actions)
 ssteps = steps = args.steps
 step_points = [x for x in range(1, steps+1)]
+prior = args.prior
 alpha = args.alpha
 
-strats = [RandomStrat(w, '-r'), UnembodiedStrat(w, '-k'),
-          EmbodiedStrat(w, '-g')]
+strats = [RandomStrat(w, '-r', prior, alpha),
+          UnembodiedStrat(w, '-k', prior, alpha),
+          EmbodiedStrat(w, '-g', prior, alpha)]
 strats_data = [[],[],[]]
 
 initial_mi = strats[0].compute_mi()

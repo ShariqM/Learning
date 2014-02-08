@@ -9,9 +9,9 @@ from functions import *
 
 class RandomStrat():
 
-    def __init__(self, tm, color):
+    def __init__(self, tm, color, prior=0, alpha=1):
         self.tm = tm
-        self.im = BayesWorld(tm)
+        self.im = BayesWorld(tm) if not prior else Dirichlet(tm, alpha)
         self.pos = 0
         self.name = "Random"
         self.color = color

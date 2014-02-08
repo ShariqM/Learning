@@ -26,8 +26,10 @@ def kl_divergence(tm, im, a, s, debug=False):
 
         true_over_internal = tm.get_prob(a, s, ns) / im_prob
         if true_over_internal > 0:
+            #klsum += tm.get_prob(a, s, ns) * abs(math.log(true_over_internal, 2))
             x = tm.get_prob(a, s, ns) * math.log(true_over_internal, 2)
-            klsum += tm.get_prob(a, s, ns) * math.log(true_over_internal, 2)
+            klsum += x if x > 0 else 0
+
 
     return klsum
 

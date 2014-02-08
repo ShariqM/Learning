@@ -25,7 +25,6 @@ class UnembodiedStrat():
         max_gain = 0
         best_a = 0
         best_s = 0
-        time = datetime.datetime.now()
         for a in range(self.im.M):
             for s in range(self.im.N):
                 pig = predicted_information_gain(self.im, a, s)

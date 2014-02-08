@@ -8,7 +8,9 @@ import argparse
 from world import World
 from randomstrat import *
 from unembodiedstrat import *
-from embodiedstrat import *
+from piggreedystrat import *
+from piggreedyvistrat import *
+
 from functions import *
 import sys
 
@@ -55,8 +57,9 @@ alpha = args.alpha
 
 strats = [RandomStrat(w, '-r', prior, alpha),
           UnembodiedStrat(w, '-k', prior, alpha),
-          EmbodiedStrat(w, '-g', prior, alpha)]
-strats_data = [[],[],[]]
+          PigGreedyStrat(w, '-gs', prior, alpha),
+          PigGreedyVIStrat(w, '-go', prior, alpha)]
+strats_data = [[],[],[], []]
 
 initial_mi = strats[0].compute_mi()
 
@@ -105,7 +108,8 @@ diff_y = initial_mi * 0.05
 #plt.text(text_x, text_y - diff_y, 'Random')
 
 for i in range(len(strats)):
-    plt.plot(step_points, strats_data[i], strats[i].color, label=strats[i].name)
+    plt.plot(step_points, strats_data[i], strats[i].color, markersize=4,
+    markerfacecolor='none', label=strats[i].name)
 
 plt.legend(bbox_to_anchor=(0.65, 0.85), loc=2, borderaxespad=0.)
 

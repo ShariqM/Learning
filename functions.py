@@ -52,6 +52,13 @@ def predicted_information_gain(im, a, s):
 
     return pig
 
+def print_maze(maze):
+    for i in range(len(maze)):
+        for j in range(len(maze)):
+            print maze[i][j],
+        print
+
+
 # Notes
 # [1] We need to express certain outcomes as having 0 probability in 123World.
 # If we don't we get in a loop where we repeatedly choose a single action that

@@ -10,11 +10,12 @@ from bayesworld import *
 
 class UnembodiedStrat():
 
-    def __init__(self, tm, color, prior=0, alpha=1):
+    def __init__(self, tm, color, marker, prior=0, alpha=1):
         self.tm = tm
         self.im = BayesWorld(tm) if not prior else Dirichlet(tm, alpha)
         self.name = "Unembodied"
         self.color = color
+        self.marker = marker
 
     def compute_mi(self):
         return missing_information(self.tm, self.im)

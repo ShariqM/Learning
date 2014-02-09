@@ -10,15 +10,17 @@ from functions import *
 
 class PigGreedyVIStrat():
 
-    def __init__(self, tm, color, prior=0, alpha=1):
+    def __init__(self, tm, color, marker, control=False, prior=0, alpha=1):
         self.tm = tm
         self.im = BayesWorld(tm) if not prior else Dirichlet(tm, alpha)
         self.pos = 0
-        self.name = "PIG(VI)"
+        self.name = "PIG(VI+)" if control else "PIG(VI)"
         self.color = color
+        self.marker = marker
         self.plan = []
         self.plansteps = 3 # Number of steps to look in the future
         self.discount = 0.95 # Discount factor for gains in future
+        self.control = control # VI+ if True (uses real model)
 
     def compute_mi(self):
         return missing_information(self.tm, self.im)
@@ -36,8 +38,9 @@ class PigGreedyVIStrat():
 
         tsum = 0
         for ns in range(self.im.N):
-            tsum += self.im.get_prob(a, s, ns) * \
-                    self.best_value(all_futures[i-1], ns)
+            m = self.tm if self.control else self.im
+            tsum += m.get_prob(a, s, ns)  * self.best_value(all_futures[i-1], ns)
+
         return self.discount * tsum
 
     def step(self):

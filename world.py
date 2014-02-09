@@ -1,7 +1,7 @@
 """
     123World represents the probability distribution of a specific test environment.
     Its scope is limited to returning new states given a current state and an
-    action. For example, it keeps no state about a user of the environment.
+    action. It keeps no state about a user of the environment.
 """
 
 from worldnode import WorldNode

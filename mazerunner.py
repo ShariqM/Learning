@@ -50,63 +50,6 @@ if args.level: # Override M, N, S
     args.states = levels[l][0]
     args.actions = levels[l][1]
     args.steps = levels[l][2]
-w = World(args.states, args.actions)
-ssteps = steps = args.steps
-step_points = [x for x in range(1, steps+1)]
-prior = args.prior
-alpha = args.alpha
 
-strats = [RandomStrat(w, '-r', None, prior, alpha),
-          UnembodiedStrat(w, '-k', None,  prior, alpha),
-          PigGreedyStrat(w, 'g', None, prior, alpha),
-          PigGreedyVIStrat(w, 'b', None, False, prior, alpha),
-          PigGreedyVIStrat(w, 'm', None, True, prior, alpha)]
-strats_data = [[] for i in range(len(strats))]
+m = Maze('maze.txt')
 
-initial_mi = strats[0].compute_mi()
-
-# Step through for all models
-while steps > 0:
-    msg = "("
-    for i in range(len(strats)):
-        mi = strats[i].compute_mi()
-        strats_data[i].append(mi)
-        msg += "%s_MI=%f " % (strats[i].name, mi)
-
-        strats[i].step()
-
-    msg += ")"
-
-    if steps % (ssteps / 10) == 0:
-        print msg
-    steps = steps - 1
-
-# Display text data for each model
-w.display()
-for strat in strats:
-    strat.display()
-
-# Generate Graphs
-try:
-    import matplotlib.pyplot as plt
-except:
-    print "\n***WARNING***\nUnable to generate graph. Please install matplotlib.\n***WARNING***"
-    sys.exit(0)
-
-plt.xlabel('Time (steps)', fontdict={'fontsize':16})
-plt.ylabel('Missing Information (bits)', fontdict={'fontsize':16})
-plt.title('1-2-3 Worlds [N=%d, M=%d]' % (args.states, args.actions))
-plt.axis([0, ssteps, 0, initial_mi * 1.1])
-
-for i in range(len(strats)):
-    interval = 5
-    plt.plot(step_points, strats_data[i], strats[i].color, label=strats[i].name)
-    if strats[i].marker:
-        plt.plot(step_points[0:len(step_points):interval],
-              strats_data[i][0:len(step_points):interval],
-              strats[i].marker, markersize=4, markerfacecolor='none')
-
-
-plt.legend(bbox_to_anchor=(0.65, 0.85), loc=2, borderaxespad=0.)
-
-plt.show()

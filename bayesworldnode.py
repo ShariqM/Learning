@@ -25,7 +25,7 @@ class BayesWorldNode:
             self.total_obs.append(0)
             self.actions.append([x for x in range(N)])
 
-    def get_prob_help(self, a, ns):
+    def get_prob_impl(self, a, ns):
         if self.data[a][ns]: # previously observed
             return 1 / (a + 1.0)
         if self.T[a] == a + 1: # all transitions found.
@@ -44,7 +44,7 @@ class BayesWorldNode:
             return num / (self.N - self.T[a] - 1.0)
 
     def get_prob(self, a, ns):
-        r = self.get_prob_help(a, ns)
+        r = self.get_prob_impl(a, ns)
         return r if r > 0 else 0.0
 
     def get_sprob(self, a, ns):

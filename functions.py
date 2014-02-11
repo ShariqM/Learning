@@ -58,6 +58,15 @@ def print_maze(maze):
             print maze[i][j],
         print
 
+def sample(dist):
+    r = random.random()
+    tsum = 0.0
+    for i in range(len(dist)):
+        tsum += dist[i]
+        if r <= tsum:
+            return i
+    print 'tsum was', tsum
+    return 1 - range(len(dist))
 
 # Notes
 # [1] We need to express certain outcomes as having 0 probability in 123World.

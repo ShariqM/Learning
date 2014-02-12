@@ -68,9 +68,6 @@ class Maze:
                 print "%spos=%d, neighbors=" % \
                         ('\t\t\t\t\t' if curr % 2 == 0 else ' ', curr), neighbors
                 curr = curr + 1
-
-
-
         sys.exit(0)
 
 

@@ -43,6 +43,12 @@ class Runner():
                           help="Alpha value for Dirichlet distribution (default: 1.0)")
         parser.add_argument("-p", "--prior", dest="prior", default=0, type=int,
                           help="Prior Distribution\n(0) - Bayes specific to 123World\n(1) - Dirichlet distribution\n (default: 0)")
+        parser.add_argument("-r", "--runs", dest="runs", default=5, type=int,
+                          help="Number of runs to average over")
+        parser.add_argument("-o", "--ofile", dest="ofile", default=None,
+                            type=str, help="Name of file to output data to")
+        parser.add_argument("-i", "--ifile", dest="ifile", default=None,
+                            type=str, help="Name of file to graph data from")
         parser.add_argument("-v", "--verbose", dest="verbose", default=False, type=bool,
                           help="Print more information (unsupported at the moment)")
         return parser.parse_args()
@@ -52,8 +58,8 @@ class Runner():
         return [RandomStrat(self.world, '-r', None, self.prior, self.alpha),
                 UnembodiedStrat(self.world, '-k', None,  self.prior, self.alpha),
                 PigGreedyStrat(self.world, 'g', None, self.prior, self.alpha),
-                #PigGreedyVIStrat(self.world, 'b', None, False, self.prior, self.alpha),
-                #PigGreedyVIStrat(self.world, 'm', None, True, self.prior, self.alpha)
+                PigGreedyVIStrat(self.world, 'b', None, False, self.prior, self.alpha),
+                PigGreedyVIStrat(self.world, 'm', None, True, self.prior, self.alpha)
                ]
 
     # Initialize variables according to arguments
@@ -71,7 +77,9 @@ class Runner():
         self.steps   = args.steps
         self.prior   = args.prior
         self.alpha   = args.alpha
-        self.runs    = 1
+        self.runs    = args.runs
+        self.ofile   = args.ofile
+        self.ifile   = args.ifile
         self.verbose = args.verbose
 
     def __init__(self):
@@ -99,7 +107,7 @@ class Runner():
 
         run = 0
         while run < self.runs:
-            print "Run %d " % run,
+            print "Run %d/%d " % (run+1, self.runs),
             strats = self.init_strats()
             self.initial_mi = strats[0].compute_mi()
 
@@ -127,6 +135,12 @@ class Runner():
                     strats_finish[i] = s
         return strats_data, strats_finish
 
+    def get_weights(self, stop):
+        weights = [1 if i < stop else 0 for i in range(self.steps)] # 1 before stop, 0 after
+        weights[0] = weights[stop-1] = self.steps / 10.0 # weight the end points by alot
+        #weights[0] = weights[stop-1] = self.steps / 10.0 # weight the end points by alot
+        return weights
+
     def graph_data(self, strats_data, strats_finish):
         # Generate Graphs
         try:
@@ -134,31 +148,50 @@ class Runner():
             from scipy.interpolate import spline
             import numpy as np
             import scipy
+            from scipy.interpolate import interp1d
+            import scipy.optimize as optimization
+            from scipy.optimize import curve_fit
         except:
             print """\n***WARNING***\nUnable to generate graph.
                  Please install matplotlib, scipy, and numpy. \n***WARNING***"""
             sys.exit(0)
+        print "Graphing data..."
 
         step_points = [i for i in range(self.steps)]
         plt.xlabel('Time (steps)', fontdict={'fontsize':16})
         plt.ylabel('Missing Information (bits)', fontdict={'fontsize':16})
-        plt.title('1-2-3 Worlds [N=%d, M=%d]' % (self.states, self.actions))
+        plt.title('1-2-3 Worlds [N=%d States, M=%d Actions, R=%d Runs]' % \
+                   (self.states, self.actions, self.runs))
         plt.axis([0, self.steps, 0, self.initial_mi * 1.1])
 
         for i in range(len(self.strats)):
-            weights = self.get_weights(strats_finish[i])
-            z2 = np.polyfit(step_points, strats_data[i], 2, w=weights)
-            p2 = np.poly1d(z2)
-            #xnew = np.linspace(0, min(steps, steps * 1.5), steps * 20)
-            xnew = np.linspace(0, min(self.steps, strats_finish[i]), self.steps * 20)
-            plt.plot(xnew, p2(xnew), self.strats[i].color, label=self.strats[i].name)
+            """ # 2/11/14 I tried fitting curves in a variety of ways and they all failed
+            if False: # polyfit approach
+                weights = self.get_weights(strats_finish[i])
+                z2 = np.polyfit(step_points, strats_data[i], 2, w=weights)
+                p2 = np.poly1d(z2)
+                #xnew = np.linspace(0, min(steps, steps * 1.5), steps * 20)
+                xnew = np.linspace(0, min(self.steps, strats_finish[i]), self.steps * 20)
+                plt.plot(xnew, p2(xnew), self.strats[i].color, label=self.strats[i].name)
+            elif False: # Interpolatoin?
+                xnew = np.linspace(0, self.steps, self.steps * 3)
+                smooth = spline(step_points, strats_data[i], xnew)
+                f2 = interp1d(xnew, smooth, kind='cubic')
+                plt.plot(xnew, f2(xnew), self.strats[i].color, label=self.strats[i].name)
+                #plt.plot(xnew, smooth, 'r', label=self.strats[i].name)
+            elif False: # Least squares
+                if i >= 2:
+                    continue
+                def powerlaw(x,a,b):
+                    return self.initial_mi*1.1 - a*(x**b)
+                pars, covar = curve_fit(powerlaw, step_points, strats_data[i])
+                plt.plot(step_points, powerlaw(step_points, *pars),
+                         self.strats[i].color, label=self.strats[i].name)
+            """
 
             plt.plot(step_points, strats_data[i], self.strats[i].color,
                      label=self.strats[i].name)
 
-            #xnew = np.linspace(0, steps, steps * 20)
-            #smooth = spline(step_points, strats_data[i], xnew)
-            #plt.plot(xnew, smooth, strats[i].color, label=strats[i].name)
             if self.strats[i].marker:
                 interval = 5
                 plt.plot(step_points[0:len(step_points):interval],
@@ -168,15 +201,52 @@ class Runner():
         plt.legend(bbox_to_anchor=(0.65, 0.85), loc=2, borderaxespad=0.)
         plt.show()
 
-    def run(self):
-        strats_data = self.collect_data()
-        strats_data, strats_finish = self.analyze_data(strats_data)
-        self.graph_data(strats_data, strats_finish)
+    def export_data(self, strats_data):
+        f = open(self.ofile, 'w')
+        for i in range(len(strats_data)):
+            for s in range(len(strats_data[i])):
+                f.write('%f ' % strats_data[i][s])
+            f.write('\n')
 
-    def get_weights(self, stop):
-        weights = [i < stop for i in range(self.steps)] # 1 before stop, 0 after
-        weights[0] = weights[i] = self.steps / 10 # weight the end points by alot
-        return weights
+    def import_data(self):
+        f = open(self.ifile, 'r')
+        strats_data = []
+        strats_finish = []
+        l = f.readline()
+        i = 0
+        initial_mi = 0
+        while l != '' and l != '\n':
+            strats_data.append([])
+            strats_finish.append(0)
+            step = 0
+            for mi in l.split():
+                mi = float(mi)
+                if not initial_mi:
+                    initial_mi = mi
+                strats_data[i].append(mi)
+                if mi <= 0.0 and not strats_finish[i]:
+                    strats_finish[i] = step
+                step = step + 1
+
+            if not strats_finish[i]:
+                strats_finish[i] = step
+            self.steps = step
+
+            i = i + 1
+            l = f.readline()
+        self.initial_mi = initial_mi
+        return strats_data, strats_finish
+
+    def run(self):
+        if self.ifile:
+            strats_data, strats_finish = self.import_data()
+        else:
+            strats_data = self.collect_data()
+            strats_data, strats_finish = self.analyze_data(strats_data)
+            if self.ofile:
+                self.export_data(strats_data)
+
+        self.graph_data(strats_data, strats_finish)
 
 def main():
     r = Runner()

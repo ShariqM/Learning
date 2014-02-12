@@ -35,3 +35,6 @@ class World:
 
     def is_affected_by(self, a, s):
         return False
+
+    def is_maze(self):
+        return False

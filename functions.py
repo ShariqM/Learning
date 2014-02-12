@@ -7,16 +7,6 @@ import random
 from hypothetical import *
 import datetime
 
-# Compute N choose R
-def choose(n, r):
-    if not n and not r:
-        return 1
-    if not n:
-        return 0
-    num = math.factorial(n)
-    den = float(math.factorial(r) * math.factorial(n-r))
-    return num / den
-
 # Given a true model and an internal model, compute the kl divergence
 def kl_divergence(tm, im, a, s, debug=False):
     klsum = 0
@@ -51,6 +41,16 @@ def predicted_information_gain(im, a, s):
         pig += im.get_prob(a, s, ns) * kl_divergence(imm, im, a, s)
 
     return pig
+
+# Compute N choose R
+def choose(n, r):
+    if not n and not r:
+        return 1
+    if not n:
+        return 0
+    num = math.factorial(n)
+    den = float(math.factorial(r) * math.factorial(n-r))
+    return num / den
 
 def print_maze(maze):
     for i in range(len(maze)):

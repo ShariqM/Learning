@@ -1,7 +1,6 @@
 """
-FIXME
-    A dirichlet node calculates probability of entering a new node based on it's
-    data. Its data is updated everytime it enters a new state.
+    A BayesWorldNode encodes the internal probability distribution model for a
+    single node. Bayesian updates described in section (3) of Appendix A2.
 """
 
 import random
@@ -10,7 +9,7 @@ from functions import *
 
 class BayesWorldNode:
 
-    def __init__(self, M, N, index, debug=False):
+    def __init__(self, M, N, index):
         self.M = M
         self.N = N
         self.T = [0 for i in range(self.M)] # Number of target states observed for action a
@@ -18,7 +17,6 @@ class BayesWorldNode:
         self.actions = []
         self.data = []
         self.total_obs = []
-        self.debug = debug
 
         for action in range(M):
             self.data.append([0 for x in range(N)])
@@ -46,9 +44,6 @@ class BayesWorldNode:
     def get_prob(self, a, ns):
         r = self.get_prob_impl(a, ns)
         return r if r > 0 else 0.0
-
-    def get_sprob(self, a, ns):
-        return "obs=%f" % (self.data[a][ns])
 
     def update(self, a, ns):
         if not self.data[a][ns]:

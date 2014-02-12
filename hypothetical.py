@@ -24,13 +24,9 @@ class Hypothetical:
     # Update with the hypothetical observation, calc get_prob, then undo update
     def get_prob(self, a, s, ns):
         orig  = self.im.get_prob(a, s, ns)
-        #if orig < .01:
-            #print "not poss"
         self.im.update(a, s, ns)
         rv = self.im.get_prob(a, s, ns)
         self.im.undo_update(a, s, ns)
-        #print "%d--%d-->%d, normally: %f but now %f" % \
-                    #(s, a, ns, orig, rv)
         return rv
 
     # Return true if we can't use a cache version of this.

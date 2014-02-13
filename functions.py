@@ -20,7 +20,6 @@ def kl_divergence(tm, im, a, s, debug=False):
             x = tm.get_prob(a, s, ns) * math.log(true_over_internal, 2)
             klsum += x if x > 0 else 0
 
-
     return klsum
 
 def missing_information(tm, im):
@@ -38,7 +37,8 @@ def predicted_information_gain(im, a, s):
     pig = 0
     for ns in range(im.N):
         imm = Hypothetical(im, a, s, ns)
-        pig += im.get_prob(a, s, ns) * kl_divergence(imm, im, a, s)
+        x = im.get_prob(a, s, ns) * kl_divergence(imm, im, a, s)
+        pig += x
 
     return pig
 

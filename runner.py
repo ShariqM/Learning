@@ -11,7 +11,6 @@ from world import World
 from randomstrat import *
 from unembodiedstrat import *
 from piggreedystrat import *
-from piggreedyvistrat import *
 from maze import *
 
 from functions import *
@@ -42,7 +41,7 @@ class Runner():
         while run < self.runs:
             elapsed = datetime.datetime.now() - start
             print "Elapsed=%ds Run %d/%d " % (elapsed.seconds, run+1, self.runs),
-            strats = self.init_strats()
+            self.strats = strats = self.init_strats()
             self.initial_mi = strats[0].compute_mi()
 
             step = 0
@@ -77,6 +76,12 @@ class Runner():
         return weights
 
     def graph_data(self, strats_data, strats_finish):
+
+        # Text representation of Model
+        if self.verbose:
+            for i in range(len(self.strats)):
+                self.strats[i].display()
+
         # Generate Graphs
         try:
             import matplotlib.pyplot as plt

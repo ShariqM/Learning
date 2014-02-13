@@ -3,7 +3,6 @@
 """
 
 import string
-from optparse import OptionParser
 import argparse
 from world import World
 from randomstrat import *
@@ -23,10 +22,10 @@ class WorldRunner(Runner):
     def init_strats(self):
         return [
                 RandomStrat(self.world, BayesWorld(self.world), '-r'),
-                UnembodiedStrat(self.world, BayesWorld(self.world), '-k'),
+                #UnembodiedStrat(self.world, BayesWorld(self.world), '-k'),
                 PigGreedyStrat(self.world, BayesWorld(self.world), 'g'),
-                PigVIStrat(self.world, BayesWorld(self.world), 'b', False),
-                PigVIStrat(self.world, BayesWorld(self.world), 'm', True)
+                #PigVIStrat(self.world, BayesWorld(self.world), 'b', False),
+                #PigVIStrat(self.world, BayesWorld(self.world), 'm', True)
                ]
 
     # Initialize variables according to arguments
@@ -82,8 +81,9 @@ class WorldRunner(Runner):
                             type=str, help="Name of file to output data to")
         parser.add_argument("-i", "--ifile", dest="ifile", default=None,
                             type=str, help="Name of file to graph data from")
-        parser.add_argument("-v", "--verbose", dest="verbose", default=False, type=bool,
-                          help="Print more information (unsupported at the moment)")
+        parser.add_argument('-v', dest="verbose", action='store_true')
+        #parser.add_argument("-v", "--verbose", dest="verbose", default=False,
+                          #help="Print more information (unsupported at the moment)")
         return parser.parse_args()
 
     def __init__(self):

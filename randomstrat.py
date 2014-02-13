@@ -20,7 +20,9 @@ class RandomStrat():
     def compute_mi(self):
         return missing_information(self.tm, self.im)
 
-    def step(self):
+    def step(self, last_mi=1):
+        if last_mi <= 0.0: # optimization: no more information to gain
+            return
         actions = [x for x in range(self.tm.M)]
         action = random.sample(actions, 1)[0]
         oldpos = self.pos

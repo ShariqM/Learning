@@ -1,5 +1,82 @@
-# Code for Learning and exploration in action-perception loops
-# by Daniel Y. Little and Friedrich T. Sommer
+# Code for UC Berkeley Theoretical Neuroscience Lab Paper:
+# - Learning and exploration in action-perception loops
+#   by Daniel Y. Little and Friedrich T. Sommer (2013)
 
-# Example use
-python runner.py
+# Use
+python worldrunner.py
+python mazerunner.py
+
+# Help
+python worldrunner.py --help
+python mazerunner.py --help
+
+# Dependencies
+# - matplotlib
+# - numpy
+# In the future, you may additionally need:
+# - scipy
+#
+# I recommend this resource for acquiring these packages:
+# http://www.lowindata.com/2013/installing-scientific-python-on-mac-os-x/
+# I did have a problem with matplotlib because freetype was installed
+# improperly. Specifically the C code was not added to the default C path.
+
+# Descriptions and Organization of files
+
+    # Real Model Files
+        # World.py - 123 World representation
+            # WorldNode.py - 123 World Node representation
+
+        # Maze.py - Maze representation
+            # MazeNode.py - Maze Node representation
+
+    # Internal Model Files
+        # BayesWorld.py - Internal Model used to learn 123World
+            # BayesWorldNode.py - Node of Internal Model
+
+        # Dirichlet.py - Internal Model used to learn Mazes and Dense Worlds
+            # DirichletNode.py - Node of Internal Model
+
+        # Hypothetical.py - This wraps around an Internal Model and is used to
+        #                   create hypothetical updates to the model so that
+        #                   PIG can be calculate
+
+    # Strategy Files
+        # RandomStrat.py - Chooses actions randomely (Negative Control)
+
+        # UnembodiedStrat.py - An agent that can move to any state it wants.
+        # It looks for the (s,a) that maximizes and takes it (Positive Control)
+
+        # PigGreedyStrat.py - An agent that is embodied, i.e. it has a position,
+        # takes actions, and is stuck with where the real model takes it. It
+        # picks the action from it's current state that maximizes its PIG. It's
+        # greedy because it doesn't look into the future.
+
+        # PigVIStrat.py - A PigGreedyStrat that isn't greedy, it looks N time
+        # steps ahead using back propogration and chooses the action that
+        # maximizes PIG over those N time steps. An optional argument to this
+        # strategy allows it to use the real model when calculating PIG, this
+        # strategy is known as PIGVI+ in the paper.
+
+    # Graph generating files
+        # Runner.py - Abstract class that implements that simulates an
+        #             arbitrary environment with arbitrary strategies
+        #             and generates a graph of Missing Information vs. Time
+
+            # WorldRunner.py - Generate graphs for 123World environment
+            # MazeRunner.py  - Generate graphs for Maze environment
+
+    # functions.py - Miscellaneous functions
+    #                   - KL Divergence
+    #                   - Missing Information
+    #                   - Predicted Information Gain (PIG)
+    #                   - etc.
+
+    # maze.txt - representaiton of maze described in paper
+
+
+#TODO
+# - Dense environment
+
+# Author
+Shariq Mobin (Shariq.Mobin@gmail.com)

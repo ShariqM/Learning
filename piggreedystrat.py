@@ -23,7 +23,9 @@ class PigGreedyStrat():
 
     # Look for the action that results in the most pig and then
     # take it.
-    def step(self):
+    def step(self, last_mi=1):
+        if last_mi <= 0.0: # optimization: no more information to gain
+            return
         max_gain = -1
         best_as = []
         for a in range(self.im.M):

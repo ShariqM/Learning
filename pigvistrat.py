@@ -43,7 +43,9 @@ class PigVIStrat():
 
         return self.discount * tsum
 
-    def step(self):
+    def step(self, last_mi=1):
+        if last_mi <= 0.0: # optimization: no more information to gain
+            return
         if len(self.plan) != 0:
             ns = self.tm.take_action(self.pos, self.plan[0])
             self.im.update(best_a, self.pos, ns)

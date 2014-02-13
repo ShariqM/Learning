@@ -37,17 +37,20 @@ class Runner():
         # Missing information for each step of each strat
         strats_data = self.init_strats_data()
 
+        start = datetime.datetime.now()
         run = 0
         while run < self.runs:
-            print "Run %d/%d " % (run+1, self.runs),
+            elapsed = datetime.datetime.now() - start
+            print "Elapsed=%ds Run %d/%d " % (elapsed.seconds, run+1, self.runs),
             strats = self.init_strats()
             self.initial_mi = strats[0].compute_mi()
 
             step = 0
             while step < self.steps:
                 for i in range(len(strats)):
-                    strats_data[i][step] += strats[i].compute_mi()
-                    strats[i].step()
+                    mi = strats[i].compute_mi()
+                    strats_data[i][step] += mi
+                    strats[i].step(mi)
                 step = step + 1
                 if step % (self.steps / 10) == 0:
                     sys.stdout.write('.')

@@ -22,7 +22,9 @@ class UnembodiedStrat():
 
     # Look for the (state, action) pair that results in the most pig and then
     # take it. This is pretty slow...
-    def step(self):
+    def step(self, last_mi=1):
+        if last_mi <= 0.0: # optimization: no more information to gain
+            return
         max_gain = 0
         best_a = 0
         best_s = 0

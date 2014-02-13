@@ -24,9 +24,9 @@ class MazeRunner(Runner):
         return [
                 RandomStrat(self.maze, Dirichlet(self.maze), '-r'),
                 UnembodiedStrat(self.maze, Dirichlet(self.maze), '-k'),
-                #PigGreedyStrat(self.maze, Dirichlet(self.maze), 'g'),
-                #PigGreedyVIStrat(self.maze, Dirichlet(self.maze), 'b', False),
-                #PigGreedyVIStrat(self.maze, Dirichlet(self.maze), 'm', True)
+                PigGreedyStrat(self.maze, Dirichlet(self.maze), 'g'),
+                PigGreedyVIStrat(self.maze, Dirichlet(self.maze), 'b', False),
+                PigGreedyVIStrat(self.maze, Dirichlet(self.maze), 'm', True)
                ]
 
     # Initialize variables according to arguments

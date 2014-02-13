@@ -22,10 +22,10 @@ class WorldRunner(Runner):
     def init_strats(self):
         return [
                 RandomStrat(self.world, BayesWorld(self.world), '-r'),
-                #UnembodiedStrat(self.world, BayesWorld(self.world), '-k'),
+                UnembodiedStrat(self.world, BayesWorld(self.world), '-k'),
                 PigGreedyStrat(self.world, BayesWorld(self.world), 'g'),
-                #PigVIStrat(self.world, BayesWorld(self.world), 'b', False),
-                #PigVIStrat(self.world, BayesWorld(self.world), 'm', True)
+                PigVIStrat(self.world, BayesWorld(self.world), 'b', False),
+                PigVIStrat(self.world, BayesWorld(self.world), 'm', True)
                ]
 
     # Initialize variables according to arguments
@@ -53,7 +53,8 @@ class WorldRunner(Runner):
     def setup_arguments(self):
         defaults = [10,3,100]
         self.levels = [[3,3,200],
-                       [10,3,300],
+                       [7,3,400],
+                       [10,3,500],
                        [20,3,1000]]
         levels = self.levels
         msgs = ["(0) - Use values from -n, -m, -s"]

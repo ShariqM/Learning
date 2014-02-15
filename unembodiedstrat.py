@@ -35,9 +35,11 @@ class UnembodiedStrat():
                     max_gain = pig
                     best_a = a
                     best_s = s
-
+        #print '(a=%d, s=%d) max_gain =%f' % (best_a, best_s, max_gain)
+        x = self.compute_mi()
         ns = self.tm.take_action(best_s, best_a)
         self.im.update(best_a, best_s, ns)
+        #print 'gained: ', self.compute_mi() - x
 
     def display(self):
         self.im.display(self.name)

@@ -83,7 +83,7 @@ class Maze:
 
     def display(self):
         i = 1
-        print "*** 123World (Real) Model ***"
+        print "*** Maze (Real) Model ***"
         for node in self.nodes:
             print "\t%d."% i
             ia = 0

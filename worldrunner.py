@@ -83,8 +83,6 @@ class WorldRunner(Runner):
         parser.add_argument("-i", "--ifile", dest="ifile", default=None,
                             type=str, help="Name of file to graph data from")
         parser.add_argument('-v', dest="verbose", action='store_true')
-        #parser.add_argument("-v", "--verbose", dest="verbose", default=False,
-                          #help="Print more information (unsupported at the moment)")
         return parser.parse_args()
 
     def __init__(self):

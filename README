@@ -73,6 +73,8 @@ python mazerunner.py --help
     #                   - etc.
 
     # maze.txt - representaiton of maze described in paper
+    # maze_easy.txt - 4 state maze
+    # maze_medium.txt - 9 state maze
 
 
 #TODO

@@ -12,16 +12,11 @@ class MazeNode:
         self.neighbors = neighbors # Neighboring states
         self.actions = [] # The distribution of each action
 
-        def print_arr(arr):
-            x = "["
-            tsum = 0
-            for r in arr:
-                print "%f," % r,
-                tsum += r
-            print '], tsum=', tsum
-
         for a in range(4):
             dist = ran.dirichlet([0.25, 0.25, 0.25, 0.25]) # alpha = 0.25
+            #print dist
+            #dist = [round(x, 2) for x in dist]
+            #print dist
             highest = 0.0
             tgt_i = '0'
             for i in range(4):
@@ -39,7 +34,7 @@ class MazeNode:
             return 0.0
         for j in range(4):
             if self.neighbors[j] == ns:
-                return self.actions[a][j]
+                return round(self.actions[a][j], 3)
 
     def take_action(self, a):
         return self.neighbors[sample(self.actions[a])]

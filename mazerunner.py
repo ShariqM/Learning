@@ -3,13 +3,12 @@
 """
 
 import string
-from optparse import OptionParser
 import argparse
 from world import World
 from randomstrat import *
 from unembodiedstrat import *
 from piggreedystrat import *
-from piggreedyvistrat import *
+from pigvistrat import *
 from maze import *
 from runner import Runner
 
@@ -25,8 +24,8 @@ class MazeRunner(Runner):
                 RandomStrat(self.maze, Dirichlet(self.maze), '-r'),
                 UnembodiedStrat(self.maze, Dirichlet(self.maze), '-k'),
                 PigGreedyStrat(self.maze, Dirichlet(self.maze), 'g'),
-                PigGreedyVIStrat(self.maze, Dirichlet(self.maze), 'b', False),
-                PigGreedyVIStrat(self.maze, Dirichlet(self.maze), 'm', True)
+                PigVIStrat(self.maze, Dirichlet(self.maze), 'b', False),
+                #PigVIStrat(self.maze, Dirichlet(self.maze), 'm', True)
                ]
 
     # Initialize variables according to arguments
@@ -54,9 +53,8 @@ class MazeRunner(Runner):
         parser.add_argument("-o", "--ofile", dest="ofile", default=None,
                             type=str, help="Name of file to output data to (default: None)")
         parser.add_argument("-i", "--ifile", dest="ifile", default=None,
-                            type=str, help="Name of file to graph data from (default: None")
-        parser.add_argument("-v", "--verbose", dest="verbose", default=False, type=bool,
-                          help="Print more information (unsupported at the moment)")
+                            type=str, help="Name of file to import data from (default: None")
+        parser.add_argument('-v', dest="verbose", action='store_true')
         return parser.parse_args()
 
     def __init__(self):

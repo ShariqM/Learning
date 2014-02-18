@@ -26,7 +26,7 @@ class BayesWorldNode:
     def get_prob_impl(self, a, ns):
         if self.data[a][ns]: # previously observed
             return 1 / (a + 1.0)
-        if self.T[a] == a + 1: # all transitions found.
+        if self.T[a] >= a + 1: # all transitions found.
             return 0.0 # Necessary to avoid (1 choose 2) (not in paper)
 
         if self.data[a][0]:

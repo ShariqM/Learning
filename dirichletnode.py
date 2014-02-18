@@ -34,6 +34,8 @@ class DirichletNode:
         x = (self.data[a][ns] + self.alpha) / (Ns * self.alpha + osum)
         #print 'prob_maze (a=%d, ns=%d) - %f' % (a, ns, x)
         return x
+    # The probability of s--a-->s' is dependent on how many times I've seen this
+    # transition AND the number of times I've taken s--a-->s*
 
     def get_prob(self, a, ns):
         if self.is_maze:

@@ -7,18 +7,17 @@ import random
 from hypothetical import *
 import datetime
 
+#klsum += tm.get_prob(a, s, ns) * abs(math.log(true_over_internal, 2))
 # Given a true model and an internal model, compute the kl divergence
 def kl_divergence(tm, im, a, s, debug=False):
     klsum = 0
     for ns in range(tm.N):
+        tm_prob = tm.get_prob(a, s, ns)
+        if tm_prob <= 0.0: # can't do log 0
+            continue
         im_prob = im.get_prob(a, s, ns)
         im_prob = 1 if not im_prob else im_prob # See note [1]
-
-        true_over_internal = tm.get_prob(a, s, ns) / im_prob
-        if true_over_internal > 0:
-            #klsum += tm.get_prob(a, s, ns) * abs(math.log(true_over_internal, 2))
-            x = tm.get_prob(a, s, ns) * math.log(true_over_internal, 2)
-            klsum += x if x > 0 else 0
+        klsum += max(tm_prob * math.log(tm_prob / im_prob, 2), 0.0)
 
     return klsum
 
@@ -36,8 +35,8 @@ def missing_information(tm, im):
 def predicted_information_gain(im, a, s):
     pig = 0
     for ns in range(im.N):
-        imm = Hypothetical(im, a, s, ns)
-        x = im.get_prob(a, s, ns) * kl_divergence(imm, im, a, s)
+        hm = Hypothetical(im, a, s, ns)
+        x = im.get_prob(a, s, ns) * kl_divergence(hm, im, a, s, False)
         pig += x
 
     return pig

@@ -27,13 +27,17 @@ class PigGreedyStrat():
         if last_mi <= 0.0: # optimization: no more information to gain
             return
         max_gain = -1
-        best_a = -1
+        best_as = []
         for a in range(self.im.M):
             pig = predicted_information_gain(self.im, a, self.pos)
             #print "\t(%d) %f" % (a, pig)
-            if pig >= max_gain:
+            if pig > max_gain:
                 max_gain = pig
-                best_a = a
+                best_as = [a]
+            if pig == max_gain:
+                best_as.append(a)
+        # This prevents us from picking the same action forever
+        best_a = random.sample(best_as, 1)[0]
 
         ns = self.tm.take_action(self.pos, best_a)
         self.im.update(best_a, self.pos, ns)

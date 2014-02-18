@@ -21,10 +21,10 @@ class MazeRunner(Runner):
     # Strategies used in this run
     def init_strats(self):
         return [
-                RandomStrat(self.maze, Dirichlet(self.maze), '-r'),
+                #RandomStrat(self.maze, Dirichlet(self.maze), '-r'),
                 UnembodiedStrat(self.maze, Dirichlet(self.maze), '-k'),
-                PigGreedyStrat(self.maze, Dirichlet(self.maze), 'g'),
-                PigVIStrat(self.maze, Dirichlet(self.maze), 'b', False),
+                #PigGreedyStrat(self.maze, Dirichlet(self.maze), 'g'),
+                #PigVIStrat(self.maze, Dirichlet(self.maze), 'b', False),
                 #PigVIStrat(self.maze, Dirichlet(self.maze), 'm', True)
                ]
 
@@ -37,7 +37,7 @@ class MazeRunner(Runner):
         self.ofile   = args.ofile
         self.ifile   = args.ifile
         self.verbose = args.verbose
-        self.title = '[Maze N=36 States, M=4 Actions, R=%d Runs]' % self.runs
+        self.title = '[Maze F=%s, R=%d Runs]' % (self.mazef, self.runs)
 
     def setup_arguments(self):
         defaults = ['maze.txt', 300, 5]

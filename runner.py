@@ -80,8 +80,10 @@ class Runner():
 
         # Text representation of Model
         if self.verbose:
-            self.maze.display()
+            self.world.display()
             for i in range(len(self.strats)):
+                if i == 0:
+                    continue
                 self.strats[i].display()
 
         # Generate Graphs

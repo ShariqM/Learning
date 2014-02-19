@@ -43,6 +43,8 @@ class Runner():
             print "Elapsed=%ds Run %d/%d " % (elapsed.seconds, run+1, self.runs),
             self.strats = strats = self.init_strats()
             self.initial_mi = strats[0].compute_mi()
+            #if self.initial_mi <= 0.0:
+                #raise Exception("already know everything...")
 
             step = 0
             while step < self.steps:

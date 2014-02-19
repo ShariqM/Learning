@@ -21,11 +21,11 @@ class WorldRunner(Runner):
     # Strategies used in this run
     def init_strats(self):
         return [
-                #RandomStrat(self.world, BayesWorld(self.world), '-r'),
+                RandomStrat(self.world, BayesWorld(self.world), '-r'),
                 UnembodiedStrat(self.world, BayesWorld(self.world), '-k'),
-                #PigGreedyStrat(self.world, BayesWorld(self.world), 'g'),
-                #PigVIStrat(self.world, BayesWorld(self.world), 'b', False),
-                #PigVIStrat(self.world, BayesWorld(self.world), 'm', True)
+                PigGreedyStrat(self.world, BayesWorld(self.world), 'g'),
+                PigVIStrat(self.world, BayesWorld(self.world), 'b', False),
+                PigVIStrat(self.world, BayesWorld(self.world), 'm', True)
                ]
 
     # Initialize variables according to arguments

@@ -21,11 +21,11 @@ class MazeRunner(Runner):
     # Strategies used in this run
     def init_strats(self):
         return [
-                #RandomStrat(self.maze, Dirichlet(self.maze), '-r'),
+                RandomStrat(self.maze, Dirichlet(self.maze), '-r'),
                 UnembodiedStrat(self.maze, Dirichlet(self.maze), '-k'),
-                #PigGreedyStrat(self.maze, Dirichlet(self.maze), 'g'),
-                #PigVIStrat(self.maze, Dirichlet(self.maze), 'b', False),
-                #PigVIStrat(self.maze, Dirichlet(self.maze), 'm', True)
+                PigGreedyStrat(self.maze, Dirichlet(self.maze), 'g'),
+                PigVIStrat(self.maze, Dirichlet(self.maze), 'b', False),
+                PigVIStrat(self.maze, Dirichlet(self.maze), 'm', True)
                ]
 
     # Initialize variables according to arguments

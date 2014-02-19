@@ -8,6 +8,17 @@ from dirichlet import Dirichlet
 from bayesworld import *
 from functions import *
 
+from multiprocessing import Pool
+import multiprocessing
+
+def subset_pigs(im, start, stop):
+    data = []
+    for a in range(im.M):
+        data.append([])
+        for s in range(start, stop):
+            data[a].append(predicted_information_gain(im, a, s))
+    return (start, stop, data)
+
 class PigVIStrat():
 
     def __init__(self, tm, im, color, control=False, marker=None):
@@ -21,6 +32,18 @@ class PigVIStrat():
         self.plansteps = 5 # Number of steps to look in the future
         self.discount = 0.95 # Discount factor for gains in future
         self.control = control # VI+ if True (uses real model)
+
+        # Multiprocess organization
+        self.nprocesses = multiprocessing.cpu_count()
+        self.state_division = [] # describes which states go to which process
+        remainder = self.tm.N % self.nprocesses # remainder states
+        states_pp = self.tm.N / self.nprocesses # states per process
+        end = 0
+        for i in range(self.nprocesses):
+            start = end
+            end = end + states_pp + (1 if remainder > 0 else 0)
+            remainder -= 1
+            self.state_division.append((start,end))
 
     def compute_mi(self):
         return missing_information(self.tm, self.im)
@@ -52,6 +75,29 @@ class PigVIStrat():
             self.pos = ns
             return
 
+        global pigs
+        pigs = []
+        for a in range(self.im.M):
+            pigs.append([])
+            for s in range(self.im.N):
+                pigs[a].append(0)
+
+        # Fill in the global pigs table
+        def global_pigs(state_tuple):
+            start, stop, data = state_tuple
+            global pigs
+            for s in range(start, stop):
+                for a in range(self.im.M):
+                    pigs[a][s] = data[a][s-start]
+
+        p = Pool(self.nprocesses) # Pool of processes
+        for i in range(self.nprocesses):
+            start, end = self.state_division[i]
+            p.apply_async(subset_pigs, args=(self.im, start, end),
+                          callback=global_pigs)
+        p.close()
+        p.join()
+
         all_futures = [] # List of Q's from the paper
         for i in range(self.plansteps):
             all_futures.append([])
@@ -59,9 +105,8 @@ class PigVIStrat():
                 all_futures[i].append([])
                 for s in range(self.im.N):
                     all_futures[i][a].append([])
-                    #print i, a, s, all_futures
-                    all_futures[i][a][s] = predicted_information_gain(self.im, a, s) \
-                        + self.future_gain(i, all_futures, a, s)
+                    all_futures[i][a][s] = pigs[a][s] + \
+                        self.future_gain(i, all_futures, a, s)
 
         max_fgain = -1
         best_a = -1

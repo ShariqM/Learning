@@ -8,14 +8,12 @@ import math
 
 class DirichletNode:
 
-    def __init__(self, M, N, index, is_maze, debug=False):
+    def __init__(self, M, N, is_maze):
         self.M = M
         self.N = N
-        self.index = index
         self.actions = []
         self.data = []
         self.total_obs = []
-        self.debug = debug
         self.is_maze = is_maze
         self.alpha = 0.25 if is_maze else 1.0
 
@@ -34,9 +32,9 @@ class DirichletNode:
         x = (self.data[a][ns] + self.alpha) / (Ns * self.alpha + osum)
         #print 'prob_maze (a=%d, ns=%d) - %f' % (a, ns, x)
         return x
+
     # The probability of s--a-->s' is dependent on how many times I've seen this
     # transition AND the number of times I've taken s--a-->s*
-
     def get_prob(self, a, ns):
         if self.is_maze:
             return self.get_prob_maze(a, ns)

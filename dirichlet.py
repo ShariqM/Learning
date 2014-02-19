@@ -4,6 +4,7 @@
 """
 
 from dirichletnode import DirichletNode
+from bayesworldnode import BayesWorldNode
 import random
 
 class Dirichlet(object):
@@ -11,8 +12,9 @@ class Dirichlet(object):
     def __init__(self, tm):
         self.N = tm.N
         self.M = tm.M
-        self.nodes = [DirichletNode(self.M, self.N, i, tm.is_maze)
+        self.nodes = [DirichletNode(self.M, self.N, tm.is_maze())
                         for i in range(self.N)]
+        #self.nodes = [BayesWorldNode(self.M, self.N, i) for i in range(self.N)]
 
     def get_prob(self, a, s, ns):
         return self.nodes[s].get_prob(a, ns)

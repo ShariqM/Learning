@@ -99,3 +99,7 @@ class Maze:
 
     def is_maze(self):
         return True
+
+
+
+

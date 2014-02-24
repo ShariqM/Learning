@@ -196,5 +196,6 @@ class Runner():
                 self.export_data(strats_data, open(self.ifile, 'r'))
             if self.dump:
                 self.export_data(strats_data, sys.stdout)
+                return
 
         self.graph_data(strats_data, strats_finish)

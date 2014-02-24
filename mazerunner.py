@@ -37,6 +37,7 @@ class MazeRunner(Runner):
         self.ofile   = args.ofile
         self.ifile   = args.ifile
         self.verbose = args.verbose
+        self.dump    = args.dump
         self.title = '[Maze F=%s, R=%d Runs]' % (self.mazef, self.runs)
 
     def setup_arguments(self):
@@ -55,6 +56,7 @@ class MazeRunner(Runner):
         parser.add_argument("-i", "--ifile", dest="ifile", default=None,
                             type=str, help="Name of file to import data from (default: None")
         parser.add_argument('-v', dest="verbose", action='store_true')
+        parser.add_argument('-d', dest="dump", action='store_true')
         return parser.parse_args()
 
     def __init__(self):

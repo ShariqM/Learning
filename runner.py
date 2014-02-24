@@ -146,8 +146,7 @@ class Runner():
         plt.legend(bbox_to_anchor=(0.65, 0.85), loc=2, borderaxespad=0.)
         plt.show()
 
-    def export_data(self, strats_data):
-        f = open(self.ofile, 'w')
+    def export_data(self, strats_data, f):
         for i in range(len(strats_data)):
             for s in range(len(strats_data[i])):
                 f.write('%f ' % strats_data[i][s])
@@ -182,13 +181,20 @@ class Runner():
         self.initial_mi = initial_mi
         return strats_data, strats_finish
 
+    def init_vars(self):
+        self.elapsed = datetime.timedelta(0)
+
     def run(self):
+        self.init_vars()
+
         if self.ifile:
             strats_data, strats_finish = self.import_data()
         else:
             strats_data = self.collect_data()
             strats_data, strats_finish = self.analyze_data(strats_data)
             if self.ofile:
-                self.export_data(strats_data)
+                self.export_data(strats_data, open(self.ifile, 'r'))
+            if self.dump:
+                self.export_data(strats_data, sys.stdout)
 
         self.graph_data(strats_data, strats_finish)

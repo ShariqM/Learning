@@ -47,6 +47,7 @@ class WorldRunner(Runner):
         self.ofile   = args.ofile
         self.ifile   = args.ifile
         self.verbose = args.verbose
+        self.dump    = args.dump
         self.title = '1-2-3 Worlds [N=%d States, M=%d Actions, R=%d Runs]' % \
                         (self.states, self.actions, self.runs)
         self.elapsed = datetime.datetime.now() - datetime.datetime.now()
@@ -84,6 +85,7 @@ class WorldRunner(Runner):
         parser.add_argument("-i", "--ifile", dest="ifile", default=None,
                             type=str, help="Name of file to graph data from")
         parser.add_argument('-v', dest="verbose", action='store_true')
+        parser.add_argument('-d', dest="dump", action='store_true')
         return parser.parse_args()
 
     def __init__(self):

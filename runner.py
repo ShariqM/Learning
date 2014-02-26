@@ -160,6 +160,10 @@ class Runner():
         i = 0
         initial_mi = 0
         while l != '' and l != '\n':
+            if l.startswith('Elap'):# skip prog lines
+                l = f.readline()
+                continue
+
             strats_data.append([])
             strats_finish.append(0)
             step = 0

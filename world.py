@@ -20,6 +20,9 @@ class World:
     def get_prob(self, a, s, ns):
         return self.nodes[s].get_prob(a, ns)
 
+    def get_neighbors(self, s):
+        return []
+
     def display(self):
         i = 1
         print "*** 123World (Real) Model ***"

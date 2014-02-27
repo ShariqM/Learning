@@ -12,9 +12,8 @@ class Dirichlet(object):
     def __init__(self, tm):
         self.N = tm.N
         self.M = tm.M
-        self.nodes = [DirichletNode(self.M, self.N, tm.is_maze())
-                        for i in range(self.N)]
-        #self.nodes = [BayesWorldNode(self.M, self.N, i) for i in range(self.N)]
+        self.nodes = [DirichletNode(self.M, self.N, get_neighbors(tm, i),
+                                    tm.is_maze()) for i in range(self.N)]
 
     def get_prob(self, a, s, ns):
         return self.nodes[s].get_prob(a, ns)
@@ -34,11 +33,20 @@ class Dirichlet(object):
             print "\t%d."% i
             ia = 0
             for a in node.actions:
-                print "\t\t(%d)-->" % ia, ["%.2f" % node.get_prob(ia, ns) for ns in
-                    range(self.N)]
+                arr = []
+                for ns in range(self.N):
+                    if node.get_prob(ia, ns) <= 0.0:
+                        continue
+                    arr.append((ns, round(node.get_prob(ia, ns), 3)))
+                print "\t\t(a=%d)-->" % ia,  arr
                 ia = ia + 1
             print "\n\n"
             i = i + 1
 
     def is_affected_by(self, a, s):
         return False
+
+def get_neighbors(tm, i):
+    if not tm.is_maze():
+        return []
+    return tm.get_neighbors(i)

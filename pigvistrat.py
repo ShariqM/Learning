@@ -62,7 +62,7 @@ class PigVIStrat():
         tsum = 0
         for ns in range(self.im.N):
             m = self.tm if self.control else self.im
-            tsum += m.get_prob(a, s, ns)  * self.best_value(all_futures[i-1], ns)
+            tsum += m.get_prob(a, s, ns) * self.best_value(all_futures[i-1], ns)
 
         return self.discount * tsum
 

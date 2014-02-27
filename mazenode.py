@@ -17,8 +17,8 @@ class MazeNode:
             #print dist
             #dist = [round(x, 2) for x in dist]
             #print dist
-            highest = 0.0
-            tgt_i = '0'
+            highest = -1.0
+            tgt_i = -1
             for i in range(4):
                 if dist[i] > highest:
                     highest = dist[i]
@@ -27,14 +27,25 @@ class MazeNode:
             tmp = dist[a]
             dist[a] = highest
             dist[tgt_i] = tmp
+
+            tprob = 0
+            for a in dist:
+                tprob += a
             self.actions.append(dist)
 
     def get_prob(self, a, ns):
         if ns not in self.neighbors:
             return 0.0
+
+        tsum = 0.0
         for j in range(4):
             if self.neighbors[j] == ns:
-                return round(self.actions[a][j], 3)
+                # we may have 2 neighbors point to self
+                tsum += round(self.actions[a][j], 3)
+        return tsum
+
+    def get_neighbors(self):
+        return self.neighbors
 
     def take_action(self, a):
         return self.neighbors[sample(self.actions[a])]

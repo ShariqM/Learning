@@ -80,14 +80,6 @@ class Runner():
 
     def graph_data(self, strats_data, strats_finish):
 
-        # Text representation of Model
-        if self.verbose:
-            self.world.display()
-            for i in range(len(self.strats)):
-                if i == 0:
-                    continue
-                self.strats[i].display()
-
         # Generate Graphs
         try:
             import matplotlib.pyplot as plt
@@ -196,10 +188,18 @@ class Runner():
         else:
             strats_data = self.collect_data()
             strats_data, strats_finish = self.analyze_data(strats_data)
+
+            # Display text representation of Model
+            if self.verbose:
+                self.maze.display() # FIXME
+                for i in range(len(self.strats)):
+                    self.strats[i].display()
+
             if self.ofile:
                 self.export_data(strats_data, open(self.ifile, 'r'))
             if self.dump:
                 self.export_data(strats_data, sys.stdout)
                 return
+
 
         self.graph_data(strats_data, strats_finish)

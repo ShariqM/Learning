@@ -81,15 +81,22 @@ class Maze:
     def get_prob(self, a, s, ns):
         return self.nodes[s].get_prob(a, ns)
 
+    def get_neighbors(self, s):
+        return self.nodes[s].get_neighbors()
+
     def display(self):
-        i = 1
+        i = 0
         print "*** Maze (Real) Model ***"
         for node in self.nodes:
             print "\t%d."% i
             ia = 0
             for a in node.actions:
-                print "\t\t(%d)-->" % ia, [node.get_prob(ia, ns) for ns in
-                range(self.N)]
+                arr = []
+                for ns in range(self.N):
+                    if node.get_prob(ia, ns) <= 0.0:
+                        continue
+                    arr.append((ns, node.get_prob(ia, ns)))
+                print "\t\t(a=%d)-->" % ia,  arr
                 ia = ia + 1
             print "\n\n"
             i = i + 1

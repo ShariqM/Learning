@@ -8,12 +8,14 @@ import math
 
 class DirichletNode:
 
-    def __init__(self, M, N, is_maze):
+    def __init__(self, M, N, neighbors, is_maze):
         self.M = M
         self.N = N
         self.actions = []
         self.data = []
         self.total_obs = []
+        self.neighbors = neighbors
+        self.Ns = len(set(self.neighbors)) # Number of unique neighbors
         self.is_maze = is_maze
         self.alpha = 0.25 if is_maze else 1.0
 
@@ -24,12 +26,15 @@ class DirichletNode:
 
     # Dirichlet distribution with alpha=0.25 (Equation 14)
     def get_prob_maze(self, a, ns):
-        Ns = 4
+        if ns not in self.neighbors:
+            # Peeking into real model... kinda hacky
+            return 0.0
+
         osum = 0
         for os in range(self.N):
             osum += self.data[a][os]
         #print '\t osum: %d ' % osum
-        x = (self.data[a][ns] + self.alpha) / (Ns * self.alpha + osum)
+        x = (self.data[a][ns] + self.alpha) / (self.Ns * self.alpha + osum)
         #print 'prob_maze (a=%d, ns=%d) - %f' % (a, ns, x)
         return x
 

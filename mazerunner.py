@@ -29,7 +29,7 @@ class MazeRunner(Runner):
     # Initialize variables according to arguments
     def init_variables(self):
         args = self.setup_arguments()
-        self.mazef   = args.mazef
+        self.mazef   = "maze_files/%s" % args.mazef
         self.steps   = args.steps
         self.runs    = args.runs
         self.title = '[Maze F=%s, R=%d Runs]' % (self.mazef, self.runs)
@@ -39,7 +39,7 @@ class MazeRunner(Runner):
 
         parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
         parser.add_argument("-m", "--mazef", dest="mazef", default=defaults[0],
-                            type=str, help="""txt file to generate maze from (default: %s)""" % defaults[0])
+                            type=str, help="""Read this .txt file from maze_files/ to generate the maze default: %s)""" % defaults[0])
         parser.add_argument("-s", "--steps", dest="steps", default=defaults[1], type=int,
                           help="Number of steps to run (default: %d)" % defaults[1])
         parser.add_argument("-r", "--runs", dest="runs", default=defaults[2], type=int,

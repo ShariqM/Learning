@@ -12,9 +12,6 @@ python mazerunner.py --help
 
 # Dependencies
 # - matplotlib
-# - numpy
-# In the future, you may additionally need:
-# - scipy
 #
 # I recommend this resource for acquiring these packages:
 # http://www.lowindata.com/2013/installing-scientific-python-on-mac-os-x/
@@ -40,6 +37,8 @@ python mazerunner.py --help
         # Hypothetical.py - This wraps around an Internal Model and is used to
         #                   create hypothetical updates to the model so that
         #                   PIG can be calculate
+
+    # model.py - Implements the text display method for any model
 
     # Strategy Files
         # RandomStrat.py - Chooses actions randomely (Negative Control)
@@ -72,13 +71,16 @@ python mazerunner.py --help
     #                   - Predicted Information Gain (PIG)
     #                   - etc.
 
-    # maze.txt - representaiton of maze described in paper
-    # maze_easy.txt - 4 state maze
-    # maze_medium.txt - 9 state maze
+    # Maze files
+        # Located in maze_files/
+
+        # maze.txt - representaiton of maze described in paper
+        # maze_easy.txt - 4 state maze
+        # maze_medium.txt - 9 state maze
 
 
 #TODO
-# - Dense environment
+# - Unbounded Maze environments
 
 # Author
 Shariq Mobin (Shariq.Mobin@gmail.com)

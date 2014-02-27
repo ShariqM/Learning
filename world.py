@@ -5,8 +5,9 @@
 """
 
 from worldnode import WorldNode
+from model import Model
 
-class World:
+class World(Model):
 
     def __init__(self, N, M):
         self.N = N
@@ -24,20 +25,5 @@ class World:
         return []
 
     def display(self):
-        i = 1
         print "*** 123World (Real) Model ***"
-        for node in self.nodes:
-            print "\t%d."% i
-            ia = 0
-            for a in node.actions:
-                print "\t\t(%d)-->" % ia, [node.get_prob(ia, ns) for ns in
-                range(self.N)]
-                ia = ia + 1
-            print "\n\n"
-            i = i + 1
-
-    def is_affected_by(self, a, s):
-        return False
-
-    def is_maze(self):
-        return False
+        super(World, self).display()

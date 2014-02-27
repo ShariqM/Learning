@@ -7,8 +7,7 @@
         - ~30% performance gain with 4 CPUs on 123World
         - ~100% performance gain with 4 CPUs on Maze
     - There is no concurrency control so we are assuming concurrent PIG
-      computations are independent. This is true for 123World since updating
-      one (stage, action) does not affect another other (state, action)
+      computations are independent.
 """
 
 import random
@@ -20,20 +19,6 @@ import pdb
 
 from multiprocessing import Pool
 import multiprocessing
-
-# Compute the max gain for a subset of states i.e. those from *start* to *stop*
-# Each process is assigned a subset
-#def subset_max_gain(im, start, stop):
-#def subset_max_gain(start, stop):
-    #return (1,1,1)
-def subset_max_gain(im, start, stop):
-    max_gain, best_a, best_s = (-1.0, -1, -1)
-    for s in range(start, stop):
-        for a in range(im.M):
-            pig = predicted_information_gain(im, a, s)
-            if pig > max_gain:
-                max_gain, best_a, best_s = (pig, a, s)
-    return (max_gain, best_a, best_s)
 
 class UnembodiedStrat():
 
@@ -96,9 +81,6 @@ class UnembodiedStrat():
         p = Pool(self.nprocesses) # Pool of processes
         for i in range(self.nprocesses):
             start, end = self.state_division[i]
-            #print start, end
-            #p.apply_async(subset_max_gain, args=(self.im, start, end))
-            #p.apply_async(subset_max_gain, args=(start, end))
             p.apply_async(subset_max_gain, args=(self.im, start, end),
                           callback=global_max_gain)
         p.close()
@@ -107,9 +89,17 @@ class UnembodiedStrat():
         ns = self.tm.take_action(best_s, best_a)
         self.im.update(best_a, best_s, ns)
         self.pos = ns
-        #print "time = ", (datetime.datetime.now() - tstart).microseconds
 
     def display(self):
         self.im.display(self.name)
 
-
+# Compute the max gain for a subset of states i.e. those from *start* to *stop*
+# Each process is assigned a subset
+def subset_max_gain(im, start, stop):
+    max_gain, best_a, best_s = (-1.0, -1, -1)
+    for s in range(start, stop):
+        for a in range(im.M):
+            pig = predicted_information_gain(im, a, s)
+            if pig > max_gain:
+                max_gain, best_a, best_s = (pig, a, s)
+    return (max_gain, best_a, best_s)

@@ -11,14 +11,6 @@ from functions import *
 from multiprocessing import Pool
 import multiprocessing
 
-def subset_pigs(im, start, stop):
-    data = []
-    for a in range(im.M):
-        data.append([])
-        for s in range(start, stop):
-            data[a].append(predicted_information_gain(im, a, s))
-    return (start, stop, data)
-
 class PigVIStrat():
 
     def __init__(self, tm, im, color, control=False, marker=None):
@@ -28,7 +20,6 @@ class PigVIStrat():
         self.name = "PIG(VI+)" if control else "PIG(VI)"
         self.color = color
         self.marker = marker
-        self.plan = []
         self.plansteps = 10 # Number of steps to look in the future
         self.discount = 0.95 # Discount factor for gains in future
         self.control = control # VI+ if True (uses real model)
@@ -68,11 +59,6 @@ class PigVIStrat():
 
     def step(self, last_mi=1):
         if last_mi <= 0.0: # optimization: no more information to gain
-            return
-        if len(self.plan) != 0:
-            ns = self.tm.take_action(self.pos, self.plan[0])
-            self.im.update(best_a, self.pos, ns)
-            self.pos = ns
             return
 
         global pigs
@@ -116,8 +102,6 @@ class PigVIStrat():
                 max_fgain = future[a][self.pos]
                 best_a = a
 
-        #print "(a=%d, s=%d) pig=%d l=%d" % (best_a, self.pos, max_gain, \
-                    #len(best_as))
         ns = self.tm.take_action(self.pos, best_a)
         self.im.update(best_a, self.pos, ns)
         self.pos = ns
@@ -125,3 +109,12 @@ class PigVIStrat():
     def display(self):
         self.im.display(self.name)
 
+# Compute the pig for a subset of states i.e. those from *start* to *stop*
+# Each process is assigned a subset
+def subset_pigs(im, start, stop):
+    data = []
+    for a in range(im.M):
+        data.append([])
+        for s in range(start, stop):
+            data[a].append(predicted_information_gain(im, a, s))
+    return (start, stop, data)

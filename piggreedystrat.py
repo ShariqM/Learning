@@ -30,7 +30,6 @@ class PigGreedyStrat():
         best_as = []
         for a in range(self.im.M):
             pig = predicted_information_gain(self.im, a, self.pos)
-            #print "\t(%d) %f" % (a, pig)
             if pig > max_gain:
                 max_gain = pig
                 best_as = [a]

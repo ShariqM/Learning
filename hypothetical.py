@@ -28,7 +28,3 @@ class Hypothetical:
         rv = self.im.get_prob(a, s, ns)
         self.im.undo_update(self.a, self.s, self.ns)
         return rv
-
-    # Return true if we can't use a cache version of this.
-    def is_affected_by(self, a, s):
-        return self.a == a and self.s == s

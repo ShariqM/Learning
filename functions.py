@@ -18,7 +18,6 @@ def kl_divergence(tm, im, a, s, debug=False):
         im_prob = im.get_prob(a, s, ns)
         im_prob = 1 if not im_prob else im_prob # See note [1]
         klsum += max(tm_prob * math.log(tm_prob / im_prob, 2), 0.0)
-        #print im_prob, tm_prob
 
     return klsum
 

@@ -3,9 +3,10 @@
 """
 
 from bayesworldnode import BayesWorldNode
+from model import Model
 import random
 
-class BayesWorld(object):
+class BayesWorld(Model):
 
     def __init__(self, tm):
         self.N = tm.N
@@ -24,17 +25,5 @@ class BayesWorld(object):
         return self.nodes[s].undo_update(a, ns)
 
     def display(self, strat):
-        i = 1
         print "*** %s BayesWorld (Internal) Model ***" % strat
-        for node in self.nodes:
-            print "\t%d."% i
-            ia = 0
-            for a in node.actions:
-                print "\t\t(%d)-->" % ia, ["%.2f" % node.get_prob(ia, ns) for ns in
-                    range(self.N)]
-                ia = ia + 1
-            print "\n\n"
-            i = i + 1
-
-    def is_affected_by(self, a, s):
-        return False
+        super(BayesWorld, self).display()

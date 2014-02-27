@@ -41,16 +41,9 @@ class WorldRunner(Runner):
         self.states  = args.states
         self.actions = args.actions
         self.steps   = args.steps
-        self.prior   = args.prior
-        self.alpha   = args.alpha
         self.runs    = args.runs
-        self.ofile   = args.ofile
-        self.ifile   = args.ifile
-        self.verbose = args.verbose
-        self.dump    = args.dump
         self.title = '1-2-3 Worlds [N=%d States, M=%d Actions, R=%d Runs]' % \
                         (self.states, self.actions, self.runs)
-        self.elapsed = datetime.datetime.now() - datetime.datetime.now()
 
     def setup_arguments(self):
         defaults = [10,3,100]
@@ -66,31 +59,25 @@ class WorldRunner(Runner):
 
         parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
         parser.add_argument("-l", "--level", dest="level", default=0, type=int,
-                          help='Run at a certain complexity level.\n%s\n%s\n%s\n%s\nUsing this argument overrides all other options. (default: 0)'
-                               % (msgs[0], msgs[1], msgs[2], msgs[3]))
+                          help='Run at a certain complexity level.\n%s\n%s\n%s\n%s\n%s\nUsing this argument overrides all other options. (default: 0)'
+                               % (msgs[0], msgs[1], msgs[2], msgs[3], msgs[4]))
         parser.add_argument("-n", "--states", dest="states", default=defaults[0], type=int,
                           help="Number of unique states (default: %d)" % defaults[0])
         parser.add_argument("-m", "--actions", dest="actions", default=defaults[1], type=int,
                           help="Number of unique actions (default: %d)" % defaults[1])
         parser.add_argument("-s", "--steps", dest="steps", default=defaults[2], type=int,
                           help="Number of steps to run (default: %d)" % defaults[2])
-        parser.add_argument("-a", "--alpha", dest="alpha", default=1.0, type=float,
-                          help="Alpha value for Dirichlet distribution (default: 1.0)")
-        parser.add_argument("-p", "--prior", dest="prior", default=0, type=int,
-                          help="Prior Distribution\n(0) - Bayes specific to 123World\n(1) - Dirichlet distribution\n (default: 0)")
         parser.add_argument("-r", "--runs", dest="runs", default=5, type=int,
                           help="Number of runs to average over")
-        parser.add_argument("-o", "--ofile", dest="ofile", default=None,
-                            type=str, help="Name of file to output data to")
-        parser.add_argument("-i", "--ifile", dest="ifile", default=None,
-                            type=str, help="Name of file to graph data from")
-        parser.add_argument('-v', dest="verbose", action='store_true')
-        parser.add_argument('-d', dest="dump", action='store_true')
+
+        super(WorldRunner, self).setup_arguments(parser)
+
         return parser.parse_args()
 
     def __init__(self):
         self.init_variables()
         self.world = World(self.states, self.actions)
+        self.environ = self.world
         self.strats = self.init_strats()
 
 

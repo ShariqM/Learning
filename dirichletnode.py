@@ -15,7 +15,8 @@ class DirichletNode:
         self.data = []
         self.total_obs = []
         self.neighbors = neighbors
-        self.Ns = len(set(self.neighbors)) # Number of unique neighbors
+        #self.Ns = len(set(self.neighbors)) # Number of unique neighbors
+        self.Ns = self.N
         self.alpha = 0.25
 
         for action in range(M):
@@ -25,9 +26,9 @@ class DirichletNode:
 
     # Dirichlet distribution with alpha=0.25 (Equation 14)
     def get_prob(self, a, ns):
-        if ns not in self.neighbors:
+        #if ns not in self.neighbors:
             # Peeking into real model... kinda hacky
-            return 0.0
+            #return 0.0
 
         osum = 0
         for os in range(self.N):

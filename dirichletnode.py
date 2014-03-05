@@ -11,7 +11,6 @@ class DirichletNode:
     def __init__(self, M, N, neighbors):
         self.M = M
         self.N = N
-        self.actions = []
         self.data = []
         self.total_obs = []
         self.neighbors = neighbors
@@ -22,7 +21,6 @@ class DirichletNode:
         for action in range(M):
             self.data.append([0 for x in range(N)])
             self.total_obs.append(0)
-            self.actions.append([x for x in range(N)])
 
     # Dirichlet distribution with alpha=0.25 (Equation 14)
     def get_prob(self, a, ns):

@@ -1,5 +1,5 @@
 """
-    An PigGreedy agent explores the world with limitation on a position. It
+    A PigGreedy agent explores the world with limitation on a position. It
     picks an action that maximizes its PIG
 """
 
@@ -44,4 +44,3 @@ class PigGreedyStrat():
 
     def display(self):
         self.im.display(self.name)
-

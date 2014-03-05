@@ -21,6 +21,18 @@ def kl_divergence(tm, im, a, s, debug=False):
 
     return klsum
 
+def kl_divergence(tm, im, a, s, debug=False):
+    klsum = 0
+    for ns in range(tm.N):
+        tm_prob = tm.get_prob(a, s, ns)
+        if tm_prob <= 0.0: # can't do log 0
+            continue
+        im_prob = im.get_prob(a, s, ns)
+        im_prob = 1 if not im_prob else im_prob # See note [1]
+        klsum += max(tm_prob * math.log(tm_prob / im_prob, 2), 0.0)
+
+    return klsum
+
 def missing_information(tm, im):
     if tm.N != im.N or tm.M != im.M:
         raise Exception("Incomparable models")
@@ -40,6 +52,20 @@ def predicted_information_gain(im, a, s):
         pig += x
 
     return pig
+
+
+def pig2(im, a, s):
+    pig = 0
+    new_states = im.get_neighbors(s, a)
+    new_states.append(-1) # a new state (table)
+    for ns in new_states:
+        hm = Hypothetical(im, a, s, ns)
+        x = im.get_prob(a, s, ns) * kl_divergence(hm, im, a, s, False)
+        pig += x
+
+    return pig
+
+
 
 # Compute N choose R
 def choose(n, r):

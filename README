@@ -34,6 +34,10 @@ python mazerunner.py --help
         # Dirichlet.py - Internal Model used to learn Mazes and Dense Worlds
             # DirichletNode.py - Node of Internal Model
 
+        # DirichletProcess.py - Internal Model used to learn Mazes, follows the
+        #                       Chinese Restaurant Process Model
+            # DirichletProcessNode.py - Node of Internal Model
+
         # Hypothetical.py - This wraps around an Internal Model and is used to
         #                   create hypothetical updates to the model so that
         #                   PIG can be calculate

@@ -7,7 +7,7 @@ import random
 from hypothetical import *
 import datetime
 
-#klsum += tm.get_prob(a, s, ns) * abs(math.log(true_over_internal, 2))
+# klsum += tm.get_prob(a, s, ns) * abs(math.log(true_over_internal, 2))
 # Given a true model and an internal model, compute the kl divergence
 def kl_divergence(tm, im, a, s, debug=False):
     klsum = 0
@@ -21,51 +21,46 @@ def kl_divergence(tm, im, a, s, debug=False):
 
     return klsum
 
-def kl_divergence(tm, im, a, s, debug=False):
-    klsum = 0
-    for ns in range(tm.N):
+# A more flexible divergence that can deal with unknown states
+# is_aware_of is used to make the DirichletProcess probabilities sum to 1
+def sm_divergence(tm, im, a, s, debug=False):
+    div = 0
+    num_unk_states = 0
+    if im.has_state(s):
+        num_unk_states = len(tm.get_states(a,s)) - len(im.get_states(a,s))
+    for ns in tm.get_states(a, s):
         tm_prob = tm.get_prob(a, s, ns)
-        if tm_prob <= 0.0: # can't do log 0
-            continue
-        im_prob = im.get_prob(a, s, ns)
-        im_prob = 1 if not im_prob else im_prob # See note [1]
-        klsum += max(tm_prob * math.log(tm_prob / im_prob, 2), 0.0)
+        im_prob = 0.0
+        if im.has_state(s):
+            im_prob = im.get_prob(a, s, ns)
+            #print (im_prob,a,s,ns,num_unk_states)
+            im_prob = im_prob if im.is_aware_of(a, s, ns) else im_prob / num_unk_states
+        div += tm_prob * abs(tm_prob - im_prob)
+    return div
 
-    return klsum
+# TODO Need to make this an argument to runner
+def divergence(tm, im, a, s, debug=False):
+    if True:
+        return sm_divergence(tm, im, a, s, debug)
+    else:
+        return kl_divergence(tm, im, a, s, debug)
 
 def missing_information(tm, im):
-    if tm.N != im.N or tm.M != im.M:
-        raise Exception("Incomparable models")
     misum = 0
     for s in range(tm.N):
         for a in range(tm.M):
-            misum += kl_divergence(tm, im, a, s)
-
+            misum += divergence(tm, im, a, s)
     return misum
 
 # This could be optimized, we recalculate alot, would be a little messy.
 def predicted_information_gain(im, a, s):
     pig = 0
-    for ns in range(im.N):
+    for ns in im.get_states(a, s):
         hm = Hypothetical(im, a, s, ns)
-        x = im.get_prob(a, s, ns) * kl_divergence(hm, im, a, s, False)
+        x = im.get_prob(a, s, ns) * sm_divergence(hm, im, a, s, False)
         pig += x
 
     return pig
-
-
-def pig2(im, a, s):
-    pig = 0
-    new_states = im.get_neighbors(s, a)
-    new_states.append(-1) # a new state (table)
-    for ns in new_states:
-        hm = Hypothetical(im, a, s, ns)
-        x = im.get_prob(a, s, ns) * kl_divergence(hm, im, a, s, False)
-        pig += x
-
-    return pig
-
-
 
 # Compute N choose R
 def choose(n, r):

@@ -10,6 +10,7 @@ from piggreedystrat import *
 from pigvistrat import *
 from maze import *
 from runner import Runner
+from dirichletp import DirichletProcess
 
 from functions import *
 import sys
@@ -21,9 +22,11 @@ class MazeRunner(Runner):
         return [
                 RandomStrat(self.maze, Dirichlet(self.maze), '-r'),
                 UnembodiedStrat(self.maze, Dirichlet(self.maze), '-k'),
-                PigGreedyStrat(self.maze, Dirichlet(self.maze), 'g'),
-                PigVIStrat(self.maze, Dirichlet(self.maze), 'b', False),
-                PigVIStrat(self.maze, Dirichlet(self.maze), 'm', True)
+                PigGreedyStrat(self.maze, Dirichlet(self.maze), 0, 'g'),
+                #PigGreedyStrat(self.maze, DirichletProcess(self.maze), 1, '-c'),
+                PigVIStrat(self.maze, Dirichlet(self.maze), 0, 'b', False),
+                #PigVIStrat(self.maze, DirichletProcess(self.maze), 1, 'y', False),
+                PigVIStrat(self.maze, Dirichlet(self.maze), 0, 'm', True)
                ]
 
     # Initialize variables according to arguments
@@ -54,7 +57,6 @@ class MazeRunner(Runner):
         self.maze = Maze(self.mazef)
         self.environ = self.maze # So Runner can specify any environ
         self.strats = self.init_strats()
-
 
 def main():
     r = MazeRunner()

@@ -56,13 +56,14 @@ class Runner(object):
             self.initial_mi = strats[0].compute_mi()
 
             step = 0
+            mi = 0
             while step < self.steps:
                 for i in range(len(strats)):
                     mi = strats[i].compute_mi()
                     strats_data[i][step] += mi
                     strats[i].step(mi)
                 step = step + 1
-                if step % (self.steps / 10) == 0:
+                if self.steps < 10 or step % (self.steps / 10) == 0:
                     sys.stdout.write('.')
                 sys.stdout.flush()
             run = run + 1
@@ -144,6 +145,8 @@ class Runner(object):
             if self.verbose:
                 self.environ.display()
                 for i in range(len(self.strats)):
+                    if i == 0:
+                        continue
                     self.strats[i].display()
 
             if self.ofile:

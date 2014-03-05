@@ -11,8 +11,9 @@ class MazeNode:
     def __init__(self, neighbors):
         self.neighbors = neighbors # Neighboring states
         self.actions = [] # The distribution of each action
+        self.M = 4
 
-        for a in range(4):
+        for a in range(self.M):
             dist = ran.dirichlet([0.25, 0.25, 0.25, 0.25]) # alpha = 0.25
             dist = realign(a, dist)
             self.actions.append(dist)
@@ -22,7 +23,7 @@ class MazeNode:
             return 0.0
 
         tsum = 0.0
-        for j in range(4):
+        for j in range(self.M):
             if self.neighbors[j] == ns:
                 # we may have 2 neighbors that point to self
                 tsum += round(self.actions[a][j], 3)

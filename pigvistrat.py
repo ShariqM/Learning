@@ -13,28 +13,19 @@ import multiprocessing
 
 class PigVIStrat():
 
-    def __init__(self, tm, im, color, control=False, marker=None):
+    def __init__(self, tm, im, proc, color, control=False, marker=None):
         self.tm = tm
         self.im = im
         self.pos = 0
         self.name = "PIG(VI+)" if control else "PIG(VI)"
+        if proc:
+            self.name += " [proc]"
         self.color = color
         self.marker = marker
         self.plansteps = 10 # Number of steps to look in the future
         self.discount = 0.95 # Discount factor for gains in future
         self.control = control # VI+ if True (uses real model)
-
-        # Multiprocess organization
         self.nprocesses = multiprocessing.cpu_count()
-        self.state_division = [] # describes which states go to which process
-        remainder = self.tm.N % self.nprocesses # remainder states
-        states_pp = self.tm.N / self.nprocesses # states per process
-        end = 0
-        for i in range(self.nprocesses):
-            start = end
-            end = end + states_pp + (1 if remainder > 0 else 0)
-            remainder -= 1
-            self.state_division.append((start,end))
 
     def compute_mi(self):
         return missing_information(self.tm, self.im)
@@ -51,11 +42,24 @@ class PigVIStrat():
             return 0
 
         tsum = 0
-        for ns in range(self.im.N):
+        for ns in self.im.get_states():
             m = self.tm if self.control else self.im
             tsum += m.get_prob(a, s, ns) * self.best_value(all_futures[i-1], ns)
 
         return self.discount * tsum
+
+    def update_state_division(self):
+        # Multiprocess organization
+        self.state_division = [] # describes which states go to which process
+        nstates = len(self.im.get_states())
+        remainder = nstates % self.nprocesses # remainder states
+        states_pp = nstates / self.nprocesses # states per process
+        end = 0
+        for i in range(self.nprocesses):
+            start = end
+            end = end + states_pp + (1 if remainder > 0 else 0)
+            remainder -= 1
+            self.state_division.append((start,end))
 
     def step(self, last_mi=1):
         if last_mi <= 0.0: # optimization: no more information to gain
@@ -64,9 +68,9 @@ class PigVIStrat():
         global pigs
         pigs = []
         for a in range(self.im.M):
-            pigs.append([])
-            for s in range(self.im.N):
-                pigs[a].append(0)
+            pigs.append({})
+            for s in self.im.get_states():
+                pigs[a][s] = 0
 
         # Fill in the global pigs table
         def global_pigs(state_tuple):
@@ -76,6 +80,7 @@ class PigVIStrat():
                 for a in range(self.im.M):
                     pigs[a][s] = data[a][s-start]
 
+        self.update_state_division()
         p = Pool(self.nprocesses) # Pool of processes
         for i in range(self.nprocesses):
             start, end = self.state_division[i]
@@ -88,9 +93,8 @@ class PigVIStrat():
         for i in range(self.plansteps):
             all_futures.append([])
             for a in range(self.im.M):
-                all_futures[i].append([])
-                for s in range(self.im.N):
-                    all_futures[i][a].append([])
+                all_futures[i].append({})
+                for s in self.im.get_states():
                     all_futures[i][a][s] = pigs[a][s] + \
                         self.future_gain(i, all_futures, a, s)
 

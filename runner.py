@@ -91,13 +91,13 @@ class Runner(object):
         plt.xlabel('Time (steps)', fontdict={'fontsize':16})
         plt.ylabel('Missing Information (bits)', fontdict={'fontsize':16})
         plt.title(self.title + " Elapsed=%ds) " % self.elapsed.seconds)
-        plt.axis([0, self.steps, 0, self.initial_mi * 1.1])
+        plt.axis([0, self.steps, 0, self.initial_mi * 2])
 
         for i in range(len(self.strats)):
             plt.plot(step_points, strats_data[i], self.strats[i].color,
                      label=self.strats[i].name)
 
-        plt.legend(bbox_to_anchor=(0.65, 0.85), loc=2, borderaxespad=0.)
+        plt.legend(bbox_to_anchor=(0.8,1), loc=2, borderaxespad=0.)
         plt.show()
 
     def export_data(self, strats_data, f):

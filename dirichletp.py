@@ -59,7 +59,7 @@ class DirichletProcess(object):
             print "\tFrom Starting State=%d."% i
             for a in range(node.M):
                 arr = []
-                new_states = self.get_neighbors(a, i) + [-1]
+                new_states = self.get_states(a, i) + [-1]
                 for ns in new_states:
                     if node.get_prob(a, ns) <= 0.0:
                         continue

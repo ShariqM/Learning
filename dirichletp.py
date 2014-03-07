@@ -19,9 +19,10 @@ class DirichletProcess(object):
             return self.nodes.keys()
         # -1 represents the Unknown state
         states = self.nodes[s].get_states(a)
-        if -1 in states:
-            raise "State Corruption"
-        return states + [-1]
+        return states
+        #if -1 in states: Think about this
+            #raise "State Corruption"
+        #return states + [-1]
 
     def has_state(self, s):
         return self.nodes.has_key(s)
@@ -63,3 +64,6 @@ class DirichletProcess(object):
                 print "\t\t(s=%d, a=%d) ->" % (i, a),  arr
             print ""
         #super(Dirichlet, self).display()
+
+    def has_unknown_states(self):
+        return True

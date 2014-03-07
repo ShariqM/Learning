@@ -28,6 +28,9 @@ def sm_divergence(tm, im, a, s, debug=False):
     num_unk_states = 0
     if im.has_state(s):
         num_unk_states = len(tm.get_states(a,s)) - len(im.get_states(a,s))
+        #if num_unk_states:
+            #print num_unk_states
+    #print "\ts=%d, a=%d" % (s,a)
     for ns in tm.get_states(a, s):
         tm_prob = tm.get_prob(a, s, ns)
         im_prob = 0.0
@@ -35,6 +38,8 @@ def sm_divergence(tm, im, a, s, debug=False):
             im_prob = im.get_prob(a, s, ns)
             #print (im_prob,a,s,ns,num_unk_states)
             im_prob = im_prob if im.is_aware_of(a, s, ns) else im_prob / num_unk_states
+            #if not im.is_aware_of(a, s, ns):
+                #print im_prob
         div += tm_prob * abs(tm_prob - im_prob)
     return div
 
@@ -55,7 +60,8 @@ def missing_information(tm, im):
 # This could be optimized, we recalculate alot, would be a little messy.
 def predicted_information_gain(im, a, s):
     pig = 0
-    for ns in im.get_states(a, s):
+    for ns in im.get_states(a, s) + [-1]:
+        #print "ns=%d" % ns
         hm = Hypothetical(im, a, s, ns)
         x = im.get_prob(a, s, ns) * sm_divergence(hm, im, a, s, False)
         pig += x

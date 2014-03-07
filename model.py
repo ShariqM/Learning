@@ -32,3 +32,6 @@ class Model(object):
                 print "\t\t(s=%d, a=%d) ->" % (i, a),  arr
             print ""
             i = i + 1
+
+    def has_unknown_states(self):
+        return False

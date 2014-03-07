@@ -15,7 +15,7 @@ class DirichletNode:
         self.total_obs = []
         self.neighbors = neighbors
         self.Ns = len(set(self.neighbors)) # Number of unique neighbors
-        self.Ns = self.N
+        #self.Ns = self.N
         self.alpha = 0.25
 
         for action in range(M):

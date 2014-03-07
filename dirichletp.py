@@ -6,19 +6,22 @@
 from dirichletpnode import DirichletProcessNode
 import random
 
+NULL_UPDATE = -9999
+
 class DirichletProcess(object):
 
     def __init__(self, tm):
         self.M = tm.M
         self.nodes = {}
         self.nodes[0] = DirichletProcessNode(self.M)
-        self.last_update = -2
+        self.last_update = NULL_UPDATE
 
     def get_states(self, a=-5, s=-5):
         if s == -5:
             return self.nodes.keys()
         # -1 represents the Unknown state
         states = self.nodes[s].get_states(a)
+
         return states
         #if -1 in states: Think about this
             #raise "State Corruption"
@@ -39,12 +42,12 @@ class DirichletProcess(object):
             self.last_update = ns
             self.nodes[ns] = DirichletProcessNode(self.M)
         else:
-            self.last_update = -2
+            self.last_update = NULL_UPDATE
         return self.nodes[s].update(a, ns)
 
     # Undo update (for hypothetical updates)
     def undo_update(self, a, s, ns):
-        if self.last_update != -2:
+        if self.last_update != NULL_UPDATE:
             self.nodes.pop(self.last_update)
         return self.nodes[s].undo_update(a, ns)
 

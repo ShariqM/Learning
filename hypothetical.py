@@ -28,7 +28,6 @@ class Hypothetical:
 
     # Update with the hypothetical observation, calc get_prob, then undo update
     def get_prob(self, a, s, ns):
-        orig  = self.im.get_prob(a, s, ns)
         self.im.update(self.a, self.s, self.ns)
         rv = self.im.get_prob(a, s, ns)
         self.im.undo_update(self.a, self.s, self.ns)

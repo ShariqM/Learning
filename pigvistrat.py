@@ -42,24 +42,28 @@ class PigVIStrat():
             return 0
 
         tsum = 0
-        for ns in self.im.get_states():
+        num_states = len(self.im.get_states() + [-1])
+        for ns in self.im.get_states() + [-1]:
             m = self.tm if self.control else self.im
-            tsum += m.get_prob(a, s, ns) * self.best_value(all_futures[i-1], ns)
+            m_prob = 1.0/num_states if s == -1 else m.get_prob(a, s, ns)
+            tsum += m_prob * self.best_value(all_futures[i-1], ns)
 
         return self.discount * tsum
 
     def update_state_division(self):
         # Multiprocess organization
         self.state_division = [] # describes which states go to which process
-        nstates = len(self.im.get_states())
+        all_states = self.im.get_states() + [-1]
+        nstates = len(all_states)
         remainder = nstates % self.nprocesses # remainder states
         states_pp = nstates / self.nprocesses # states per process
         end = 0
+        j = 0
         for i in range(self.nprocesses):
             start = end
             end = end + states_pp + (1 if remainder > 0 else 0)
             remainder -= 1
-            self.state_division.append((start,end))
+            self.state_division.append(all_states[start:end])
 
     def step(self, last_mi=1):
         if last_mi <= 0.0: # optimization: no more information to gain
@@ -69,22 +73,24 @@ class PigVIStrat():
         pigs = []
         for a in range(self.im.M):
             pigs.append({})
-            for s in self.im.get_states():
+            for s in self.im.get_states() + [-1]:
                 pigs[a][s] = 0
 
         # Fill in the global pigs table
-        def global_pigs(state_tuple):
-            start, stop, data = state_tuple
+        def global_pigs(msg):
+            if msg== "Failed":
+                raise Exception("Process failed")
+            sub_states, data = msg
             global pigs
-            for s in range(start, stop):
+            for s in sub_states:
                 for a in range(self.im.M):
-                    pigs[a][s] = data[a][s-start]
+                    pigs[a][s] = data[a][s]
 
         self.update_state_division()
         p = Pool(self.nprocesses) # Pool of processes
         for i in range(self.nprocesses):
-            start, end = self.state_division[i]
-            p.apply_async(subset_pigs, args=(self.im, start, end),
+            sub_states = self.state_division[i]
+            p.apply_async(subset_pigs, args=(self.im, sub_states),
                           callback=global_pigs)
         p.close()
         p.join()
@@ -94,7 +100,7 @@ class PigVIStrat():
             all_futures.append([])
             for a in range(self.im.M):
                 all_futures[i].append({})
-                for s in self.im.get_states():
+                for s in self.im.get_states() + [-1]:
                     all_futures[i][a][s] = pigs[a][s] + \
                         self.future_gain(i, all_futures, a, s)
 
@@ -113,12 +119,15 @@ class PigVIStrat():
     def display(self):
         self.im.display(self.name)
 
-# Compute the pig for a subset of states i.e. those from *start* to *stop*
-# Each process is assigned a subset
-def subset_pigs(im, start, stop):
+# Compute the pig for a subset of states, each process is assigned a subset
+def subset_pigs(im, sub_states):
     data = []
     for a in range(im.M):
-        data.append([])
-        for s in range(start, stop):
-            data[a].append(predicted_information_gain(im, a, s))
-    return (start, stop, data)
+        data.append({})
+        for s in sub_states:
+            try:
+                data[a][s] = predicted_information_gain(im, a, s)
+            except Exception as e:
+                print e
+                #return "Failed" Why does this stop the exception...
+    return (sub_states, data)

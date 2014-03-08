@@ -26,6 +26,7 @@ class PigVIStrat():
         self.discount = 0.95 # Discount factor for gains in future
         self.control = control # VI+ if True (uses real model)
         self.nprocesses = multiprocessing.cpu_count()
+        self.data = {}
 
     def compute_mi(self):
         return missing_information(self.tm, self.im)
@@ -114,6 +115,12 @@ class PigVIStrat():
 
         ns = self.tm.take_action(self.pos, best_a)
         self.im.update(best_a, self.pos, ns)
+
+        #if not self.data.has_key((self.pos, best_a)):
+            #self.data[(self.pos, best_a)] = 0
+        #self.data[(self.pos, best_a)] = self.data[(self.pos, best_a)] + 1
+        #print self.data
+        #print "(s=%d, a=%d, ns=%d)" % (self.pos, best_a, ns)
         self.pos = ns
 
     def display(self):

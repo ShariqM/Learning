@@ -13,7 +13,7 @@ class DirichletProcessNode:
         self.actions = []
         self.data = []
         self.obs_num = []
-        self.alpha = 0.25
+        self.alpha = 0.25 # Make sure float
 
         for action in range(M):
             self.data.append({})

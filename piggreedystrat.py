@@ -47,11 +47,11 @@ class PigGreedyStrat():
         self.im.update(best_a, self.pos, ns)
         self.pos = ns
 
-        if not self.data.has_key((self.pos, best_a)):
-            self.data[(self.pos, best_a)] = 0
-        self.data[(self.pos, best_a)] = self.data[(self.pos, best_a)] + 1
-        print self.data
-        print "(s=%d, a=%d, ns=%d)" % (self.pos, best_a, ns)
+        #if not self.data.has_key((self.pos, best_a)):
+            #self.data[(self.pos, best_a)] = 0
+        #self.data[(self.pos, best_a)] = self.data[(self.pos, best_a)] + 1
+        #print self.data
+        #print "(s=%d, a=%d, ns=%d)" % (self.pos, best_a, ns)
 
     def display(self):
         print self.data

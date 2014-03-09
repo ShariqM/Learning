@@ -8,6 +8,9 @@ class Model(object):
     def get_states(self, a=-1, s=-1):
         return range(self.N)
 
+    def get_known_states(self, a=-1, s=-1):
+        return range(self.N)
+
     def has_state(self, s):
         return True
 

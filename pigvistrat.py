@@ -43,8 +43,8 @@ class PigVIStrat():
             return 0
 
         tsum = 0
-        num_states = len(self.im.get_states() + [-1])
-        for ns in self.im.get_states() + [-1]:
+        num_states = len(self.im.get_states())
+        for ns in self.im.get_states():
             m = self.tm if self.control else self.im
             m_prob = 1.0/num_states if s == -1 else m.get_prob(a, s, ns)
             tsum += m_prob * self.best_value(all_futures[i-1], ns)
@@ -54,7 +54,7 @@ class PigVIStrat():
     def update_state_division(self):
         # Multiprocess organization
         self.state_division = [] # describes which states go to which process
-        all_states = self.im.get_states() + [-1]
+        all_states = self.im.get_states()
         nstates = len(all_states)
         remainder = nstates % self.nprocesses # remainder states
         states_pp = nstates / self.nprocesses # states per process
@@ -65,6 +65,7 @@ class PigVIStrat():
             end = end + states_pp + (1 if remainder > 0 else 0)
             remainder -= 1
             self.state_division.append(all_states[start:end])
+        #print self.state_division
 
     def step(self, last_mi=1):
         if last_mi <= 0.0: # optimization: no more information to gain
@@ -74,7 +75,7 @@ class PigVIStrat():
         pigs = []
         for a in range(self.im.M):
             pigs.append({})
-            for s in self.im.get_states() + [-1]:
+            for s in self.im.get_states():
                 pigs[a][s] = 0
 
         # Fill in the global pigs table
@@ -101,13 +102,16 @@ class PigVIStrat():
             all_futures.append([])
             for a in range(self.im.M):
                 all_futures[i].append({})
-                for s in self.im.get_states() + [-1]:
+                for s in self.im.get_states():
                     all_futures[i][a][s] = pigs[a][s] + \
                         self.future_gain(i, all_futures, a, s)
 
         max_fgain = -1
         best_a = -1
         future = all_futures[self.plansteps - 1]
+        #print_pig(pigs)
+        #print_future(future)
+        #self.display()
         for a in range(self.im.M):
             if future[a][self.pos] > max_fgain:
                 max_fgain = future[a][self.pos]
@@ -120,7 +124,7 @@ class PigVIStrat():
             #self.data[(self.pos, best_a)] = 0
         #self.data[(self.pos, best_a)] = self.data[(self.pos, best_a)] + 1
         #print self.data
-        #print "(s=%d, a=%d, ns=%d)" % (self.pos, best_a, ns)
+        #print "--- STEP --- (s=%d, a=%d, ns=%d)" % (self.pos, best_a, ns)
         self.pos = ns
 
     def display(self):

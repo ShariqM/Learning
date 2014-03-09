@@ -16,16 +16,17 @@ class DirichletProcess(object):
         self.nodes[0] = DirichletProcessNode(self.M)
         self.last_update = NULL_UPDATE
 
-    def get_states(self, a=-5, s=-5):
+    def get_known_states(self, a=-5, s=-5):
         if s == -5:
             return self.nodes.keys()
-        # -1 represents the Unknown state
-        states = self.nodes[s].get_states(a)
+        return self.nodes[s].get_states(a)
 
-        return states
-        #if -1 in states: Think about this
-            #raise "State Corruption"
-        #return states + [-1]
+    def get_states(self, a=-5, s=-5):
+        states = self.get_known_states()
+        # -1 represents the Unknown state
+        if -1 in states: #Think about this
+            raise "State Corruption"
+        return states + [-1]
 
     def has_state(self, s):
         return self.nodes.has_key(s)

@@ -27,20 +27,23 @@ def sm_divergence(tm, im, a, s, debug=False):
     div = 0
     num_unk_states = 0
     if im.has_state(s):
-        num_unk_states = len(tm.get_states(a,s)) - len(im.get_states(a,s))
+        num_unk_states = len(tm.get_states(a,s)) - len(im.get_known_states(a,s))
         #if num_unk_states:
             #print num_unk_states
     #print "\ts=%d, a=%d" % (s,a)
     for ns in tm.get_states(a, s):
         tm_prob = tm.get_prob(a, s, ns)
-        im_prob = 0.0
+        if tm_prob <= 0.0:
+            continue
+        im_prob = 0.001
         if im.has_state(s):
             im_prob = im.get_prob(a, s, ns)
             #print (im_prob,a,s,ns,num_unk_states)
             im_prob = im_prob if im.is_aware_of(a, s, ns) else im_prob / num_unk_states
             #if not im.is_aware_of(a, s, ns):
                 #print im_prob
-        div += tm_prob * abs(tm_prob - im_prob)
+        #div += tm_prob * abs(tm_prob - im_prob)
+        div += max(tm_prob * math.log(tm_prob / im_prob, 2), 0.0)
     return div
 
 # TODO Need to make this an argument to runner
@@ -62,10 +65,10 @@ def predicted_information_gain(im, a, s):
     pig = 0
 
     if s == -1:
-        return 0.1 #Hmm....
+        return 0.8 * math.log(0.8 / 0.001, 2) #Hmm....
     for ns in im.get_states(a, s) + [-1]:
         hm = Hypothetical(im, a, s, ns)
-        x = im.get_prob(a, s, ns) * sm_divergence(hm, im, a, s, False)
+        x = im.get_prob(a, s, ns) * divergence(hm, im, a, s, False)
         pig += x
 
     return pig
@@ -85,6 +88,24 @@ def print_maze(maze):
         for j in range(len(maze)):
             print maze[i][j],
         print
+
+def print_future(future):
+    print "\n-----FUTURE-----"
+    a = 0
+    for data in future:
+        print "a=%d" % a
+        for pos in future[a].keys():
+            print "\t(a=%d, s=%d) ->" % (a, pos), future[a][pos]
+        a = a + 1
+
+def print_pig(pigs):
+    print "\n-----PIGS-----"
+    a = 0
+    for data in pigs:
+        print "a=%d" % a
+        for s, val in data.items():
+            print "\t(a=%d, s=%d) ->" % (a, s), pigs[a][s]
+        a = a + 1
 
 def sample(dist):
     r = random.random()

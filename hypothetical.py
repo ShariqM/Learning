@@ -12,10 +12,10 @@ class Hypothetical:
         self.s = s
         self.ns = ns
 
-    def get_states(self, a, s):
-        if self.im.has_unknown_states():
-            return self.im.get_states(a, s) + [-1]
-        return self.im.get_states(a, s)
+    #def get_states(self, a, s):
+        #if self.im.has_unknown_states():
+            #return self.im.get_states(a, s) + [-1]
+        #return self.im.get_states(a, s)
 
     def __getattr__(self,attr):
         orig_attr = self.im.__getattribute__(attr)

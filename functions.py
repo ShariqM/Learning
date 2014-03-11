@@ -66,7 +66,7 @@ def predicted_information_gain(im, a, s):
 
     if s == -1:
         return 0.8 * math.log(0.8 / 0.001, 2) #Hmm....
-    for ns in im.get_states(a, s) + [-1]:
+    for ns in im.get_states(a, s):
         hm = Hypothetical(im, a, s, ns)
         x = im.get_prob(a, s, ns) * divergence(hm, im, a, s, False)
         pig += x

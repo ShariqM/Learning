@@ -3,6 +3,7 @@
     model that takes the internal model and adds an observation a,s,ns. This is used
     to calculate Predicted Information Gain (PIG)
 """
+import sys
 
 class Hypothetical:
 
@@ -10,12 +11,12 @@ class Hypothetical:
         self.im = im
         self.a = a
         self.s = s
-        self.ns = ns
+        self.ns = sys.maxint if ns == -1 else ns
 
-    #def get_states(self, a, s):
-        #if self.im.has_unknown_states():
-            #return self.im.get_states(a, s) + [-1]
-        #return self.im.get_states(a, s)
+    def get_states(self, a, s):
+        if self.ns == sys.maxint:
+            return self.im.get_states(a, s) + [self.ns]
+        return self.im.get_states(a, s)
 
     def __getattr__(self,attr):
         orig_attr = self.im.__getattribute__(attr)

@@ -23,7 +23,7 @@ def kl_divergence(tm, im, a, s, debug=False):
 
 # A more flexible divergence that can deal with unknown states
 # is_aware_of is used to make the DirichletProcess probabilities sum to 1
-def sm_divergence(tm, im, a, s, debug=False):
+def old_sm_divergence(tm, im, a, s, debug=False):
     div = 0
     num_unk_states = 0
     if im.has_state(s):
@@ -43,6 +43,20 @@ def sm_divergence(tm, im, a, s, debug=False):
             #if not im.is_aware_of(a, s, ns):
                 #print im_prob
         #div += tm_prob * abs(tm_prob - im_prob)
+        div += max(tm_prob * math.log(tm_prob / im_prob, 2), 0.0)
+    return div
+
+# A more flexible divergence that can deal with unknown states
+# is_aware_of is used to make the DirichletProcess probabilities sum to 1
+def sm_divergence(tm, im, a, s, debug=False):
+    div = 0
+    for ns in tm.get_states(a, s):
+        tm_prob = tm.get_prob(a, s, ns)
+        if tm_prob <= 0.0:
+            continue
+        im_prob = 0.001
+        if im.has_state(s):
+            im_prob = im.get_prob(a, s, ns) if im.is_aware_of(a, s, ns) else 0.001
         div += max(tm_prob * math.log(tm_prob / im_prob, 2), 0.0)
     return div
 

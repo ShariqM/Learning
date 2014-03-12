@@ -31,14 +31,8 @@ class PigVIStrat(Strat):
     def compute_mi(self):
         return missing_information(self.tm, self.im)
 
-    def best_value(self, future, s):
-        tmax = -1
-        for a in range(self.im.M):
-            tmax = max(future[a][s],tmax)
-        return tmax
-
-    def future_gain(self, i, all_futures, a, s):
-        if i == 0:
+    def future_gain(self, i, future_v, a, s):
+        if not future_v:
             return 0
 
         tsum = 0
@@ -46,14 +40,18 @@ class PigVIStrat(Strat):
         for ns in self.im.get_states():
             m = self.tm if self.control else self.im
             m_prob = 1.0/num_states if s == -1 else m.get_prob(a, s, ns)
-            tsum += m_prob * self.best_value(all_futures[i-1], ns)
+            tsum += m_prob * future_v[ns]
 
         return self.discount * tsum
+
+    def debug(self, msg):
+        if False:
+            print msg
 
     def step(self, last_mi=1):
         if last_mi <= 0.0: # optimization: no more information to gain
             return
-        #print "Iter"
+        self.debug("Iter")
         start = datetime.datetime.now()
 
         for a in range(self.im.M):
@@ -61,26 +59,27 @@ class PigVIStrat(Strat):
                 if self.pig_cache[a].has_key(s):
                     continue
                 self.pig_cache[a][s] = predicted_information_gain(self.im, a, s)
-        #print "\t cache - ", (datetime.datetime.now() - start).microseconds
+        self.debug("\t cache - %d" % (datetime.datetime.now() - start).microseconds)
 
-        pigs = self.pig_cache
-        all_futures = [] # List of Q's from the paper
+        future_v = None
         for i in range(self.plansteps):
-            all_futures.append([])
+            last_future = [] # List of Q's from the paper
+            next_future_v = {}
             for a in range(self.im.M):
-                all_futures[i].append({})
+                last_future.append({})
                 for s in self.im.get_states():
-                    all_futures[i][a][s] = pigs[a][s] + \
-                        self.future_gain(i, all_futures, a, s)
+                    v = self.pig_cache[a][s] + self.future_gain(i, future_v, a, s)
+                    last_future[a][s] = v
+                    next_future_v[s] = max(next_future_v[s], v) if next_future_v.has_key(s) else v
+            future_v = next_future_v
 
-        #print "\t future - ", (datetime.datetime.now() - start).microseconds
+        self.debug("\t future - %d" % (datetime.datetime.now() - start).microseconds)
 
         max_fgain = -1
         best_a = -1
-        future = all_futures[self.plansteps - 1]
         for a in range(self.im.M):
-            if future[a][self.pos] > max_fgain:
-                max_fgain = future[a][self.pos]
+            if last_future[a][self.pos] > max_fgain:
+                max_fgain = last_future[a][self.pos]
                 best_a = a
 
         self.pig_cache[best_a].pop(self.pos) # ASSUMPTION
@@ -89,7 +88,7 @@ class PigVIStrat(Strat):
         self.im.update(best_a, self.pos, ns)
         self.pos = ns
 
-        #print "\t end - ", (datetime.datetime.now() - start).microseconds
+        self.debug("\t end - %d" % (datetime.datetime.now() - start).microseconds)
 
     def get_name(self):
         return "%s (%s)" % (self.name, self.im.get_name())

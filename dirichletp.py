@@ -25,7 +25,7 @@ class DirichletProcess(object):
         return self.nodes[s].get_states(a)
 
     def get_states(self, a=-5, s=-5):
-        states = self.get_known_states()
+        states = self.get_known_states(a, s)
         # -1 represents the Unknown state
         if -1 in states: #Think about this
             raise "State Corruption"

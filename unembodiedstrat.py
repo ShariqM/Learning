@@ -14,13 +14,14 @@ import random
 from dirichlet import Dirichlet
 from functions import *
 from bayesworld import *
+from strat import Strat
 import datetime
 import pdb
 
 from multiprocessing import Pool
 import multiprocessing
 
-class UnembodiedStrat():
+class UnembodiedStrat(Strat):
 
     def __init__(self, tm, im, color, marker=None):
         self.tm = tm
@@ -28,18 +29,22 @@ class UnembodiedStrat():
         self.name = "Unembodied"
         self.color = color
         self.marker = marker
-
-        # Multiprocess organization
         self.nprocesses = multiprocessing.cpu_count()
+
+    def update_state_division(self):
+        # Multiprocess organization
         self.state_division = [] # describes which states go to which process
-        remainder = self.tm.N % self.nprocesses # remainder states
-        states_pp = self.tm.N / self.nprocesses # states per process
+        all_states = self.im.get_known_states()
+        nstates = len(all_states)
+        remainder = nstates % self.nprocesses # remainder states
+        states_pp = nstates / self.nprocesses # states per process
         end = 0
+        j = 0
         for i in range(self.nprocesses):
             start = end
             end = end + states_pp + (1 if remainder > 0 else 0)
             remainder -= 1
-            self.state_division.append((start,end))
+            self.state_division.append(all_states[start:end])
 
     def compute_mi(self):
         return missing_information(self.tm, self.im)
@@ -69,7 +74,7 @@ class UnembodiedStrat():
 
         tstart = datetime.datetime.now()
         global max_gain, best_a, best_s
-        max_gain, best_a, best_s = (-1.0, -1, -1)
+        max_gain, best_a, best_s = (-5.0, -5, -5)
 
         # compute the max gain of the subset max gains
         def global_max_gain(state_tuple):
@@ -78,10 +83,11 @@ class UnembodiedStrat():
             if gain > max_gain:
                 max_gain, best_a, best_s = (gain, a, s)
 
+        self.update_state_division()
         p = Pool(self.nprocesses) # Pool of processes
         for i in range(self.nprocesses):
-            start, end = self.state_division[i]
-            p.apply_async(subset_max_gain, args=(self.im, start, end),
+            sub_states = self.state_division[i]
+            p.apply_async(subset_max_gain, args=(self.im, sub_states),
                           callback=global_max_gain)
         p.close()
         p.join()
@@ -90,14 +96,11 @@ class UnembodiedStrat():
         self.im.update(best_a, best_s, ns)
         self.pos = ns
 
-    def display(self):
-        self.im.display(self.name)
-
-# Compute the max gain for a subset of states i.e. those from *start* to *stop*
+    # Compute the max gain for a subset of states i.e. those from *start* to *stop*
 # Each process is assigned a subset
-def subset_max_gain(im, start, stop):
+def subset_max_gain(im, sub_states):
     max_gain, best_a, best_s = (-1.0, -1, -1)
-    for s in range(start, stop):
+    for s in sub_states:
         for a in range(im.M):
             pig = predicted_information_gain(im, a, s)
             if pig > max_gain:

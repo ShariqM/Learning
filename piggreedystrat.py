@@ -7,17 +7,15 @@ import random
 from dirichlet import Dirichlet
 from bayesworld import *
 from functions import *
+from strat import Strat
 
-class PigGreedyStrat():
+class PigGreedyStrat(Strat):
 
-    def __init__(self, tm, im, proc, color, marker=None):
+    def __init__(self, tm, im, color, marker=None):
         self.tm = tm
         self.im = im
         self.pos = 0
         self.name = "PIG(greedy)"
-        if proc:
-            self.name += " [proc]"
-        self.proc = proc
         self.color = color
         self.marker = marker
         self.data = {}
@@ -52,7 +50,3 @@ class PigGreedyStrat():
         #self.data[(self.pos, best_a)] = self.data[(self.pos, best_a)] + 1
         #print self.data
         #print "(s=%d, a=%d, ns=%d)" % (self.pos, best_a, ns)
-
-    def display(self):
-        print self.data
-        self.im.display(self.name)

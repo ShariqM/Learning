@@ -16,6 +16,9 @@ class Dirichlet(Model):
         self.nodes = [DirichletNode(self.M, self.N, tm.get_neighbors(i))
                                     for i in range(self.N)]
 
+    def get_name(self):
+        return "Dirich"
+
     def get_prob(self, a, s, ns):
         return self.nodes[s].get_prob(a, ns)
 

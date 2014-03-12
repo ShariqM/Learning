@@ -46,6 +46,7 @@ class Runner(object):
     def collect_data(self):
         # Missing information for each step of each strat
         strats_data = self.init_strats_data()
+        self.initial_mi = 0
 
         start = datetime.datetime.now()
         run = 0
@@ -53,7 +54,7 @@ class Runner(object):
             elapsed = datetime.datetime.now() - start
             print "Elapsed=%ds Run %d/%d " % (elapsed.seconds, run+1, self.runs),
             self.strats = strats = self.init_strats()
-            self.initial_mi = strats[0].compute_mi()
+            self.initial_mi = max(self.initial_mi, strats[1].compute_mi())
 
             step = 0
             mi = 0
@@ -94,8 +95,9 @@ class Runner(object):
         plt.axis([0, self.steps, 0, self.initial_mi * 2])
 
         for i in range(len(self.strats)):
-            plt.plot(step_points, strats_data[i], self.strats[i].color,
-                     label=self.strats[i].name)
+            plt.plot(step_points, strats_data[i],
+                     color=self.strats[i].color,
+                     label=self.strats[i].get_name())
 
         plt.legend(bbox_to_anchor=(0.8,1), loc=2, borderaxespad=0.)
         plt.show()

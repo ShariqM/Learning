@@ -16,6 +16,9 @@ class DirichletProcess(object):
         self.nodes[0] = DirichletProcessNode(self.M)
         self.last_update = NULL_UPDATE
 
+    def get_name(self):
+        return "DirichP"
+
     def get_known_states(self, a=-5, s=-5):
         if s == -5:
             return self.nodes.keys()

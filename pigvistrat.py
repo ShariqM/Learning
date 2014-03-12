@@ -7,19 +7,18 @@ import random
 from dirichlet import Dirichlet
 from bayesworld import *
 from functions import *
+from strat import Strat
 
 from multiprocessing import Pool
 import multiprocessing
 
-class PigVIStrat():
+class PigVIStrat(Strat):
 
-    def __init__(self, tm, im, proc, color, control=False, marker=None):
+    def __init__(self, tm, im, color, control=False, marker=None):
         self.tm = tm
         self.im = im
         self.pos = 0
         self.name = "PIG(VI+)" if control else "PIG(VI)"
-        if proc:
-            self.name += " [proc]"
         self.color = color
         self.marker = marker
         self.plansteps = 10 # Number of steps to look in the future
@@ -126,6 +125,9 @@ class PigVIStrat():
         #print self.data
         #print "--- STEP --- (s=%d, a=%d, ns=%d)" % (self.pos, best_a, ns)
         self.pos = ns
+
+    def get_name(self):
+        return "%s (%s)" % (self.name, self.im.get_name())
 
     def display(self):
         self.im.display(self.name)

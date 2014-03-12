@@ -6,8 +6,9 @@ import random
 from dirichlet import Dirichlet
 from bayesworld import *
 from functions import *
+from strat import Strat
 
-class RandomStrat():
+class RandomStrat(Strat):
 
     def __init__(self, tm, im, color, marker=None):
         self.tm = tm
@@ -29,7 +30,3 @@ class RandomStrat():
         self.pos = self.tm.take_action(self.pos, action)
 
         self.im.update(action, oldpos, self.pos)
-
-    def display(self):
-        self.im.display(self.name)
-

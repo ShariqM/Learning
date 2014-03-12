@@ -11,7 +11,6 @@ from strat import Strat
 
 from multiprocessing import Pool
 import multiprocessing
-import datetime
 
 class PigVIStrat(Strat):
 
@@ -25,8 +24,9 @@ class PigVIStrat(Strat):
         self.plansteps = 10 # Number of steps to look in the future
         self.discount = 0.95 # Discount factor for gains in future
         self.control = control # VI+ if True (uses real model)
+        self.nprocesses = multiprocessing.cpu_count()
         self.data = {}
-        self.pig_cache = [{} for a in range(self.tm.M)]
+        self.pig_cache
 
     def compute_mi(self):
         return missing_information(self.tm, self.im)
@@ -34,7 +34,8 @@ class PigVIStrat(Strat):
     def best_value(self, future, s):
         tmax = -1
         for a in range(self.im.M):
-            tmax = max(future[a][s],tmax)
+            if future[a][s] > tmax:
+                tmax = future[a][s]
         return tmax
 
     def future_gain(self, i, all_futures, a, s):
@@ -50,20 +51,52 @@ class PigVIStrat(Strat):
 
         return self.discount * tsum
 
+    def update_state_division(self):
+        # Multiprocess organization
+        self.state_division = [] # describes which states go to which process
+        all_states = self.im.get_states()
+        nstates = len(all_states)
+        remainder = nstates % self.nprocesses # remainder states
+        states_pp = nstates / self.nprocesses # states per process
+        end = 0
+        j = 0
+        for i in range(self.nprocesses):
+            start = end
+            end = end + states_pp + (1 if remainder > 0 else 0)
+            remainder -= 1
+            self.state_division.append(all_states[start:end])
+        #print self.state_division
+
     def step(self, last_mi=1):
         if last_mi <= 0.0: # optimization: no more information to gain
             return
-        #print "Iter"
-        start = datetime.datetime.now()
 
+        global pigs
+        pigs = []
         for a in range(self.im.M):
+            pigs.append({})
             for s in self.im.get_states():
-                if self.pig_cache[a].has_key(s):
-                    continue
-                self.pig_cache[a][s] = predicted_information_gain(self.im, a, s)
-        #print "\t cache - ", (datetime.datetime.now() - start).microseconds
+                pigs[a][s] = 0
 
-        pigs = self.pig_cache
+        # Fill in the global pigs table
+        def global_pigs(msg):
+            if msg== "Failed":
+                raise Exception("Process failed")
+            sub_states, data = msg
+            global pigs
+            for s in sub_states:
+                for a in range(self.im.M):
+                    pigs[a][s] = data[a][s]
+
+        self.update_state_division()
+        p = Pool(self.nprocesses) # Pool of processes
+        for i in range(self.nprocesses):
+            sub_states = self.state_division[i]
+            p.apply_async(subset_pigs, args=(self.im, sub_states),
+                          callback=global_pigs)
+        p.close()
+        p.join()
+
         all_futures = [] # List of Q's from the paper
         for i in range(self.plansteps):
             all_futures.append([])
@@ -73,26 +106,42 @@ class PigVIStrat(Strat):
                     all_futures[i][a][s] = pigs[a][s] + \
                         self.future_gain(i, all_futures, a, s)
 
-        #print "\t future - ", (datetime.datetime.now() - start).microseconds
-
         max_fgain = -1
         best_a = -1
         future = all_futures[self.plansteps - 1]
+        #print_pig(pigs)
+        #print_future(future)
+        #self.display()
         for a in range(self.im.M):
             if future[a][self.pos] > max_fgain:
                 max_fgain = future[a][self.pos]
                 best_a = a
 
-        self.pig_cache[best_a].pop(self.pos) # ASSUMPTION
-
         ns = self.tm.take_action(self.pos, best_a)
         self.im.update(best_a, self.pos, ns)
-        self.pos = ns
 
-        #print "\t end - ", (datetime.datetime.now() - start).microseconds
+        #if not self.data.has_key((self.pos, best_a)):
+            #self.data[(self.pos, best_a)] = 0
+        #self.data[(self.pos, best_a)] = self.data[(self.pos, best_a)] + 1
+        #print self.data
+        #print "--- STEP --- (s=%d, a=%d, ns=%d)" % (self.pos, best_a, ns)
+        self.pos = ns
 
     def get_name(self):
         return "%s (%s)" % (self.name, self.im.get_name())
 
     def display(self):
         self.im.display(self.name)
+
+# Compute the pig for a subset of states, each process is assigned a subset
+def subset_pigs(im, sub_states):
+    data = []
+    for a in range(im.M):
+        data.append({})
+        for s in sub_states:
+            try:
+                data[a][s] = predicted_information_gain(im, a, s)
+            except Exception as e:
+                print e
+                #return "Failed" Why does this stop the exception...
+    return (sub_states, data)

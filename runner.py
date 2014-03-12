@@ -54,7 +54,8 @@ class Runner(object):
             elapsed = datetime.datetime.now() - start
             print "Elapsed=%ds Run %d/%d " % (elapsed.seconds, run+1, self.runs),
             self.strats = strats = self.init_strats()
-            self.initial_mi = max(self.initial_mi, strats[1].compute_mi())
+            for s in strats:
+                self.initial_mi = max(self.initial_mi, s.compute_mi())
 
             step = 0
             mi = 0

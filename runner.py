@@ -93,7 +93,7 @@ class Runner(object):
         plt.xlabel('Time (steps)', fontdict={'fontsize':16})
         plt.ylabel('Missing Information (bits)', fontdict={'fontsize':16})
         plt.title(self.title + " Elapsed=%ds) " % self.elapsed.seconds)
-        plt.axis([0, self.steps, 0, self.initial_mi * 2])
+        plt.axis([0, self.steps, 0, self.initial_mi * 1.1])
 
         for i in range(len(self.strats)):
             plt.plot(step_points, strats_data[i],

@@ -22,7 +22,7 @@ class PigVIStrat(Strat):
         self.name = "PIG(VI+)" if control else "PIG(VI)"
         self.color = color
         self.marker = marker
-        self.plansteps = 20 # Number of steps to look in the future
+        self.plansteps = 10 # Number of steps to look in the future
         self.discount = 0.95 # Discount factor for gains in future
         self.control = control # VI+ if True (uses real model)
         self.data = {}

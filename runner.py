@@ -12,7 +12,7 @@ from unembodiedstrat import *
 from piggreedystrat import *
 from maze import *
 
-from multiprocessing import Pool
+from multiprocessing import Pool, Queue, Manager
 import multiprocessing
 
 from functions import *
@@ -52,34 +52,54 @@ class Runner(object):
         global strats_data
         strats_data = self.init_strats_data()
         self.initial_mi = 0
-
         start = datetime.datetime.now()
-        run = 0
-        while run < self.runs:
-            elapsed = datetime.datetime.now() - start
-            print "Elapsed=%ds Run %d/%d " % (elapsed.seconds, run+1, self.runs),
 
-            self.strats = strats = self.init_strats()
-            for s in strats:
-                self.initial_mi = max(self.initial_mi, s.compute_mi())
+        jobs = []
+        self.strats = strats = self.init_strats()
+        for i in range(len(strats)):
+            self.initial_mi = max(self.initial_mi, strats[i].compute_mi())
+            jobs += [i] * self.runs
 
-            if len(strats) > self.nprocesses:
-                raise Exception("Not ready")
-            def collect_data(i):
-                def collect_data_i(data):
-                    for j in range(len(data)):
-                        strats_data[i][j] += data[j]
-                return collect_data_i
+        print "Running %d jobs" % len(jobs)
 
-            p = Pool(self.nprocesses)
-            for i in range(len(strats)):
-                p.apply_async(strat_collect, args=(strats[i], self.steps),
-                              callback=collect_data(i))
-            p.close()
-            p.join()
+        def collect_data(i):
+            def collect_data_i(data):
+                for j in range(len(data)):
+                    strats_data[i][j] += data[j]
+            return collect_data_i
 
-            run = run + 1
-            print ''
+        m = Manager()
+        q = m.Queue()
+        p = Pool(self.nprocesses)
+        running = 0
+        for j in range(self.nprocesses):
+            if len(jobs) == 0:
+                break
+            i = jobs.pop()
+            p.apply_async(strat_collect, args=(q, i, strats[i], self.steps))
+            running += 1
+
+        z = 0
+        while running > 0:
+            i, data = q.get()
+            print 'Job %d completed' % z
+            z = z + 1
+            for j in range(len(data)):
+                strats_data[i][j] += data[j]
+            if len(jobs):
+                i = jobs.pop()
+                p.apply_async(strat_collect, args=(q, i, strats[i], self.steps))
+            else:
+                running -= 1
+
+        #p = Pool(self.nprocesses)
+        #i,j = (0,0)
+        #while i < self.nprocess and j < len(jobs):
+            #p.apply_async(strat_collect, args=(strats[i], self.steps),
+                          #callback=collect_data(i))
+        p.close()
+        p.join()
+
         self.elapsed = datetime.datetime.now() - start
         return strats_data
 
@@ -170,21 +190,21 @@ class Runner(object):
 
         self.graph_data(strats_data)
 
-def strat_collect(strat, steps):
+def strat_collect(q, i, strat, steps):
     try:
         step = 0
         mi = 0
-        strats_data = [0 for i in range(steps)]
+        strats_data = [0 for j in range(steps)]
         while step < steps:
             mi = strat.compute_mi()
             strats_data[step] += mi
             strat.step(mi)
 
             step = step + 1
-            if steps < 10 or step % (steps / 10) == 0:
-                sys.stdout.write('.')
-            sys.stdout.flush()
-        return strats_data
+            #if steps < 10 or step % (steps / 10) == 0:
+                #sys.stdout.write('.')
+                #sys.stdout.flush()
+        q.put((i, strats_data))
     except Exception as e:
         print 'e', e
         return e

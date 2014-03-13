@@ -22,7 +22,7 @@ class PigVIStrat(Strat):
         self.name = "PIG(VI+)" if control else "PIG(VI)"
         self.color = color
         self.marker = marker
-        self.plansteps = 10 # Number of steps to look in the future
+        self.plansteps = 20 # Number of steps to look in the future
         self.discount = 0.95 # Discount factor for gains in future
         self.control = control # VI+ if True (uses real model)
         self.data = {}
@@ -56,9 +56,11 @@ class PigVIStrat(Strat):
 
         for a in range(self.im.M):
             for s in self.im.get_states():
-                if self.pig_cache[a].has_key(s):
-                    continue
-                self.pig_cache[a][s] = predicted_information_gain(self.im, a, s)
+                if not self.pig_cache[a].has_key(s):
+                    self.pig_cache[a][s] = predicted_information_gain(self.im, a, s)
+                else:
+                    assert self.pig_cache[a][s] ==  predicted_information_gain(self.im, a, s)
+
         self.debug("\t cache - %d" % (datetime.datetime.now() - start).microseconds)
 
         future_v = None

@@ -46,7 +46,22 @@ class Runner(object):
                 strats_data[i].append(0.0)
         return strats_data
 
-        # Step through each strategy, record the MI at each step
+    def strat_collect(strat, steps):
+        step = 0
+        mi = 0
+        strats_data = {}
+        while step < steps:
+            mi = strat.compute_mi()
+            strats_data[step] += mi
+            strats.step(mi)
+
+            step = step + 1
+            if self.steps < 10 or step % (self.steps / 10) == 0:
+                sys.stdout.write('.')
+            sys.stdout.flush()
+        return strats_data
+
+    # Step through each strategy, record the MI at each step
     def collect_data(self):
         # Missing information for each step of each strat
         global strats_data
@@ -59,22 +74,23 @@ class Runner(object):
             elapsed = datetime.datetime.now() - start
             print "Elapsed=%ds Run %d/%d " % (elapsed.seconds, run+1, self.runs),
 
-            self.strats = strats = self.init_strats()
+
+            def collect_data(i):
+                def collect_data_i(data):
+                    strats_data[i] = data
+                return collect_data_i
+
             for s in strats:
                 self.initial_mi = max(self.initial_mi, s.compute_mi())
 
+            self.strats = strats = self.init_strats()
             if len(strats) > self.nprocesses:
                 raise Exception("Not ready")
-            def collect_data(i):
-                def collect_data_i(data):
-                    for j in range(len(data)):
-                        strats_data[i][j] += data[j]
-                return collect_data_i
 
             p = Pool(self.nprocesses)
             for i in range(len(strats)):
-                p.apply_async(strat_collect, args=(strats[i], self.steps),
-                              callback=collect_data(i))
+                p.apply_async(strats_collect, args=(strat, self.steps),
+                              callback=collect_data(i)
             p.close()
             p.join()
 
@@ -169,23 +185,3 @@ class Runner(object):
                 return
 
         self.graph_data(strats_data)
-
-def strat_collect(strat, steps):
-    try:
-        step = 0
-        mi = 0
-        strats_data = [0 for i in range(steps)]
-        while step < steps:
-            mi = strat.compute_mi()
-            strats_data[step] += mi
-            strat.step(mi)
-
-            step = step + 1
-            if steps < 10 or step % (steps / 10) == 0:
-                sys.stdout.write('.')
-            sys.stdout.flush()
-        return strats_data
-    except Exception as e:
-        print 'e', e
-        return e
-    return -1

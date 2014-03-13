@@ -12,9 +12,6 @@ from unembodiedstrat import *
 from piggreedystrat import *
 from maze import *
 
-from multiprocessing import Pool
-import multiprocessing
-
 from functions import *
 import sys
 
@@ -36,7 +33,6 @@ class Runner(object):
         self.verbose = args.verbose
         self.dump    = args.dump
         self.elapsed = datetime.timedelta(0)
-        self.nprocesses = multiprocessing.cpu_count()
 
     def init_strats_data(self):
         strats_data = [[] for i in range(len(self.strats))]
@@ -46,10 +42,9 @@ class Runner(object):
                 strats_data[i].append(0.0)
         return strats_data
 
-        # Step through each strategy, record the MI at each step
+    # Step through each strategy, record the MI at each step
     def collect_data(self):
         # Missing information for each step of each strat
-        global strats_data
         strats_data = self.init_strats_data()
         self.initial_mi = 0
 
@@ -58,26 +53,21 @@ class Runner(object):
         while run < self.runs:
             elapsed = datetime.datetime.now() - start
             print "Elapsed=%ds Run %d/%d " % (elapsed.seconds, run+1, self.runs),
-
             self.strats = strats = self.init_strats()
             for s in strats:
                 self.initial_mi = max(self.initial_mi, s.compute_mi())
 
-            if len(strats) > self.nprocesses:
-                raise Exception("Not ready")
-            def collect_data(i):
-                def collect_data_i(data):
-                    for j in range(len(data)):
-                        strats_data[i][j] += data[j]
-                return collect_data_i
-
-            p = Pool(self.nprocesses)
-            for i in range(len(strats)):
-                p.apply_async(strat_collect, args=(strats[i], self.steps),
-                              callback=collect_data(i))
-            p.close()
-            p.join()
-
+            step = 0
+            mi = 0
+            while step < self.steps:
+                for i in range(len(strats)):
+                    mi = strats[i].compute_mi()
+                    strats_data[i][step] += mi
+                    strats[i].step(mi)
+                step = step + 1
+                if self.steps < 10 or step % (self.steps / 10) == 0:
+                    sys.stdout.write('.')
+                sys.stdout.flush()
             run = run + 1
             print ''
         self.elapsed = datetime.datetime.now() - start
@@ -169,23 +159,3 @@ class Runner(object):
                 return
 
         self.graph_data(strats_data)
-
-def strat_collect(strat, steps):
-    try:
-        step = 0
-        mi = 0
-        strats_data = [0 for i in range(steps)]
-        while step < steps:
-            mi = strat.compute_mi()
-            strats_data[step] += mi
-            strat.step(mi)
-
-            step = step + 1
-            if steps < 10 or step % (steps / 10) == 0:
-                sys.stdout.write('.')
-            sys.stdout.flush()
-        return strats_data
-    except Exception as e:
-        print 'e', e
-        return e
-    return -1

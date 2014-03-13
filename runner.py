@@ -11,6 +11,7 @@ from randomstrat import *
 from unembodiedstrat import *
 from piggreedystrat import *
 from maze import *
+from datetime import datetime as dt
 
 from multiprocessing import Pool, Queue, Manager
 import multiprocessing
@@ -52,7 +53,7 @@ class Runner(object):
         global strats_data
         strats_data = self.init_strats_data()
         self.initial_mi = 0
-        start = datetime.datetime.now()
+        start = dt.now()
 
         jobs = []
         self.strats = strats = self.init_strats()
@@ -82,7 +83,7 @@ class Runner(object):
         z = 0
         while running > 0:
             i, data = q.get()
-            print 'Job %d completed' % z
+            print 'Job %d completed elapsed=%ds' % (z, (dt.now() - start).seconds)
             z = z + 1
             for j in range(len(data)):
                 strats_data[i][j] += data[j]
@@ -100,7 +101,7 @@ class Runner(object):
         p.close()
         p.join()
 
-        self.elapsed = datetime.datetime.now() - start
+        self.elapsed = dt.now() - start
         return strats_data
 
     # Average the data and find when MI hits 0

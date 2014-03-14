@@ -79,7 +79,7 @@ def predicted_information_gain(im, a, s):
     pig = 0
 
     if s == -1:
-        return 0.8 * math.log(0.8 / 0.001, 2) #Hmm....
+        return math.log(1.0 / 0.001, 2) #Hmm....
     for ns in im.get_states(a, s):
         hm = Hypothetical(im, a, s, ns)
         x = im.get_prob(a, s, ns) * divergence(hm, im, a, s, False)
@@ -104,13 +104,22 @@ def print_maze(maze):
         print
 
 def print_future(future):
-    print "\n-----FUTURE-----"
-    a = 0
-    for data in future:
-        print "a=%d" % a
+    #print "\n-----FUTURE-----"
+    nfuture = {}
+    for a in range(len(future)):
+        #print "a=%d" % a
         for pos in future[a].keys():
-            print "\t(a=%d, s=%d) ->" % (a, pos), future[a][pos]
-        a = a + 1
+            if not nfuture.has_key(pos):
+                nfuture[pos] = []
+            nfuture[pos].append(future[a][pos])
+            #print "\ts=%d" % pos, future[a][pos]
+
+    for s in nfuture.keys():
+        print "s=%d" % s
+        a = 0
+        for v in nfuture[s]:
+            print "\t(a=%d) ->" % (a), nfuture[s][a]
+            a = a + 1
 
 def print_pig(pigs):
     print "\n-----PIGS-----"

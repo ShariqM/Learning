@@ -18,7 +18,14 @@ class MazeNode:
             dist = realign(a, dist)
             self.actions.append(dist)
 
-    def get_prob(self, a, ns):
+    def get_prob(self, a, ns, new_states=None):
+        if ns == -1 and new_states:
+            unk_prob = 0.0
+            for ns in set(self.neighbors):
+                if ns in new_states:
+                    continue
+                unk_prob += self.get_prob(a, ns)
+            return unk_prob
         if ns not in self.neighbors:
             return 0.0
 

@@ -201,12 +201,14 @@ def strat_collect(q, i, strat, steps):
             strats_data[step] += mi
             strat.step(mi)
 
-            step = step + 1
             #if steps < 10 or step % (steps / 10) == 0:
                 #sys.stdout.write('.')
                 #sys.stdout.flush()
+
+            step = step + 1
         q.put((i, strats_data))
     except Exception as e:
         print 'e', e
+        print 'e', e.value
         return e
     return -1

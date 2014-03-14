@@ -52,14 +52,3 @@ class UnembodiedStrat(Strat):
 
         ns = self.tm.take_action(best_s, best_a)
         self.im.update(best_a, best_s, ns)
-
-# Compute the max gain for a subset of states i.e. those from *start* to *stop*
-# Each process is assigned a subset
-def subset_max_gain(im, sub_states):
-    max_gain, best_a, best_s = (-1.0, -1, -1)
-    for s in sub_states:
-        for a in range(im.M):
-            pig = predicted_information_gain(im, a, s)
-            if pig > max_gain:
-                max_gain, best_a, best_s = (pig, a, s)
-    return (max_gain, best_a, best_s)

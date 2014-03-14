@@ -25,7 +25,7 @@ class DirichletNode:
     # Dirichlet distribution with alpha=0.25 (Equation 14)
     def get_prob(self, a, ns):
         #if ns not in self.neighbors:
-             #Peeking into real model... kinda hacky
+            #Peeking into real model... kinda hacky
             #return 0.0
 
         osum = 0

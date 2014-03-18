@@ -80,7 +80,7 @@ class MazeRunner(Runner):
         self.title = '[Maze F=%s, R=%d Runs]' % (self.mazef, self.runs)
 
     def setup_arguments(self):
-        defaults = ['maze.txt', 300, 5]
+        defaults = ['maze.mz', 300, 5]
 
         parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
         parser.add_argument("-m", "--mazef", dest="mazef", default=defaults[0],

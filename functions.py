@@ -7,6 +7,7 @@ import random
 from hypothetical import *
 import datetime
 
+UNK_PROB = float("1e-5")
 # klsum += tm.get_prob(a, s, ns) * abs(math.log(true_over_internal, 2))
 # Given a true model and an internal model, compute the kl divergence
 def kl_divergence(tm, im, a, s, debug=False):
@@ -35,7 +36,7 @@ def old_sm_divergence(tm, im, a, s, debug=False):
         tm_prob = tm.get_prob(a, s, ns)
         if tm_prob <= 0.0:
             continue
-        im_prob = 0.001
+        im_prob = UNK_PROB
         if im.has_state(s):
             im_prob = im.get_prob(a, s, ns)
             #print (im_prob,a,s,ns,num_unk_states)
@@ -54,9 +55,9 @@ def sm_divergence(tm, im, a, s, debug=False):
         tm_prob = tm.get_prob(a, s, ns)
         if tm_prob <= 0.0:
             continue
-        im_prob = 0.001
+        im_prob = UNK_PROB
         if im.has_state(s):
-            im_prob = im.get_prob(a, s, ns) if im.is_aware_of(a, s, ns) else 0.001
+            im_prob = im.get_prob(a, s, ns) if im.is_aware_of(a, s, ns) else UNK_PROB
         div += max(tm_prob * math.log(tm_prob / im_prob, 2), 0.0)
     return div
 
@@ -79,7 +80,7 @@ def predicted_information_gain(im, a, s):
     pig = 0
 
     if s == -1:
-        return math.log(1.0 / 0.001, 2) #Hmm....
+        return math.log(1.0 / UNK_PROB, 2) #Hmm....
     for ns in im.get_states(a, s):
         hm = Hypothetical(im, a, s, ns)
         x = im.get_prob(a, s, ns) * divergence(hm, im, a, s, False)

@@ -19,6 +19,7 @@ class PigGreedyStrat(Strat):
         self.color = color
         self.marker = marker
         self.data = {}
+        self.debugl = False
 
     def compute_mi(self):
         return missing_information(self.tm, self.im)

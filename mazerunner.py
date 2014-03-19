@@ -9,6 +9,7 @@ from unembodiedstrat import *
 from piggreedystrat import *
 from pigvistrat import *
 from ltastrat import *
+from ltavistrat import *
 from maze import *
 from runner import Runner
 from dirichletp import DirichletProcess
@@ -59,16 +60,18 @@ class MazeRunner(Runner):
         i = 0
         return [
          #RandomStrat(self.maze, Dirichlet(self.maze), colors['red']),
-         RandomStrat(self.maze, DirichletProcess(self.maze), colors['red2']),
+         #RandomStrat(self.maze, DirichletProcess(self.maze), colors['red2']),
          #UnembodiedStrat(self.maze, Dirichlet(self.maze), colors['black']),
-         UnembodiedStrat(self.maze, DirichletProcess(self.maze), colors['grey']),
+         #UnembodiedStrat(self.maze, DirichletProcess(self.maze), colors['grey']),
          #PigGreedyStrat(self.maze, Dirichlet(self.maze), colors['blue']),
-         PigGreedyStrat(self.maze, DirichletProcess(self.maze), colors['grue2']),
+         #PigGreedyStrat(self.maze, DirichletProcess(self.maze), colors['grue2']),
          #PigVIStrat(self.maze, Dirichlet(self.maze), colors['green'], 0),
-         PigVIStrat(self.maze, DirichletProcess(self.maze), colors['green2'], 0),
+         #PigVIStrat(self.maze, DirichletProcess(self.maze), colors['green2'], 0),
          #PigVIStrat(self.maze, Dirichlet(self.maze), colors['blue'], 1),
-         PigVIStrat(self.maze, DirichletProcess(self.maze), colors['blue2'], 1),
-         LTAStrat(self.maze, DirichletProcess(self.maze), colors['yellow'])
+         #PigVIStrat(self.maze, DirichletProcess(self.maze), colors['blue2'], 1),
+         #LTAStrat(self.maze, DirichletProcess(self.maze), colors['yellow'])
+         LTAStrat(self.maze, Dirichlet(self.maze), colors['yellow']),
+         LTAVIStrat(self.maze, Dirichlet(self.maze), colors['purple3'])
                ]
 
     # Initialize variables according to arguments

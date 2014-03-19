@@ -9,7 +9,7 @@ class Strat(object):
         return "%s (%s)" % (self.name, self.im.get_name())
 
     def debug(self, msg):
-        if False:
+        if self.debugl:
             print msg
 
     def display(self):

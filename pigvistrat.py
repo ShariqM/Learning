@@ -22,7 +22,8 @@ class PigVIStrat(Strat):
         self.name = "PIG(VI%s)" % ('+' * control)
         self.color = color
         self.marker = marker
-        self.plansteps = 2 # Number of steps to look in the future
+        self.plansteps = 10 # Number of steps to look in the future
+        self.debugl = False
         self.discount = 0.95 # Discount factor for gains in future
         self.control = control # VI+ if True (uses real model)
         self.data = {}
@@ -36,7 +37,6 @@ class PigVIStrat(Strat):
             return 0
 
         tsum = 0
-        num_states = len(self.im.get_states())
         new_states = self.im.get_states()
         for ns in new_states:
             if s == -1:
@@ -48,8 +48,6 @@ class PigVIStrat(Strat):
                     m_prob = 0.001
                     if self.im.is_aware_of(a, s, ns):
                         m_prob = self.im.get_prob(a, s, ns)
-            #m_prob = 1.0/num_states if s == -1 else m.get_prob(a, s, ns)
-            #print "(a=%d, s=%d, ns=%d) m_prob=%f" % (a,s,ns,m_prob)
             tsum += m_prob * future_v[ns]
 
         return self.discount * tsum

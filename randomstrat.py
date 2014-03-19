@@ -14,6 +14,7 @@ class RandomStrat(Strat):
         self.tm = tm
         self.im = im
         self.pos = 0
+        self.debugl = False
         self.name = "Random"
         self.color = color
         self.marker = marker

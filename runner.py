@@ -57,9 +57,17 @@ class Runner(object):
 
         jobs = []
         self.strats = strats = self.init_strats()
+
+        ## Test
+        #for i in range(len(strats)):
+            #for j in range(10):
+                #strats[i].step()
+        #return
+
         for i in range(len(strats)):
             self.initial_mi = max(self.initial_mi, strats[i].compute_mi())
             jobs += [i] * self.runs
+
 
         print "Running %d jobs" % len(jobs)
 
@@ -83,7 +91,8 @@ class Runner(object):
         z = 0
         while running > 0:
             i, data = q.get()
-            print 'Job %d completed elapsed=%ds' % (z, (dt.now() - start).seconds)
+            print 'Job %d completed name=%s, elapsed=%ds' % (z, \
+                            strats[i].get_name(), (dt.now() - start).seconds)
             z = z + 1
             for j in range(len(data)):
                 strats_data[i][j] += data[j]

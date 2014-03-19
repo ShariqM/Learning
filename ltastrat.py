@@ -23,6 +23,7 @@ class LTAStrat(Strat):
         self.color = color
         self.marker = marker
         self.nodes = {}
+        self.debugl = False
 
     def get_lta(self, data):
         max_count = min(data.values())

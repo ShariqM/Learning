@@ -28,6 +28,7 @@ class UnembodiedStrat(Strat):
         self.im = im
         self.name = "Unembodied"
         self.color = color
+        self.debugl = False
         self.marker = marker
         self.pig_cache = [{} for a in range(self.tm.M)]
 

@@ -10,14 +10,15 @@ NULL_UPDATE = -9999
 
 class DirichletProcess(object):
 
-    def __init__(self, tm):
+    def __init__(self, tm, alpha=0.25):
         self.M = tm.M
         self.nodes = {}
-        self.nodes[0] = DirichletProcessNode(self.M)
+        self.nodes[0] = DirichletProcessNode(self.M, alpha)
         self.last_update = NULL_UPDATE
+        self.alpha = alpha
 
     def get_name(self):
-        return "DirichP"
+        return "DirichP (a=%.2f)" % self.alpha
 
     def get_known_states(self, a=-5, s=-5):
         if s == -5:

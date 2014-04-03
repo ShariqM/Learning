@@ -8,12 +8,13 @@ import math
 
 class DirichletProcessNode:
 
-    def __init__(self, M):
+    def __init__(self, M, alpha=0.25):
         self.M = M
         self.actions = []
         self.data = []
         self.obs_num = []
-        self.alpha = 0.25 # Make sure float
+        assert type(alpha) == float
+        self.alpha = alpha # Make sure float
 
         for action in range(M):
             self.data.append({})

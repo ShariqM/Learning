@@ -12,6 +12,11 @@ class Strat(object):
         if self.debugl:
             print msg
 
+    def new_data(self, a, s, ns):
+        self.data[s][a] += 1
+        if self.graphics:
+            self.graphics.update(a, s, ns, self.data[s][a])
+
     def display(self):
         self.im.display(self.name)
 

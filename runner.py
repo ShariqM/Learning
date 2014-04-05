@@ -58,18 +58,15 @@ class Runner(object):
         jobs = []
         self.strats = strats = self.init_strats()
 
-        ## Test
-        #for i in range(len(strats)):
-            #for j in range(10):
-                #strats[i].step()
-        #return
-
         for i in range(len(strats)):
             self.initial_mi = max(self.initial_mi, strats[i].compute_mi())
             jobs += [i] * self.runs
 
-
         print "Running %d jobs" % len(jobs)
+
+        if True:
+            strats_data[0] = strat_collect_serial(strats[0], self.steps)
+            return strats_data
 
         def collect_data(i):
             def collect_data_i(data):
@@ -199,6 +196,19 @@ class Runner(object):
                 return
 
         self.graph_data(strats_data)
+
+def strat_collect_serial(strat, steps):
+    step = 0
+    mi = 0
+    strats_data = [0 for j in range(steps)]
+    while step < steps:
+        mi = strat.compute_mi()
+        strats_data[step] += mi
+        strat.step(mi)
+
+        step = step + 1
+    return strats_data
+
 
 def strat_collect(q, i, strat, steps):
     try:

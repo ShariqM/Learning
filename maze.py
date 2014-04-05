@@ -13,7 +13,8 @@ from model import Model
 class Maze(Model):
 
     def __init__(self, fname):
-        self.maze, self.N, gwell = parse_maze(fname)
+        self.maze, self.N, self.gwell = parse_maze(fname)
+        print_maze(self.maze)
         self.M = 4
         self.nodes = []
 
@@ -21,24 +22,24 @@ class Maze(Model):
         for i in range(len(self.maze)):
             cols = (len(self.maze[i]) - 1) / 4
             for j in range(len(self.maze[i])):
-                if self.maze[i][j] not in string.digits:
+                if type(self.maze[i][j]) != int:
                     continue
                 neighbors = []
 
                 # for each direction
-                for x,y in ((0,1), (1,0), (0, -1), (-1, 0)):
+                for x,y in ((0,-1), (1,0), (0, 1), (-1, 0)):
 
                     # Teleporters are 1 space away
-                    if self.maze[i-y][j+x] == 't':
-                        neighbors.append(gwell)
+                    if self.maze[i+y][j+x] == 't':
+                        neighbors.append(self.gwell)
 
                     # Walls are 2 spaces away
-                    elif self.maze[i-y*2][j+x*2] == 'w':
+                    elif self.maze[i+y*2][j+x*2] == 'w':
                         neighbors.append(curr)
 
                     # Neighbors are 4 spaces away
-                    elif self.maze[i-y*4][j+x*4] in string.digits:
-                        neighbors.append(curr + 1 * x + cols * -y)
+                    elif type(self.maze[i+y*4][j+x*4]) == int:
+                        neighbors.append(curr + 1 * x + cols * y)
                     else:
                         raise Exception("Malformed Maze, pos=%d" % curr)
 
@@ -87,6 +88,7 @@ def parse_maze(fname):
                 i = str(nstates % 10)
             if i in string.digits:
                 nstates = nstates + 1
+                i = nstates - 1
 
             maze[r][c] = i
             c = c + 1

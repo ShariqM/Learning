@@ -8,6 +8,7 @@ from dirichlet import Dirichlet
 from bayesworld import *
 from functions import *
 from strat import Strat
+from graphics import MazeGraphics
 
 from multiprocessing import Pool
 import multiprocessing
@@ -15,19 +16,25 @@ import datetime
 
 class PigVIStrat(Strat):
 
-    def __init__(self, tm, im, color, control=0, marker=None):
+    def __init__(self, tm, im, color, control=0, graphics=True):
         self.tm = tm
         self.im = im
         self.pos = 0
         self.name = "PIG(VI%s)" % ('+' * control)
         self.color = color
-        self.marker = marker
         self.plansteps = 10 # Number of steps to look in the future
         self.debugl = False
         self.discount = 0.95 # Discount factor for gains in future
         self.control = control # VI+ if True (uses real model)
         self.data = {}
         self.pig_cache = [{} for a in range(self.tm.M)]
+        self.graphics = MazeGraphics(self.tm.maze, self.tm.N, self.tm.gwell) if graphics else None
+
+        self.data = []
+        for s in range(self.tm.N):
+            self.data.append([])
+            for a in range(4):
+                self.data[s].append(0)
 
     def compute_mi(self):
         return missing_information(self.tm, self.im)
@@ -107,6 +114,7 @@ class PigVIStrat(Strat):
 
         ns = self.tm.take_action(self.pos, best_a)
         self.im.update(best_a, self.pos, ns)
+        self.new_data(best_a, self.pos, ns)
         self.pos = ns
 
         self.debug("\t end - %d" % (datetime.datetime.now() - start).microseconds)

@@ -116,6 +116,9 @@ def sample(dist):
     print 'tsum was', tsum
     return 1 - range(len(dist))
 
+def formatColor(r, g, b):
+    return '#%02x%02x%02x' % (int(r * 255), int(g * 255), int(b * 255))
+
 # Notes
 # [1] We need to express certain outcomes as having 0 probability in 123World.
 # If we don't we get in a loop where we repeatedly choose a single action that

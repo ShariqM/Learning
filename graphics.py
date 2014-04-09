@@ -5,11 +5,11 @@ import time
 from functions import *
 
 # Parameters
-SCALE=20
+SCALE=15.0
 BACKGROUND_COLOR = formatColor(0,0,0)
 WALL_COLOR       = formatColor(0,0,0)
 TRANSPORT_COLOR  = formatColor(0,0,0.7)
-WIDTH            = 3.2
+WIDTH            = SCALE/6.0
 OFFSET           = 10
 DELAY            = 0.0
 
@@ -29,11 +29,18 @@ class MazeGraphics:
         root = Tk()
         root.columnconfigure(0, weight=1)
         root.rowconfigure(0, weight=1)
-        #root.minsize(300,300)
-        root.geometry("500x500")
+        height = self.ncols * 650 / 6
+        width = self.ncols * 700 / 6
+        dim = "%dx%d" % (width, height)
+        root.geometry(dim)
+
 
         self.canvas = Canvas(root)
         self.canvas.grid(column=0, row=0, sticky=(N, W, E, S))
+
+        self.table = SimpleTable(root, 38, 5)
+        tx = self.width * SCALE + OFFSET
+        self.canvas.create_window(tx, OFFSET, anchor = NW, window = self.table)
 
         for y in range(len(self.maze)):
             for x in range(len(maze[y])):
@@ -42,8 +49,8 @@ class MazeGraphics:
                 elif self.maze[y][x] == 't':
                     self.handle_transporter(x,y)
                 elif self.maze[y][x] == gwell:
-                    self.handle_position(x,y)
                     self.handle_well(x,y)
+                    self.handle_position(x,y)
                 elif type(self.maze[y][x]) == int:
                     self.handle_position(x,y)
 
@@ -53,7 +60,6 @@ class MazeGraphics:
                         fill='green', width=2.0)
         self.canvas.update()
         time.sleep(DELAY)
-
 
     def handle_wall(self, x, y):
         xx,yy = x * SCALE + OFFSET, y * SCALE + OFFSET
@@ -93,15 +99,19 @@ class MazeGraphics:
     def handle_position(self, x, y):
         xx,yy = x * SCALE + OFFSET, y * SCALE + OFFSET
         l = SCALE / 4.0
-        self.canvas.create_oval(xx - l, yy - l, xx + l, yy + l,
-                                fill='black', width=2.0)
 
         s = self.maze[y][x]
-        l = SCALE
+
+        self.canvas.create_text(xx, yy, fill='red', text=str(s),
+                            font=("Purisa", 10))
+        #self.canvas.create_oval(xx - l, yy - l, xx + l, yy + l,
+                                #fill='black', width=2.0)
+
+        l = SCALE * 1.1
         a = 0
         for dx,dy in ((0,-1), (1,0), (0,1), (-1, 0)):
             self.data[s][a] = self.canvas.create_text(xx + dx * l, yy + dy * l,
-                                                width=0.1, fill='red', text='0')
+                            font=("Purisa", 9), fill='grey', text='0')
             a = a + 1
 
     def handle_well(self, x, y):
@@ -109,7 +119,13 @@ class MazeGraphics:
         ll = SCALE / 4.0
         for l in (ll * 2.0, ll * 3.0, ll * 4.0):
             self.canvas.create_oval(xx - l, yy - l, xx + l, yy + l,
-                                   outline='cyan', width=2.0)
+                                   outline='cyan', width=1.0)
+
+    def update_pig(self, a, s, pig):
+        if s == -1:
+            s = 36
+        print pig
+        self.table.set(s+1,a+1, "%.2f" % pig)
 
     def update(self, a, s, ns, count):
         dxcol = (ns % self.ncols) - (s % self.ncols)
@@ -121,3 +137,43 @@ class MazeGraphics:
         self.canvas.move(self.agent, dx * SCALE, dy * SCALE)
         self.canvas.update()
         time.sleep(DELAY)
+
+class SimpleTable(Frame):
+    def __init__(self, parent, rows=10, columns=2):
+        # use black background so it "peeks through" to
+        # form grid lines
+        Frame.__init__(self, parent, background="black")
+        self._widgets = []
+        print 'cols', columns
+
+        label = Label(self, text="PIG", fg="green",
+                      borderwidth=0, width=5, height=0)
+        label.grid(row=0, sticky="nsew", padx=1, pady=1)
+
+        titles = ["S", "U", "R", "D", "L"]
+        for row in range(rows):
+            row = row+1
+            current_row = []
+            for column in range(columns):
+                if row == 1: # Titles
+                    label = Label(self, text=titles[column], font=("Purisa",10),
+                                  borderwidth=0, width=5, height=0)
+                elif column == 0: # State
+                    t = "psi" if row == rows else "%d" % (row-2)
+                    label = Label(self, text=t, font=("Purisa",10),
+                                  borderwidth=0, width=5, height=0)
+                else:
+                    label = Label(self, text="0.0", font=("Purisa",8),
+                                  fg='grey', borderwidth=0, width=10, height=0)
+                label.grid(row=row, column=column, sticky="nsew", padx=1, pady=1)
+                current_row.append(label)
+            self._widgets.append(current_row)
+
+        for column in range(columns):
+            self.grid_columnconfigure(column, weight=1)
+
+
+    def set(self, row, column, value):
+        widget = self._widgets[row][column]
+        widget.configure(text=value, fg='red')
+        widget.update()

@@ -7,6 +7,7 @@ import random
 from dirichlet import Dirichlet
 from bayesworld import *
 from functions import *
+from ifunctions import *
 from strat import Strat
 
 from multiprocessing import Pool
@@ -28,10 +29,6 @@ class PigVIStrat(Strat):
         self.nprocesses = multiprocessing.cpu_count()
         self.data = {}
         self.pig_cache = [{} for a in range(self.tm.M)]
-
-    def compute_mi(self):
-        return missing_information(self.tm, self.im)
-
 
     def update_state_division(self):
         # Multiprocess organization

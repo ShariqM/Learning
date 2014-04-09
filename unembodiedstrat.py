@@ -13,6 +13,7 @@
 import random
 from dirichlet import Dirichlet
 from functions import *
+from ifunctions import *
 from bayesworld import *
 from strat import Strat
 import datetime
@@ -31,9 +32,6 @@ class UnembodiedStrat(Strat):
         self.debugl = False
         self.marker = marker
         self.pig_cache = [{} for a in range(self.tm.M)]
-
-    def compute_mi(self):
-        return missing_information(self.tm, self.im)
 
     # Take the (state, action) that results in the most pig
     def step(self, last_mi=1):

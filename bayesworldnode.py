@@ -5,7 +5,6 @@
 
 import random
 import math
-from functions import *
 
 class BayesWorldNode:
 

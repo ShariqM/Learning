@@ -1,4 +1,4 @@
-from functions import *
+from ifunctions import *
 
 class Strat(object):
 
@@ -19,5 +19,3 @@ class Strat(object):
 
     def display(self):
         self.im.display(self.name)
-
-

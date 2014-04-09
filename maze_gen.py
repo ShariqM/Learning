@@ -5,7 +5,7 @@ import random
 def t(i):
     return 2 + 3 * i
 
-def make_maze(w = 25, h = 15):
+def make_maze(w = 10, h = 10):
     vis = [[0] * w + [1] for _ in range(h)] + [[1] * (w + 1)]
     space = [["w . . . "] * w + ['w'] for _ in range(h)] + [[]]
     border = [["w w w w "] * w + ['w'] for _ in range(h + 1)]

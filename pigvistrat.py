@@ -7,6 +7,7 @@ import random
 from dirichlet import Dirichlet
 from bayesworld import *
 from functions import *
+from ifunctions import *
 from strat import Strat
 from graphics import MazeGraphics
 
@@ -35,9 +36,6 @@ class PigVIStrat(Strat):
             self.data.append([])
             for a in range(4):
                 self.data[s].append(0)
-
-    def compute_mi(self):
-        return missing_information(self.tm, self.im)
 
     def future_gain(self, i, future_v, a, s):
         if not future_v:
@@ -74,6 +72,7 @@ class PigVIStrat(Strat):
                 if not self.pig_cache[a].has_key(s):
                     self.pig_cache[a][s] = \
                         predicted_information_gain(self.im, a, s)
+                    self.graphics.update_pig(a, s, self.pig_cache[a][s])
                 #print "(a=%d, s=%d) pig=%f" % (a, s, self.pig_cache[a][s])
                 #else: Validation
                     #assert self.pig_cache[a][s] ==

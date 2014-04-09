@@ -6,7 +6,6 @@
 import random
 from dirichlet import Dirichlet
 from bayesworld import *
-from functions import *
 from strat import Strat
 
 class PigGreedyStrat(Strat):
@@ -20,9 +19,6 @@ class PigGreedyStrat(Strat):
         self.marker = marker
         self.data = {}
         self.debugl = False
-
-    def compute_mi(self):
-        return missing_information(self.tm, self.im)
 
     # Look for the action that results in the most pig and then
     # take it.

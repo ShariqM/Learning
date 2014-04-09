@@ -5,7 +5,6 @@
 import random
 from dirichlet import Dirichlet
 from bayesworld import *
-from functions import *
 from strat import Strat
 
 class RandomStrat(Strat):
@@ -18,9 +17,6 @@ class RandomStrat(Strat):
         self.name = "Random"
         self.color = color
         self.marker = marker
-
-    def compute_mi(self):
-        return missing_information(self.tm, self.im)
 
     def step(self, last_mi=1):
         if last_mi <= 0.0: # optimization: no more information to gain

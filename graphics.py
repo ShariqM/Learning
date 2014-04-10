@@ -15,14 +15,14 @@ WIDTH            = SCALE/6.0
 
 class MazeGraphics:
 
-    def __init__(self, name, maze, nstates, gwell):
-        self.maze = maze
-        self.width = len(maze)
-        self.ncols = (len(maze) - 1) / 4
+    def __init__(self, name, tm):
+        self.maze = tm.maze
+        self.width = len(tm.maze)
+        self.ncols = (len(tm.maze) - 1) / 4
         self.nstates = int(math.pow(self.ncols, 2))
 
         self.data = []
-        for s in range(nstates):
+        for s in range(self.nstates):
             self.data.append([])
             for a in range(4):
                 self.data[s].append(None)
@@ -52,12 +52,12 @@ class MazeGraphics:
         self.canvas.create_window(OFFSET, ty, anchor = NW, window = self.stats)
 
         for y in range(len(self.maze)):
-            for x in range(len(maze[y])):
+            for x in range(len(self.maze[y])):
                 if self.maze[y][x] == 'w':
                     self.handle_wall(x,y)
                 elif self.maze[y][x] == 't':
                     self.handle_transporter(x,y)
-                elif self.maze[y][x] == gwell:
+                elif self.maze[y][x] == tm.gwell:
                     self.handle_well(x,y)
                     self.handle_position(x,y)
                 elif type(self.maze[y][x]) == int:
@@ -69,6 +69,19 @@ class MazeGraphics:
                         fill='green', width=2.0)
         self.canvas.update()
         time.sleep(DELAY)
+
+        #self.graph_dist(tm)
+
+    def graph_dist(self, tm):
+        dcanvas = Canvas(root)
+        dcanvas.grid(column=0, row=0, sticky=(N, W, E, S))
+
+        dist = SimpleTable(root, "PIG", self.nstates + 2, 5)
+        tx = self.width * SCALE + OFFSET
+        self.canvas.create_window(tx, OFFSET, anchor = NW, window = self.pig)
+
+
+
 
     def handle_wall(self, x, y):
         xx,yy = x * SCALE + OFFSET, y * SCALE + OFFSET

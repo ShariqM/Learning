@@ -90,7 +90,7 @@ def predicted_information_gain(im, a, s, explorer):
     pig = 0
 
     if s == -1:
-        return UNK_PIG
+        return UNK_PIG if explorer else 0
 
     for ns in im.get_states(a, s):
         hm = Hypothetical(im, a, s, ns)

@@ -32,8 +32,8 @@ class PigVIStrat(Strat):
         self.pig_cache = [{} for a in range(self.tm.M)]
         print 'initialize'
         name = "Explorer" if explorer else "Nurterer"
-        self.graphics = MazeGraphics(name, self.tm.maze, self.tm.N, self.tm.gwell) if graphics else None
-        self.explorer =True
+        self.graphics = MazeGraphics(name, self.tm) if graphics else None
+        self.explorer = explorer
 
         self.data = []
         for s in range(self.tm.N):

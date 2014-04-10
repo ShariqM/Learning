@@ -11,6 +11,7 @@ from strat import Strat
 class PigGreedyStrat(Strat):
 
     def __init__(self, tm, im, color, marker=None):
+        super(PigGreedyStrat, self).init()
         self.tm = tm
         self.im = im
         self.pos = 0

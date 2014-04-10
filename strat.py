@@ -2,6 +2,9 @@ from ifunctions import *
 
 class Strat(object):
 
+    def init(self):
+        self.explorer = False
+
     def compute_mi(self):
         return missing_information(self.tm, self.im)
 

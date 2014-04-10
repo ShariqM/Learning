@@ -17,7 +17,8 @@ import datetime
 
 class PigVIStrat(Strat):
 
-    def __init__(self, tm, im, color, control=0, graphics=True):
+    def __init__(self, tm, im, color, control=0, explorer=True, graphics=True):
+        super(PigVIStrat, self).init()
         self.tm = tm
         self.im = im
         self.pos = 0
@@ -29,7 +30,10 @@ class PigVIStrat(Strat):
         self.control = control # VI+ if True (uses real model)
         self.data = {}
         self.pig_cache = [{} for a in range(self.tm.M)]
-        self.graphics = MazeGraphics(self.tm.maze, self.tm.N, self.tm.gwell) if graphics else None
+        print 'initialize'
+        name = "Explorer" if explorer else "Nurterer"
+        self.graphics = MazeGraphics(name, self.tm.maze, self.tm.N, self.tm.gwell) if graphics else None
+        self.explorer =True
 
         self.data = []
         for s in range(self.tm.N):
@@ -64,6 +68,7 @@ class PigVIStrat(Strat):
     def step(self, last_mi=1):
         if last_mi <= 0.0: # optimization: no more information to gain
             return
+        self.graphics.step(last_mi, len(self.im.get_known_states()))
         self.debug("Iter")
         start = datetime.datetime.now()
 
@@ -71,7 +76,7 @@ class PigVIStrat(Strat):
             for s in self.im.get_states():
                 if not self.pig_cache[a].has_key(s):
                     self.pig_cache[a][s] = \
-                        predicted_information_gain(self.im, a, s)
+                        predicted_information_gain(self.im, a, s, self.explorer)
                     self.graphics.update_pig(a, s, self.pig_cache[a][s])
                 #print "(a=%d, s=%d) pig=%f" % (a, s, self.pig_cache[a][s])
                 #else: Validation
@@ -93,17 +98,22 @@ class PigVIStrat(Strat):
                     for s in self.im.get_states():
                         v = self.pig_cache[a][s] + self.future_gain(i, future_v, a, s)
                         last_future[a][s] = v
+                        #if i == self.plansteps - 1:
+                            #self.graphics.update_vi(a, s, last_future[a][s])
                         next_future_v[s] = max(next_future_v[s], v) if next_future_v.has_key(s) else v
                 future_v = next_future_v
 
             self.debug("\t future - %d" % (datetime.datetime.now() - start).microseconds)
 
             max_fgain = -1
-            best_a = -1
+            best_as = []
             for a in range(self.im.M):
+                if last_future[a][self.pos] == max_fgain:
+                    best_as.append(a)
                 if last_future[a][self.pos] > max_fgain:
                     max_fgain = last_future[a][self.pos]
-                    best_a = a
+                    best_as = [a]
+            best_a = random.sample(best_as, 1)[0]
 
             #print "----%s %d----" % (self.name, control)
             #print "(s=%d, a=%d) FUTURE -" % (self.pos, best_a)

@@ -5,17 +5,17 @@ import time
 from functions import *
 
 # Parameters
+SCALE=15.0
 BACKGROUND_COLOR = formatColor(0,0,0)
 WALL_COLOR       = formatColor(0,0,0)
 TRANSPORT_COLOR  = formatColor(0,0,0.7)
-SCALE            = 15.0
+WIDTH            = SCALE/6.0
 OFFSET           = 10
 DELAY            = 0.0
-WIDTH            = SCALE/6.0
 
 class MazeGraphics:
 
-    def __init__(self, name, maze, nstates, gwell):
+    def __init__(self, maze, nstates, gwell):
         self.maze = maze
         self.width = len(maze)
         self.ncols = (len(maze) - 1) / 4
@@ -30,26 +30,18 @@ class MazeGraphics:
         root = Tk()
         root.columnconfigure(0, weight=1)
         root.rowconfigure(0, weight=1)
-        root.wm_title(name)
         height = self.ncols * 650 / 6
-        width = self.ncols * 1000 / 6
+        width = self.ncols * 700 / 6
         dim = "%dx%d" % (width, height)
         root.geometry(dim)
+
 
         self.canvas = Canvas(root)
         self.canvas.grid(column=0, row=0, sticky=(N, W, E, S))
 
-        self.pig = SimpleTable(root, "PIG", self.nstates + 2, 5)
+        self.pig = SimpleTable(root, self.nstates + 2, 5)
         tx = self.width * SCALE + OFFSET
         self.canvas.create_window(tx, OFFSET, anchor = NW, window = self.pig)
-
-        self.vi = SimpleTable(root, "VI", self.nstates + 2, 5)
-        tx = tx + 260 + OFFSET
-        self.canvas.create_window(tx, OFFSET, anchor = NW, window = self.vi)
-
-        self.stats = StatsTable(root, "Stats", 2, 3)
-        ty = self.width * SCALE + OFFSET
-        self.canvas.create_window(OFFSET, ty, anchor = NW, window = self.stats)
 
         for y in range(len(self.maze)):
             for x in range(len(maze[y])):
@@ -130,24 +122,11 @@ class MazeGraphics:
             self.canvas.create_oval(xx - l, yy - l, xx + l, yy + l,
                                    outline='cyan', width=1.0)
 
-    def step(self, mi, nstates):
-        self.stats.set(1, 0, 3)
-        self.stats.set(1, 1, "%.2f" % mi)
-        self.stats.set(1, 2, nstates)
-
-    def update_val(self, for_pig, a, s, val):
+    def update_pig(self, a, s, pig):
         if s == -1:
             s = self.nstates
-        if for_pig:
-            self.pig.set(s+1,a+1, "%.2f" % val)
-        else:
-            self.vi.set(s+1,a+1, "%.2f" % val)
-
-    def update_pig(self, a, s, pig):
-        self.update_val(True, a, s, pig)
-
-    def update_vi(self, a, s, vi):
-        self.update_val(False, a, s, vi)
+        print s, a, pig
+        self.pig.set(s+1,a+1, "%.2f" % pig)
 
     def update(self, a, s, ns, count):
         dxcol = (ns % self.ncols) - (s % self.ncols)
@@ -161,14 +140,14 @@ class MazeGraphics:
         time.sleep(DELAY)
 
 class SimpleTable(Frame):
-    def __init__(self, parent, name, rows=10, columns=2):
+    def __init__(self, parent, rows=10, columns=2):
         # use black background so it "peeks through" to
         # form grid lines
         Frame.__init__(self, parent, background="black")
         self._widgets = []
         #print 'cols', columns
 
-        label = Label(self, text=name, fg="green",
+        label = Label(self, text="PIG", fg="green",
                       borderwidth=0, width=5, height=0)
         label.grid(row=0, sticky="nsew", padx=1, pady=1)
 
@@ -194,40 +173,6 @@ class SimpleTable(Frame):
         for column in range(columns):
             self.grid_columnconfigure(column, weight=1)
 
-
-    def set(self, row, column, value):
-        widget = self._widgets[row][column]
-        widget.configure(text=value, fg='red')
-        widget.update()
-
-class StatsTable(Frame):
-    def __init__(self, parent, name, rows=10, columns=2):
-        # use black background so it "peeks through" to
-        # form grid lines
-        Frame.__init__(self, parent, background="black")
-        self._widgets = []
-
-        label = Label(self, text=name, fg="green",
-                      borderwidth=0, width=5, height=0)
-        label.grid(row=0, sticky="nsew", padx=1, pady=1)
-
-        titles = ["Step", "MI", "# States"]
-        for row in range(rows):
-            row = row + 1
-            current_row = []
-            for column in range(columns):
-                if row == 1: # Titles
-                    label = Label(self, text=titles[column], font=("Purisa",10),
-                                  borderwidth=0, width=5, height=0)
-                else:
-                    label = Label(self, text="0.0", font=("Purisa",8),
-                                  fg='grey', borderwidth=0, width=10, height=0)
-                label.grid(row=row, column=column, sticky="nsew", padx=1, pady=1)
-                current_row.append(label)
-            self._widgets.append(current_row)
-
-        for column in range(columns):
-            self.grid_columnconfigure(column, weight=1)
 
     def set(self, row, column, value):
         widget = self._widgets[row][column]

@@ -16,6 +16,7 @@ import pdb
 class LTAStrat(Strat):
 
     def __init__(self, tm, im, color, marker=None):
+        super(LTAStrat, self).init()
         self.tm = tm
         self.im = im
         self.pos = 0

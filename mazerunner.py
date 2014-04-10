@@ -67,9 +67,11 @@ class MazeRunner(Runner):
          #PigGreedyStrat(self.maze, DirichletProcess(self.maze), colors['grue2']),
          #PigVIStrat(self.maze, Dirichlet(self.maze), colors['green'], 0),
 
-         PigVIStrat(self.maze, DirichletProcess(self.maze, 0.01), colors['red'], 0),
+         #PigVIStrat(self.maze, DirichletProcess(self.maze, 0.01), colors['red'], 0),
          #PigVIStrat(self.maze, DirichletProcess(self.maze, 0.25), colors['blue'], 0),
-         #PigVIStrat(self.maze, DirichletProcess(self.maze, 3.0), colors['grue2'], 0),
+         PigVIStrat(self.maze, DirichletProcess(self.maze, 3.0), colors['red'], 0),
+         PigVIStrat(self.maze, DirichletProcess(self.maze, 3.0), colors['blue'],
+                    0, False, True),
          #PigVIStrat(self.maze, DirichletProcess(self.maze, 4.0), colors['green'], 0),
          #PigVIStrat(self.maze, DirichletProcess(self.maze, 25.0), colors['yellow'], 0),
          #PigVIStrat(self.maze, DirichletProcess(self.maze, 100.0), colors['purple'], 0),

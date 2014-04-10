@@ -1,6 +1,16 @@
+"""
+    Generates NxN mazes
+    TODO: Add transporters
+"""
+
 from random import shuffle, randrange
 import random
 
+import argparse
+
+parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
+parser.add_argument("-n", "--num", dest="n", default=6,
+                    type=int, help="Create a NxN maze")
 # Transform
 def t(i):
     return 2 + 3 * i
@@ -47,4 +57,5 @@ def make_maze(w = 10, h = 10):
         maze_string += (''.join(a + ['\n'] + b + ['\n'] + c + ['\n'] + d)) + '\n'
     print maze_string
 
-make_maze()
+args = parser.parse_args()
+make_maze(args.n, args.n)

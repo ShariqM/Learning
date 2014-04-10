@@ -36,5 +36,8 @@ class Model(object):
             print ""
             i = i + 1
 
+    def is_hypothetical(self):
+        return False
+
     def has_unknown_states(self):
         return False

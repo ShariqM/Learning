@@ -10,6 +10,7 @@ from strat import Strat
 class RandomStrat(Strat):
 
     def __init__(self, tm, im, color, marker=None):
+        super(RandomStrat, self).init()
         self.tm = tm
         self.im = im
         self.pos = 0

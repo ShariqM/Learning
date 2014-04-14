@@ -5,32 +5,30 @@
 
 from dirichletpnode import DirichletProcessNode
 import random
-
-NULL_UPDATE = -9999
+import config
 
 class DirichletProcess(object):
 
     def __init__(self, tm, alpha=0.25):
         self.M = tm.M
         self.nodes = {}
-        self.nodes[0] = DirichletProcessNode(self.M, alpha)
-        self.last_update = NULL_UPDATE
+        self.nodes[config.SS] = DirichletProcessNode(self.M, alpha)
+        self.last_update = config.NULL_UPDATE
         self.alpha = alpha
 
     def get_name(self):
         return "DirichP (a=%.2f)" % self.alpha
 
-    def get_known_states(self, a=-5, s=-5):
-        if s == -5:
+    def get_known_states(self, a=config.NULL_ARG, s=config.NULL_ARG):
+        if s == config.NULL_ARG:
             return self.nodes.keys()
         return self.nodes[s].get_states(a)
 
-    def get_states(self, a=-5, s=-5):
+    def get_states(self, a=config.NULL_ARG, s=config.NULL_ARG):
         states = self.get_known_states(a, s)
-        # -1 represents the Unknown state
-        if -1 in states: #Think about this
+        if config.PSI in states:
             raise "State Corruption"
-        return states + [-1]
+        return states + [config.PSI]
 
     def has_state(self, s):
         return self.nodes.has_key(s)
@@ -47,12 +45,12 @@ class DirichletProcess(object):
             self.last_update = ns
             self.nodes[ns] = DirichletProcessNode(self.M)
         else:
-            self.last_update = NULL_UPDATE
+            self.last_update = config.NULL_UPDATE
         return self.nodes[s].update(a, ns)
 
     # Undo update (for hypothetical updates)
     def undo_update(self, a, s, ns):
-        if self.last_update != NULL_UPDATE:
+        if self.last_update != config.NULL_UPDATE:
             self.nodes.pop(self.last_update)
         return self.nodes[s].undo_update(a, ns)
 
@@ -64,14 +62,13 @@ class DirichletProcess(object):
             print "\tFrom Starting State=%d."% i
             for a in range(node.M):
                 arr = []
-                new_states = self.get_states(a, i) + [-1]
+                new_states = self.get_states(a, i) + [config.PSI]
                 for ns in new_states:
                     if node.get_prob(a, ns) <= 0.0:
                         continue
                     arr.append((ns, round(node.get_prob(a, ns), 3)))
                 print "\t\t(s=%d, a=%d) ->" % (i, a),  arr
             print ""
-        #super(Dirichlet, self).display()
 
     def has_unknown_states(self):
         return True

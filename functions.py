@@ -5,6 +5,9 @@
 import math
 import random
 
+def log2(v):
+    return math.log(v, 2)
+
 # Compute N choose R
 def choose(n, r):
     if not n and not r:

@@ -3,6 +3,7 @@
 """
 
 import random
+import config
 from dirichlet import Dirichlet
 from bayesworld import *
 from strat import Strat
@@ -13,7 +14,7 @@ class RandomStrat(Strat):
         super(RandomStrat, self).init()
         self.tm = tm
         self.im = im
-        self.pos = 0
+        self.pos = config.SS
         self.debugl = False
         self.name = "Random"
         self.color = color

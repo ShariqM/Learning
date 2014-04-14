@@ -15,6 +15,7 @@ from datetime import datetime as dt
 
 from multiprocessing import Pool, Queue, Manager
 import multiprocessing
+import config
 
 from functions import *
 import sys
@@ -56,7 +57,6 @@ class Runner(object):
         start = dt.now()
 
         jobs = []
-        #self.strats = strats = self.init_strats()
         strats = self.strats
 
         for i in range(len(strats)):
@@ -65,7 +65,7 @@ class Runner(object):
 
         print "Running %d jobs" % len(jobs)
 
-        if True:
+        if config.GRAPHICS:
             strat_collect_serial(strats, strats_data, self.steps)
             return strats_data
 
@@ -206,7 +206,7 @@ def strat_collect_serial(strats, strats_data, steps):
         for strat in strats:
             mi = strat.compute_mi()
             strats_data[i][step] += mi
-            strat.step(mi)
+            strat.step(step, mi)
             i += 1
         step = step + 1
 
@@ -220,6 +220,7 @@ def strat_collect(q, i, strat, steps):
             strats_data[step] += mi
             strat.step(mi)
 
+            # Monitor progress at subjob level
             #if steps < 10 or step % (steps / 10) == 0:
                 #sys.stdout.write('.')
                 #sys.stdout.flush()

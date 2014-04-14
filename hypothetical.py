@@ -4,8 +4,7 @@
     to calculate Predicted Information Gain (PIG)
 """
 import sys
-
-NS_NUM = sys.maxint
+import config
 
 class Hypothetical:
 
@@ -13,16 +12,16 @@ class Hypothetical:
         self.im = im
         self.a = a
         self.s = s
-        self.ns = NS_NUM if ns == -1 else ns
+        self.ns = config.ETA if ns == config.PSI else ns
 
     def get_states(self, a, s):
-        if self.ns == NS_NUM:
+        if self.ns == config.ETA:
             return self.im.get_states(a, s) + [self.ns]
         return self.im.get_states(a, s)
 
     def get_prob_new(self):
-        p = self.get_prob(self.a, self.s, NS_NUM) if self.ns == NS_NUM else 0
-        return p + self.get_prob(self.a, self.s, -1)
+        p = self.get_prob(self.a, self.s, config.ETA) if self.ns == config.ETA else 0
+        return p + self.get_prob(self.a, self.s, config.PSI)
 
     def __getattr__(self,attr):
         orig_attr = self.im.__getattribute__(attr)

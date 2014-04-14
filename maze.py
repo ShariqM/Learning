@@ -9,13 +9,14 @@ import sys
 from functions import *
 from mazenode import MazeNode
 from model import Model
+import config
 
 class Maze(Model):
 
     def __init__(self, fname):
         self.maze, self.N, self.gwell = parse_maze(fname)
         print_maze(self.maze)
-        self.M = 4
+        self.M = config.NUM_ACTIONS
         self.nodes = []
 
         curr = 0

@@ -11,7 +11,7 @@ TRANSPORT_COLOR  = formatColor(0,0,0.7)
 SCALE            = 15.0
 OFFSET           = 10
 DELAY            = 0.0
-WIDTH            = SCALE/6.0
+WIDTH            = SCALE / 6.0
 
 class MazeGraphics:
 
@@ -24,7 +24,7 @@ class MazeGraphics:
         self.data = []
         for s in range(self.nstates):
             self.data.append([])
-            for a in range(4):
+            for a in range(tm.M):
                 self.data[s].append(None)
 
         root = Tk()
@@ -39,11 +39,11 @@ class MazeGraphics:
         self.canvas = Canvas(root)
         self.canvas.grid(column=0, row=0, sticky=(N, W, E, S))
 
-        self.pig = SimpleTable(root, "PIG", self.nstates + 2, 5)
+        self.pig = SimpleTable(root, "PIG", self.nstates + 2, tm.M + 1)
         tx = self.width * SCALE + OFFSET
         self.canvas.create_window(tx, OFFSET, anchor = NW, window = self.pig)
 
-        self.vi = SimpleTable(root, "VI", self.nstates + 2, 5)
+        self.vi = SimpleTable(root, "VI", self.nstates + 2, tm.M + 1)
         tx = tx + 260 + OFFSET
         self.canvas.create_window(tx, OFFSET, anchor = NW, window = self.vi)
 
@@ -143,8 +143,8 @@ class MazeGraphics:
             self.canvas.create_oval(xx - l, yy - l, xx + l, yy + l,
                                    outline='cyan', width=1.0)
 
-    def step(self, mi, nstates):
-        self.stats.set(1, 0, 3)
+    def step(self, step, mi, nstates):
+        self.stats.set(1, 0, step)
         self.stats.set(1, 1, "%.2f" % mi)
         self.stats.set(1, 2, nstates)
 

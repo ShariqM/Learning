@@ -4,6 +4,7 @@
 
 import math
 import numpy.random as ran
+import config
 from functions import *
 
 class MazeNode:
@@ -11,7 +12,7 @@ class MazeNode:
     def __init__(self, neighbors):
         self.neighbors = neighbors # Neighboring states
         self.actions = [] # The distribution of each action
-        self.M = 4
+        self.M = config.NUM_ACTIONS
 
         for a in range(self.M):
             dist = ran.dirichlet([0.25, 0.25, 0.25, 0.25]) # alpha = 0.25
@@ -46,7 +47,7 @@ class MazeNode:
 def realign(a, dist):
     highest = -1.0
     high_i = -1
-    for i in range(4):
+    for i in range(config.NUM_ACTIONS):
         if dist[i] > highest:
             highest = dist[i]
             high_i = i

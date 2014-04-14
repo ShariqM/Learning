@@ -13,23 +13,11 @@ from ltavistrat import *
 from maze import *
 from runner import Runner
 from dirichletp import DirichletProcess
+import config
 
 from functions import *
 import sys
 
-"""
-b: blue
-g: green
-r: red
-c: cyan
-m: magenta
-y: yellow
-k: black
-w: white
-    {'c': (0.0, 0.75, 0.75), 'b': (0.0, 0.0, 1.0), 'w': (1.0, 1.0, 1.0), 'g':
-    (0.0, 0.5, 0.0), 'y': (0.75, 0.75, 0), 'k': (0.0, 0.0, 0.0), 'r': (1.0, 0.0,
-    0.0), 'm': (0.75, 0, 0.75)}
-    """
 colors = {
           'red'     : (1.0, 0.0, 0.0), # Red
           'red2'    : (0.7, 0.2, 0.2),
@@ -53,6 +41,19 @@ colors = {
           'grey'    : (0.2, 0.2, 0.2),
          }
 
+ALPHA=3.0
+DEFAULT_MAZE='maze.mz'
+DEFAULT_STEPS=300
+DEFAULT_RUNS=5
+DEFAULT_GRAPHICS=False
+
+#strats = {
+    #(strat="PigVi", model="CRP a=1.0",
+#}kk
+
+# Strategy
+#
+
 class MazeRunner(Runner):
 
     # Strategies used in this run
@@ -69,9 +70,11 @@ class MazeRunner(Runner):
 
          #PigVIStrat(self.maze, DirichletProcess(self.maze, 0.01), colors['red'], 0),
          #PigVIStrat(self.maze, DirichletProcess(self.maze, 0.25), colors['blue'], 0),
-         PigVIStrat(self.maze, DirichletProcess(self.maze, 3.0), colors['red'], 0),
-         PigVIStrat(self.maze, DirichletProcess(self.maze, 3.0), colors['blue'],
-                    0, False, True),
+         PigVIStrat(self.maze,
+                    DirichletProcess(self.maze, ALPHA),
+                    colors['red'], plus=0, explorer=True)
+         #PigVIStrat(self.maze, DirichletProcess(self.maze, ALPHA), colors['blue'],
+                    #0, False, True),
          #PigVIStrat(self.maze, DirichletProcess(self.maze, 4.0), colors['green'], 0),
          #PigVIStrat(self.maze, DirichletProcess(self.maze, 25.0), colors['yellow'], 0),
          #PigVIStrat(self.maze, DirichletProcess(self.maze, 100.0), colors['purple'], 0),
@@ -90,9 +93,10 @@ class MazeRunner(Runner):
         self.steps   = args.steps
         self.runs    = args.runs
         self.title = '[Maze F=%s, R=%d Runs]' % (self.mazef, self.runs)
+        config.GRAPHICS = args.graphics
 
     def setup_arguments(self):
-        defaults = ['maze.mz', 300, 5]
+        defaults = [DEFAULT_MAZE, DEFAULT_STEPS, DEFAULT_RUNS, DEFAULT_GRAPHICS]
 
         parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
         parser.add_argument("-m", "--mazef", dest="mazef", default=defaults[0],
@@ -102,6 +106,8 @@ class MazeRunner(Runner):
         parser.add_argument("-r", "--runs", dest="runs", default=defaults[2], type=int,
                           help="Number of runs to average over (default: %d)" %
                           defaults[2])
+        parser.add_argument('-g', dest="graphics", action='store_true',
+                            help="Toggle visualization")
 
         super(MazeRunner, self).setup_arguments(parser)
         return parser.parse_args()
@@ -118,7 +124,3 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
-
-def inc(i):
-    i = i + 1
-    return i - 1

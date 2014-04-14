@@ -12,6 +12,7 @@ from strat import Strat
 from multiprocessing import Pool
 import multiprocessing
 import datetime
+import config
 import pdb
 
 class LTAVIStrat(Strat):
@@ -20,13 +21,12 @@ class LTAVIStrat(Strat):
         super(LTAVIStrat, self).init()
         self.tm = tm
         self.im = im
-        self.pos = 0
+        self.pos = config.SS
         self.name = "LTA (VI)"
-        self.plansteps = 1
-        self.plansteps = 10
+        self.vi_steps = config.VI_STEPS
         #self.debugl = True
         self.debugl = False
-        self.discount = 0.95
+        self.discount = config.DISCOUNT_RATE
         self.color = color
         self.marker = marker
         self.nodes = {}
@@ -56,7 +56,7 @@ class LTAVIStrat(Strat):
             self.nodes[self.pos] = {i:0 for i in range(self.im.M)}
 
         future_v = None
-        for i in range(self.plansteps):
+        for i in range(self.vi_steps):
             last_future = [] # List of Q's from the paper
             next_future_v = {}
             for a in range(self.im.M):

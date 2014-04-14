@@ -4,6 +4,7 @@
 """
 
 import random
+import config
 from dirichlet import Dirichlet
 from bayesworld import *
 from strat import Strat
@@ -14,7 +15,7 @@ class PigGreedyStrat(Strat):
         super(PigGreedyStrat, self).init()
         self.tm = tm
         self.im = im
-        self.pos = 0
+        self.pos = config.SS
         self.name = "PIG(greedy)"
         self.color = color
         self.marker = marker

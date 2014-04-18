@@ -20,7 +20,7 @@ class MazeNode:
             self.actions.append(dist)
 
     def get_prob(self, a, ns, new_states=None):
-        if ns == -1 and new_states:
+        if ns == config.PSI and new_states:
             unk_prob = 0.0
             for ns in set(self.neighbors):
                 if ns in new_states:

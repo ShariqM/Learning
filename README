@@ -96,12 +96,17 @@ python mazerunner.py --help
         # - Maze file names are described as follows:
         #   - [sN] indicates it's a NxN maze
         #   - [b]  indicates it's a maze with no transporters
+        #   - [nw] No walls
         #   e.g. maze_s3b.py is a 3x3 maze with no transporters
 
         # maze.mz - representation of maze described in paper (default maze)
 
 #TODO
 # - Continuous state space
+# - maze_gen with transporters
+# - maze_gen with no walls
+# - fix FIXME's in pigvistrat
+
 
 # Author
 Shariq Mobin (Shariq.Mobin@gmail.com)

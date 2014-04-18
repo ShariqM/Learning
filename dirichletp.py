@@ -36,6 +36,9 @@ class DirichletProcess(object):
     def is_aware_of(self, a, s, ns):
         return self.nodes[s].is_aware_of(a, ns)
 
+    def get_prob_first_obs(self):
+        return self.nodes[config.SS].get_prob_first_obs()
+
     def get_prob(self, a, s, ns):
         return self.nodes[s].get_prob(a, ns)
 

@@ -72,7 +72,10 @@ class MazeRunner(Runner):
          #PigVIStrat(self.maze, DirichletProcess(self.maze, 0.25), colors['blue'], 0),
          PigVIStrat(self.maze,
                     DirichletProcess(self.maze, ALPHA),
-                    colors['red'], plus=0, explorer=True)
+                    colors['red'], plus=0, explorer=True),
+         PigVIStrat(self.maze,
+                    DirichletProcess(self.maze, ALPHA),
+                    colors['blue'], plus=0, explorer=False),
          #PigVIStrat(self.maze, DirichletProcess(self.maze, ALPHA), colors['blue'],
                     #0, False, True),
          #PigVIStrat(self.maze, DirichletProcess(self.maze, 4.0), colors['green'], 0),
@@ -94,6 +97,7 @@ class MazeRunner(Runner):
         self.runs    = args.runs
         self.title = '[Maze F=%s, R=%d Runs]' % (self.mazef, self.runs)
         config.GRAPHICS = args.graphics
+        config.FINIFY = not args.lump
 
     def setup_arguments(self):
         defaults = [DEFAULT_MAZE, DEFAULT_STEPS, DEFAULT_RUNS, DEFAULT_GRAPHICS]
@@ -108,6 +112,8 @@ class MazeRunner(Runner):
                           defaults[2])
         parser.add_argument('-g', dest="graphics", action='store_true',
                             help="Toggle visualization")
+        parser.add_argument('-l', dest="lump", action='store_true',
+                            help="Compare (PSI'+ ETA) with PSI instead of finifying")
 
         super(MazeRunner, self).setup_arguments(parser)
         return parser.parse_args()

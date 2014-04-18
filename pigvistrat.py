@@ -23,7 +23,8 @@ class PigVIStrat(Strat):
         self.tm = tm
         self.im = im
         self.pos = config.SS
-        self.name = "PIG(VI%s)" % ('+' * plus)
+        typ = "[EXP]" if explorer else "[NURT]"
+        self.name = "PIG(VI%s) %s" % (('+' * plus), typ)
         self.color = color
         self.vi_steps = config.VI_STEPS # Number of steps to look in the future
         self.debugl = False
@@ -46,17 +47,20 @@ class PigVIStrat(Strat):
             return 0
 
         tsum = 0
-        new_states = self.im.get_states()
+        if s == config.PSI:
+            return self.discount * future_v[config.PSI]
+            # Maybe I should account for PSI being a known state
+            #new_states = self.im.get_states()
+            #prob = 1.0 / len(new_states)
+            #for ns in new_states:
+                #tsum += prob * future_v[ns]
+            #return self.discount * tsum
+
+        new_states = self.im.get_states(a, s)
         for ns in new_states:
-            if s == config.PSI:
-                m_prob = 1 if ns == config.PSI else 0.001 # FIXME
-            else:
-                if self.plus:
-                    m_prob = self.tm.get_prob(a, s, ns, new_states)
-                else:
-                    m_prob = 0.001 #FIXME
-                    if self.im.is_aware_of(a, s, ns):
-                        m_prob = self.im.get_prob(a, s, ns)
+            m_prob = self.im.get_prob(a, s, ns)
+            if self.plus:
+                m_prob = self.tm.get_prob(a, s, ns, new_states)
             tsum += m_prob * future_v[ns]
 
         return self.discount * tsum
@@ -89,39 +93,35 @@ class PigVIStrat(Strat):
 
         self.debug("\t cache - %d" % (datetime.datetime.now() - start).microseconds)
 
-        #for plus in (1, 0):
-        for plus in (self.plus,):
-            self.plus = plus
-
-            future_v = None
-            for i in range(self.vi_steps):
-                last_future = [] # List of Q's from the paper
-                next_future_v = {}
-                for a in range(self.im.M):
-                    last_future.append({})
-                    for s in self.im.get_states():
-                        v = self.pig_cache[a][s] + self.future_gain(i, future_v, a, s)
-                        last_future[a][s] = v
-                        #if self.graphics and i == self.vi_steps - 1:
-                            #self.graphics.update_vi(a, s, last_future[a][s])
-                        next_future_v[s] = max(next_future_v[s], v) if next_future_v.has_key(s) else v
-                future_v = next_future_v
-
-            self.debug("\t future - %d" % (datetime.datetime.now() - start).microseconds)
-
-            max_fgain = -1
-            best_as = []
+        future_v = None
+        for i in range(self.vi_steps):
+            last_future = [] # List of Q's from the paper
+            next_future_v = {}
             for a in range(self.im.M):
-                if last_future[a][self.pos] == max_fgain:
-                    best_as.append(a)
-                if last_future[a][self.pos] > max_fgain:
-                    max_fgain = last_future[a][self.pos]
-                    best_as = [a]
-            best_a = random.sample(best_as, 1)[0]
+                last_future.append({})
+                for s in self.im.get_states():
+                    v = self.pig_cache[a][s] + self.future_gain(i, future_v, a, s)
+                    last_future[a][s] = v
+                    #if self.graphics and i == self.vi_steps - 1:
+                        #self.graphics.update_vi(a, s, last_future[a][s])
+                    next_future_v[s] = max(next_future_v[s], v) if next_future_v.has_key(s) else v
+            future_v = next_future_v
 
-            #print "----%s %d----" % (self.name, plus)
-            #print "(s=%d, a=%d) FUTURE -" % (self.pos, best_a)
-            #print_future(last_future)
+        self.debug("\t future - %d" % (datetime.datetime.now() - start).microseconds)
+
+        max_fgain = -1
+        best_as = []
+        for a in range(self.im.M):
+            if last_future[a][self.pos] == max_fgain:
+                best_as.append(a)
+            if last_future[a][self.pos] > max_fgain:
+                max_fgain = last_future[a][self.pos]
+                best_as = [a]
+        best_a = random.sample(best_as, 1)[0]
+
+        #print "----%s %d----" % (self.name, plus)
+        #print "(s=%d, a=%d) FUTURE -" % (self.pos, best_a)
+        #print_future(last_future)
 
         self.pig_cache[best_a].pop(self.pos) # ASSUMPTION
 

@@ -16,10 +16,12 @@ class DirichletProcessNode:
         assert type(alpha) == float
         self.alpha = alpha # Make sure float
 
+
         for action in range(M):
             self.data.append({})
             self.obs_num.append(1)
             self.actions.append({})
+
 
     def get_states(self, a):
         return self.data[a].keys()
@@ -27,7 +29,10 @@ class DirichletProcessNode:
     def is_aware_of(self, a, ns):
         return self.data[a].has_key(ns)
 
-    # Dirichlet distribution with alpha=0.25
+    def get_prob_first_obs(self):
+        return 1.0 / (1.0 + self.alpha)
+
+    # Dirichlet distribution
     def get_prob(self, a, ns):
         if not self.data[a].has_key(ns):
             return self.alpha / (self.obs_num[a] - 1 + self.alpha)

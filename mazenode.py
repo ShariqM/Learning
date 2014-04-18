@@ -15,7 +15,8 @@ class MazeNode:
         self.M = config.NUM_ACTIONS
 
         for a in range(self.M):
-            dist = ran.dirichlet([0.25, 0.25, 0.25, 0.25]) # alpha = 0.25
+            #dist = ran.dirichlet([0.25, 0.25, 0.25, 0.25]) # alpha = 0.25
+            dist = [0] * a + [1] + [0] * (self.M - a - 1) # Generate prob=1 for a
             dist = realign(a, dist)
             self.actions.append(dist)
 

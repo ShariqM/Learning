@@ -33,10 +33,10 @@ class Runner(object):
                             help="Dump the data to stdout")
 
         args = parser.parse_args()
-        self.ofile   = args.ofile
-        self.ifile   = args.ifile
+        self.ofile   = args.ofile or config.EXPORT_FILE
+        self.ifile   = args.ifile or config.IMPORT_FILE
         self.verbose = args.verbose
-        self.dump    = args.dump
+        self.dump    = args.dump or config.DUMP_STDOUT
         self.elapsed = datetime.timedelta(0)
         self.nprocesses = multiprocessing.cpu_count()
 
@@ -154,7 +154,8 @@ class Runner(object):
         i = 0
         initial_mi = 0
         while l != '' and l != '\n':
-            if l.startswith('Elap'):# skip progress lines
+            if l.startswith('Elap') or l.startswith('Run') or \
+                    l.startswith('Job'):# skip progress lines
                 l = f.readline()
                 continue
 

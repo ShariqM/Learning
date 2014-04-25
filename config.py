@@ -39,8 +39,13 @@ from chinese import ChineseRProcess
 # Run parameters
 ENVIRON = None      # Ignore, initialized by the runner
 MAZE    = 'maze.mz' # See files in maze_files/ dir
-STEPS   = 3000      # Number of time steps to run
-RUNS    = 10        # Number of runs
+STEPS   = 30        # Number of time steps to run
+RUNS    = 1         # Number of runs
+
+# Output
+DUMP_STDOUT = True # Dump the data to stdout
+EXPORT_FILE = None # Export data to file
+IMPORT_FILE = None # Import data and graph
 
 # Graphics
 GRAPHICS      = False # Visualization of agent

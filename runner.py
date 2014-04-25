@@ -135,7 +135,7 @@ class Runner(object):
 
         for i in range(len(self.strats)):
             plt.plot(step_points, strats_data[i],
-                     color=self.strats[i].color,
+                     #color=self.strats[i].color,
                      label=self.strats[i].get_name())
 
         plt.legend(bbox_to_anchor=(0.8,1), loc=2, borderaxespad=0.)

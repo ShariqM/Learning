@@ -44,7 +44,7 @@ class UnembodiedStrat(Strat):
             for s in self.im.get_known_states():
                 if not self.pig_cache[a].has_key(s):
                     self.pig_cache[a][s] = \
-                        predicted_information_gain(self.im, a, s)
+                        predicted_information_gain(self.im, a, s, False) #FIXME
                 if self.pig_cache[a][s] > max_gain:
                     max_gain, best_a, best_s = (self.pig_cache[a][s], a, s)
 

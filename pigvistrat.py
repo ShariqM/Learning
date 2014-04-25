@@ -18,23 +18,24 @@ import datetime
 
 class PigVIStrat(Strat):
 
-    def __init__(self, tm, im, color, plus=0, explorer=True):
+    def __init__(self, tm, im, color, PLUS=0, EXPLORER=True):
         super(PigVIStrat, self).init()
         self.tm = tm
         self.im = im
         self.pos = config.SS
-        typ = "[EXP]" if explorer else "[NURT]"
-        self.name = "PIG(VI%s) %s" % (('+' * plus), typ)
+        self.name = "PIG(VI%s)" % ('+' * PLUS)
+        if im.has_unknown_states():
+            self.name += " [EXPL]" if EXPLORER else " [PLAY]"
         self.color = color
         self.vi_steps = config.VI_STEPS # Number of steps to look in the future
         self.debugl = False
         self.discount = config.DISCOUNT_RATE # Discount factor for gains in future
-        self.plus = plus # VI+ if True (uses real model)
+        self.plus = PLUS # VI+ if True (uses real model)
         self.data = {}
         self.pig_cache = [{} for a in range(self.tm.M)]
-        name = "Explorer" if explorer else "Nurterer"
+        name = "Explorer" if EXPLORER else "Nurterer"
         self.graphics = MazeGraphics(name, self.tm) if config.GRAPHICS else None
-        self.explorer = explorer
+        self.explorer = EXPLORER
 
         self.data = []
         for s in range(self.tm.N):
@@ -73,7 +74,7 @@ class PigVIStrat(Strat):
         if last_mi <= 0.0: # optimization: no more information to gain
             return
 
-        if self.graphics:
+        if self.graphics and config.UPDATE_STEPMI:
             self.graphics.step(step, last_mi, len(self.im.get_known_states()))
 
         self.debug("Iter")
@@ -84,7 +85,7 @@ class PigVIStrat(Strat):
                 if not self.pig_cache[a].has_key(s):
                     self.pig_cache[a][s] = \
                         predicted_information_gain(self.im, a, s, self.explorer)
-                    if self.graphics:
+                    if self.graphics and config.UPDATE_PIG:
                         self.graphics.update_pig(a, s, self.pig_cache[a][s])
                 #print "(a=%d, s=%d) pig=%f" % (a, s, self.pig_cache[a][s])
                 #else: Validation
@@ -102,8 +103,9 @@ class PigVIStrat(Strat):
                 for s in self.im.get_states():
                     v = self.pig_cache[a][s] + self.future_gain(i, future_v, a, s)
                     last_future[a][s] = v
-                    #if self.graphics and i == self.vi_steps - 1:
-                        #self.graphics.update_vi(a, s, last_future[a][s])
+                    if self.graphics and config.UPDATE_VI and \
+                                            i == self.vi_steps - 1:
+                        self.graphics.update_vi(a, s, last_future[a][s])
                     next_future_v[s] = max(next_future_v[s], v) if next_future_v.has_key(s) else v
             future_v = next_future_v
 
@@ -137,7 +139,3 @@ class PigVIStrat(Strat):
 
     def display(self):
         self.im.display(self.name)
-
-class PigVIStratPlus(PigVIStrat):
-    def __init__(self, tm, im, color, explorer=True, graphics=True):
-        super(PigVIStratPlus, self).__init__(tm, im, color, 1, explorer, graphics)

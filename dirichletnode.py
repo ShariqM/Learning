@@ -12,6 +12,7 @@ class DirichletNode:
         self.M = M
         self.N = N
         self.data = []
+        self.obs_num = []
         self.total_obs = []
         self.neighbors = neighbors
         # In the paper we knew the # of neighbors, we are moving away from this.
@@ -21,6 +22,7 @@ class DirichletNode:
 
         for action in range(M):
             self.data.append([0 for x in range(N)])
+            self.obs_num.append(0)
             self.total_obs.append(0)
 
     # Dirichlet distribution with alpha=0.25 (Equation 14)
@@ -29,17 +31,16 @@ class DirichletNode:
         #if ns not in self.neighbors:
             #return 0.0
 
-        osum = 0
-        for os in range(self.N):
-            osum += self.data[a][os]
-        x = (self.data[a][ns] + self.alpha) / (self.Ns * self.alpha + osum)
-        return x
+        return (self.data[a][ns] + self.alpha) /  \
+            (self.Ns * self.alpha + self.obs_num[a])
 
     def update(self, a, ns):
-        self.data[a][ns] = self.data[a][ns] + 1
+        self.data[a][ns]  = self.data[a][ns]  + 1
+        self.obs_num[a]   = self.obs_num[a]   + 1
         self.total_obs[a] = self.total_obs[a] + 1
 
     # Used to undo hypothetical updates
     def undo_update(self, a, ns):
-        self.data[a][ns] = self.data[a][ns] - 1
+        self.data[a][ns]  = self.data[a][ns]  - 1
+        self.obs_num[a]   = self.obs_num[a]   - 1
         self.total_obs[a] = self.total_obs[a] - 1

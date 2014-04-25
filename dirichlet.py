@@ -10,14 +10,15 @@ import random
 
 class Dirichlet(Model):
 
-    def __init__(self, tm):
+    def __init__(self, tm, alpha=0.25):
         self.N = tm.N
         self.M = tm.M
         self.nodes = [DirichletNode(self.M, self.N, tm.get_neighbors(i))
                                     for i in range(self.N)]
+        self.alpha = alpha
 
     def get_name(self):
-        return "Dirich"
+        return "D [a=%.2f]" % self.alpha
 
     def get_prob(self, a, s, ns):
         return self.nodes[s].get_prob(a, ns)

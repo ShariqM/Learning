@@ -184,7 +184,7 @@ class Runner(object):
 
             # Display text representation of Model
             if self.verbose:
-                self.environ.display()
+                config.ENVIRON.display()
                 for i in range(len(self.strats)):
                     if i == 0:
                         continue

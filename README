@@ -22,6 +22,13 @@ python mazerunner.py --help
 
 # Descriptions and Organization of files
 
+    # Config File
+        # config.py - Set the parameters of the experiment, e.g.
+            # - Which Strategies to run
+            # - What parameters to use
+            # - How many steps? how many runs?
+            # - etc.
+
     # Model Files
         # model.py - The model super class, implements methods all models have
 
@@ -39,9 +46,9 @@ python mazerunner.py --help
             # Dirichlet.py - Internal Model used to learn Mazes and Dense Worlds
                 # DirichletNode.py - Node of Internal Model
 
-            # DirichletProcess.py - Internal Model used to learn Mazes, follows the
+            # Chinese.py - Internal Model used to learn Mazes, follows the
             #                       Chinese Restaurant Process Model
-                # DirichletProcessNode.py - Node of Internal Model
+                # ChineseNode.py - Node of Internal Model
 
             # Hypothetical.py - This wraps around an Internal Model and is used to
             #                   create hypothetical updates to the model so that
@@ -106,7 +113,11 @@ python mazerunner.py --help
 # - maze_gen with transporters
 # - maze_gen with no walls
 # - fix FIXME's in pigvistrat
-
+# - fix piggreedy to work with graphics
+# - fix piggreedy to have explorer arg
+# - fix unembodied to have explorer?
+# - more comments
+# - WorldRunner.py probably doesn't even work anymore
 
 # Author
 Shariq Mobin (Shariq.Mobin@gmail.com)

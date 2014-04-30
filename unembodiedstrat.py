@@ -35,7 +35,7 @@ class UnembodiedStrat(Strat):
         self.pig_cache = [{} for a in range(self.tm.M)]
 
     # Take the (state, action) that results in the most pig
-    def step(self, last_mi=1):
+    def step(self, step=0, last_mi=1):
         if last_mi <= 0.0: # optimization: no more information to gain
             return
 

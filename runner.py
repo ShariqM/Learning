@@ -43,7 +43,6 @@ class Runner(object):
     def init_strats_data(self):
         strats_data = [[] for i in range(len(self.strats))]
         for i in range(len(self.strats)):
-            strats_data.append([])
             for s in range(self.steps):
                 strats_data[i].append(0.0)
         return strats_data
@@ -65,7 +64,7 @@ class Runner(object):
 
         print "Running %d jobs" % len(jobs)
 
-        if config.GRAPHICS:
+        if config.GRAPHICS or config.SERIAL:
             strat_collect_serial(strats, strats_data, self.steps)
             return strats_data
 
@@ -133,12 +132,14 @@ class Runner(object):
         plt.title(self.title + " Elapsed=%ds) " % self.elapsed.seconds)
         plt.axis([0, self.steps, 0, self.initial_mi * 1.1])
 
+
         for i in range(len(self.strats)):
+            mi = strats_data[i][self.steps - 1]
             plt.plot(step_points, strats_data[i],
                      #color=self.strats[i].color,
-                     label=self.strats[i].get_name())
+                     label=self.strats[i].get_name() + "MI=" + str(mi))
 
-        plt.legend(bbox_to_anchor=(0.8,1), loc=2, borderaxespad=0.)
+        plt.legend(bbox_to_anchor=(0,0.8), loc=2, borderaxespad=0.)
         plt.show()
 
     def export_data(self, strats_data, f):
@@ -146,6 +147,12 @@ class Runner(object):
             for s in range(len(strats_data[i])):
                 f.write('%f ' % strats_data[i][s])
             f.write('\n')
+
+        f.write('Summary\n')
+        for i in range(len(strats_data)):
+            f.write('%s ' % self.strats[i].get_name())
+            mi = strats_data[i][self.steps - 1]
+            f.write('MI=%s\n' % str(mi))
 
     def import_data(self):
         f = open(self.ifile, 'r')
@@ -158,6 +165,9 @@ class Runner(object):
                     l.startswith('Job'):# skip progress lines
                 l = f.readline()
                 continue
+            if l.startswith('Summary'):
+                break
+
 
             strats_data.append([])
             step = 0
@@ -187,8 +197,6 @@ class Runner(object):
             if self.verbose:
                 config.ENVIRON.display()
                 for i in range(len(self.strats)):
-                    if i == 0:
-                        continue
                     self.strats[i].display()
 
             if self.ofile:

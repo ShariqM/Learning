@@ -18,7 +18,7 @@ class ChineseRProcess(object):
         self.alpha = alpha
 
     def get_name(self):
-        return "CRP [T=%.2f, a=%.2f]" % (self.theta, self.alpha)
+        return "CRP [T=%.3f, a=%.3f]" % (self.theta, self.alpha)
 
     def get_known_states(self, a=config.NULL_ARG, s=config.NULL_ARG):
         if s == config.NULL_ARG:
@@ -66,13 +66,18 @@ class ChineseRProcess(object):
             print "\tFrom Starting State=%d."% i
             for a in range(node.M):
                 arr = []
-                new_states = self.get_states(a, i) + [config.PSI]
+                new_states = self.get_states(a, i)
                 for ns in new_states:
                     if node.get_prob(a, ns) <= 0.0:
                         continue
                     arr.append((ns, round(node.get_prob(a, ns), 3)))
                 print "\t\t(s=%d, a=%d) ->" % (i, a),  arr
             print ""
+
+        for i, node in self.nodes.items():
+            print "\tFrom Starting State=%d."% i
+            node.stats()
+            print "\n"
 
     def has_unknown_states(self):
         return True

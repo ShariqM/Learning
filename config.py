@@ -39,8 +39,10 @@ from chinese import ChineseRProcess
 # Run parameters
 ENVIRON = None      # Ignore, initialized by the runner
 MAZE    = 'maze.mz' # See files in maze_files/ dir
-STEPS   = 6000      # Number of time steps to run
-RUNS    = 100       # Number of runs
+STEPS   = 3000      # Number of time steps to run
+RUNS    = 10        # Number of runs
+SERIAL  = True
+
 
 # Output
 DUMP_STDOUT = True # Dump the data to stdout
@@ -54,13 +56,14 @@ UPDATE_PIG    = False # Update Pig Table
 UPDATE_VI     = False # Update Value Iteration Table (slow)
 
 # Default parameters to models
-ALPHA   = 0.99 # Discount parameter to a CRP
-THETA   = 0.01 # Strength (or concentration) parameter to a CRP
+ALPHA   = 0.25 # Discount parameter to a CRP
+THETA   = 0.50 # Strength (or concentration) parameter to a CRP
 D_ALPHA = 0.25 # Strength parameter to a Dirichlet model
 
 # Strats to run [Choose a (Strategy, Internal Model) pair]
+import numpy
 def init_strats():
-    return [
+    arr = [
   RandomStrat(ENVIRON,
               Dirichlet(ENVIRON), COLORS['red']),
   #RandomStrat(ENVIRON,
@@ -88,30 +91,27 @@ def init_strats():
               ChineseRProcess(ENVIRON, THETA, ALPHA),
               COLORS['red'], PLUS=0, EXPLORER=False),
   PigVIStrat(ENVIRON,
-              ChineseRProcess(ENVIRON, 3.0, 0.0),
-              COLORS['red'], PLUS=0, EXPLORER=False),
+              ChineseRProcess(ENVIRON, THETA, ALPHA),
+              COLORS['red'], PLUS=1, EXPLORER=False),
+  #PigVIStrat(ENVIRON,
+              #ChineseRProcess(ENVIRON, 3.0, 0.0),
+              #COLORS['red'], PLUS=0, EXPLORER=False),
+        ]
 
     # Experiments
-  PigVIStrat(ENVIRON,
-              ChineseRProcess(ENVIRON, 0.5, 0.5),
-              COLORS['red'], PLUS=0, EXPLORER=False),
-  PigVIStrat(ENVIRON,
-              ChineseRProcess(ENVIRON, 0.50, 0.25),
-              COLORS['red'], PLUS=0, EXPLORER=False),
-  PigVIStrat(ENVIRON,
-              ChineseRProcess(ENVIRON, 3.1, 0.0),
-              COLORS['red'], PLUS=0, EXPLORER=False),
-  PigVIStrat(ENVIRON,
-              ChineseRProcess(ENVIRON, 2.9, 0.0),
-              COLORS['red'], PLUS=0, EXPLORER=False),
+    for a in numpy.arange(-0.1, 0.11, 0.04):
+        for t in numpy.arange(0.1, 1.41, 0.1):
+            max_k = 4 # Hacky...
+            if a < 0.0 and not t + max_k * a > 0.0:
+                continue
+            if a >= 0.0 and not t > -a:
+                continue
+            arr.append(
+                PigVIStrat(ENVIRON,
+                    ChineseRProcess(ENVIRON, t, a),
+                    COLORS['red'], PLUS=0, EXPLORER=False))
 
-  PigVIStrat(ENVIRON,
-              Dirichlet(ENVIRON),
-              COLORS['blue'], PLUS=1, EXPLORER=False),
-  #PigVIStrat(ENVIRON,
-              #ChineseRProcess(ENVIRON),
-              #COLORS['blue2'], PLUS=1, EXPLORER=False),
-
+    # Later
   #LTAStrat(ENVIRON,
               #ChineseRProcess(ENVIRON),
               #COLORS['yellow']),
@@ -122,4 +122,5 @@ def init_strats():
   #LTAVIStrat(ENVIRON,
               #Dirichlet(ENVIRON),
               #COLORS['purple3']),
-           ]
+           #]
+    return arr

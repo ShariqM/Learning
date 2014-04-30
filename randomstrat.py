@@ -20,7 +20,7 @@ class RandomStrat(Strat):
         self.color = color
         self.marker = marker
 
-    def step(self, last_mi=1):
+    def step(self, step=0, last_mi=1):
         if last_mi <= 0.0: # optimization: no more information to gain
             return
         actions = [x for x in range(self.tm.M)]

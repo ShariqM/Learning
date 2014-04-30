@@ -11,13 +11,15 @@ class ChineseRProcessNode:
     def __init__(self, M, theta=3.0, alpha=0.0):
         self.data = []
         self.obs_num = []
+        self.M = M
 
-        assert type(alpha) == float
-        assert type(theta) == float
+        assert type(alpha) != int
+        assert type(theta) != int
         self.theta = theta # Strength parameter
         self.alpha = alpha # Discount parameter
+        self.done = False
 
-        for action in range(M):
+        for action in range(self.M):
             self.data.append({}) # Number of times (s,a,ns) has been observed
             self.obs_num.append(0) # Num of times (s,a) has been observed
 
@@ -40,6 +42,9 @@ class ChineseRProcessNode:
 
     def update(self, a, ns):
         prev = self.data[a][ns] if self.data[a].has_key(ns) else 0
+        #if self.obs_num[a] == 5 and not self.done:
+            #self.done = True
+            #print self.data[a]
         self.data[a][ns] = prev + 1
         self.obs_num[a] = self.obs_num[a] + 1
 
@@ -50,3 +55,7 @@ class ChineseRProcessNode:
         else:
             self.data[a][ns] = self.data[a][ns] - 1
         self.obs_num[a] = self.obs_num[a] - 1
+
+    def stats(self):
+        for a in range(self.M):
+            print self.data[a]

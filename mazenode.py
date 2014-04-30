@@ -20,6 +20,7 @@ class MazeNode:
             else:
                 dist = ran.dirichlet([1.0/self.M] * self.M) # Uniform alpha's
                 dist = realign(a, dist)
+            #print 'dist', dist
 
             self.actions.append(dist)
 

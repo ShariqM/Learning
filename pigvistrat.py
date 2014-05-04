@@ -111,9 +111,11 @@ class PigVIStrat(Strat):
 
         self.debug("\t future - %d" % (datetime.datetime.now() - start).microseconds)
 
-        max_fgain = -1
+        max_fgain = -10000
         best_as = []
+        #print 'Start ', self.im.get_name()
         for a in range(self.im.M):
+            #print '\t', last_future[a][self.pos]
             if last_future[a][self.pos] == max_fgain:
                 best_as.append(a)
             if last_future[a][self.pos] > max_fgain:

@@ -90,6 +90,7 @@ class Runner(object):
             i, data = q.get()
             print 'Job %d completed name=%s, elapsed=%ds' % (z, \
                             strats[i].get_name(), (dt.now() - start).seconds)
+            sys.stdout.flush()
             z = z + 1
             for j in range(len(data)):
                 strats_data[i][j] += data[j]
@@ -217,6 +218,12 @@ def strat_collect_serial(strats, strats_data, steps):
             strats_data[i][step] += mi
             strat.step(step, mi)
             i += 1
+
+        # Monitor progress at subjob level
+        if steps < 10 or step % (steps / 10) == 0:
+            sys.stdout.write('.')
+            sys.stdout.flush()
+
         step = step + 1
 
 def strat_collect(q, i, strat, steps):

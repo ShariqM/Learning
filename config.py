@@ -13,7 +13,7 @@ NULL_UPDATE   = -9999
 NUM_ACTIONS   = 4
 
 # Maze Configuration
-DETERMINISTIC=False # Noisy actions if false
+DETERMINISTIC=True # Noisy actions if false
 
 # PIG Arguments
 DISCOUNT_RATE = 0.95
@@ -41,7 +41,7 @@ ENVIRON = None      # Ignore, initialized by the runner
 MAZE    = 'maze.mz' # See files in maze_files/ dir
 STEPS   = 3000      # Number of time steps to run
 RUNS    = 10        # Number of runs
-SERIAL  = True
+SERIAL  = False
 
 
 # Output
@@ -99,13 +99,18 @@ def init_strats():
         ]
 
     # Experiments
-    for a in numpy.arange(-0.1, 0.11, 0.04):
-        for t in numpy.arange(0.1, 1.41, 0.1):
+    for a in numpy.arange(-9.0, 1.0, 0.5):
+        for t in numpy.arange(-5.0, 5.0, 0.5):
             max_k = 4 # Hacky...
             if a < 0.0 and not t + max_k * a > 0.0:
                 continue
             if a >= 0.0 and not t > -a:
                 continue
+            if a > 1.0:
+                continue
+            if t == 0.0:
+                continue
+
             arr.append(
                 PigVIStrat(ENVIRON,
                     ChineseRProcess(ENVIRON, t, a),

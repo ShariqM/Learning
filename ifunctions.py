@@ -36,7 +36,7 @@ def ukl_divergence(tm, im, a, s):
                 im_prob = im.get_prob(a, s, ns)
             else:
                 psi_prob = im.get_prob(a, s, config.PSI)
-                nunk_states = tm.N - len(im.get_known_states())
+                nunk_states = tm.N - len(im.get_known_states(a, s))
                 im_prob = psi_prob / nunk_states
 
         klsum += tm_prob * log2(tm_prob / im_prob)

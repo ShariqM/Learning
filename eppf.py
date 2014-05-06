@@ -82,8 +82,8 @@ for t in numpy.arange(MIN_T, MAX_T, STEP_T):
                 t_max = t
                 a_max = a
                 print 'MAX - t=', t, 'a=', a, 'r=', V[i]
-            if V[i]/maxr > 0.8:
-                print 'BIG - t=', t, 'a=', a, 'r=', V[i]
+            if V[i]/maxr > 0.2:
+                #print 'BIG - t=', t, 'a=', a, 'r=', V[i]
                 ax.scatter(t, a, V[i], c=V[i], vmin=0, vmax=maxr, s=10)
             elif random.random() < STEP_T/10.0:
                 ax.scatter(t, a, V[i], c=V[i], vmin=0, vmax=maxr, s=10)

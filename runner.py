@@ -4,6 +4,9 @@
     this class, i.e. worldrunner.py, mazerunner.py, or denserunner.py
 """
 
+import traceback
+import pdb
+import random
 import string
 import argparse
 from world import World
@@ -88,6 +91,7 @@ class Runner(object):
         z = 0
         while running > 0:
             i, data = q.get()
+
             print 'Job %d completed name=%s, elapsed=%ds' % (z, \
                             strats[i].get_name(), (dt.now() - start).seconds)
             sys.stdout.flush()
@@ -236,6 +240,9 @@ def strat_collect(q, i, strat, steps):
             strats_data[step] += mi
             strat.step(mi)
 
+            #raise Exception("Hi") # Test
+            #if random.random() < 0.20:
+
             # Monitor progress at subjob level
             #if steps < 10 or step % (steps / 10) == 0:
                 #sys.stdout.write('.')
@@ -244,7 +251,7 @@ def strat_collect(q, i, strat, steps):
             step = step + 1
         q.put((i, strats_data))
     except Exception as e:
-        print 'e', e
+        traceback.print_exc()
         print 'e', e.value
-        return e
+        q.put((i, e))
     return -1

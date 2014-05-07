@@ -40,7 +40,7 @@ from chinese import ChineseRProcess
 ENVIRON = None      # Ignore, initialized by the runner
 MAZE    = 'maze.mz' # See files in maze_files/ dir
 STEPS   = 3000      # Number of time steps to run
-RUNS    = 10        # Number of runs
+RUNS    = 40        # Number of runs
 SERIAL  = False
 
 
@@ -99,8 +99,17 @@ def init_strats():
         ]
 
     # Experiments
-    for a in numpy.arange(-9.0, 1.0, 0.5):
-        for t in numpy.arange(-5.0, 5.0, 0.5):
+    MIN_T  = -5.0
+    MAX_T  =  5.01
+    STEP_T =  0.25
+
+    MIN_A  = -1.0
+    MAX_A  =  1.0
+    STEP_A =  0.25
+
+
+    for t in numpy.arange(MIN_T, MAX_T, STEP_T):
+        for a in list(numpy.arange(MIN_A, MAX_A, STEP_A)) + [0.99]:
             max_k = 4 # Hacky...
             if a < 0.0 and not t + max_k * a > 0.0:
                 continue
@@ -115,6 +124,9 @@ def init_strats():
                 PigVIStrat(ENVIRON,
                     ChineseRProcess(ENVIRON, t, a),
                     COLORS['red'], PLUS=0, EXPLORER=False))
+
+    for t in numpy.arange(MIN_T, MAX_T, STEP_T):
+        a = 0.999
 
     # Later
   #LTAStrat(ENVIRON,

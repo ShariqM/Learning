@@ -30,8 +30,8 @@ def make_maze(w = 10, h = 10):
         shuffle(d)
         for (xx, yy) in d:
             if vis[yy][xx]: continue
-            if xx == x: border[max(y, yy)][x] = "w . . . "
-            if yy == y: space[y][max(x, xx)]  = ". . . . "
+            if xx != x: space[y][max(x, xx)]  = ". . . . "
+            if yy != y: border[max(y, yy)][x] = "w . . . "
             walk(xx, yy)
 
     def number():

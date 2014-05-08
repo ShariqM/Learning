@@ -46,8 +46,8 @@ class Runner(object):
         self.nprocesses = multiprocessing.cpu_count()
         if args.cluster:
             assert config.DUMP_STDOUT
-            assert not SERIAL
-            assert not GRAPHICS
+            assert not config.SERIAL
+            assert not config.GRAPHICS
 
     def init_strats_data(self):
         strats_data = [[] for i in range(len(self.strats))]

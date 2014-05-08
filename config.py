@@ -44,7 +44,7 @@ SERIAL  = False
 
 
 # Output
-DUMP_STDOUT = False # Dump the data to stdout
+DUMP_STDOUT = True # Dump the data to stdout
 EXPORT_FILE = None # Export data to file
 IMPORT_FILE = None # Import data and graph
 

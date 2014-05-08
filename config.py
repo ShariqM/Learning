@@ -10,10 +10,9 @@ SS            = 0 # Start State
 # Misc (don't touch)
 NULL_ARG      = -999
 NULL_UPDATE   = -9999
-NUM_ACTIONS   = 4
 
 # Maze Configuration
-DETERMINISTIC=True # Noisy actions if false
+DETERMINISTIC=False # Noisy actions if false
 
 # PIG Arguments
 DISCOUNT_RATE = 0.95
@@ -38,14 +37,14 @@ from chinese import ChineseRProcess
 
 # Run parameters
 ENVIRON = None      # Ignore, initialized by the runner
-MAZE    = 'maze.mz' # See files in maze_files/ dir
-STEPS   = 3000      # Number of time steps to run
-RUNS    = 40        # Number of runs
-SERIAL  = False
+MAZE    = 'maze_3d.mz' # See files in maze_files/ dir
+STEPS   = 2000       # Number of time steps to run
+RUNS    = 1         # Number of runs
+SERIAL  = True
 
 
 # Output
-DUMP_STDOUT = True # Dump the data to stdout
+DUMP_STDOUT = False # Dump the data to stdout
 EXPORT_FILE = None # Export data to file
 IMPORT_FILE = None # Import data and graph
 
@@ -64,14 +63,14 @@ D_ALPHA = 0.25 # Strength parameter to a Dirichlet model
 import numpy
 def init_strats():
     arr = [
-  RandomStrat(ENVIRON,
-              Dirichlet(ENVIRON), COLORS['red']),
+  #RandomStrat(ENVIRON,
+              #Dirichlet(ENVIRON), COLORS['red']),
   #RandomStrat(ENVIRON,
               #ChineseRProcess(ENVIRON, THETA, ALPHA), COLORS['red2']),
 
-  UnembodiedStrat(ENVIRON,
-              Dirichlet(ENVIRON),
-              COLORS['black']),
+  #UnembodiedStrat(ENVIRON,
+              #Dirichlet(ENVIRON),
+              #COLORS['black']),
   #UnembodiedStrat(ENVIRON,
               #ChineseRProcess(ENVIRON, THETA, ALPHA),
               #COLORS['grey']),
@@ -84,15 +83,15 @@ def init_strats():
               #ChineseRProcess(ENVIRON, THETA, ALPHA),
               #COLORS['grue2']),
 
-  PigVIStrat(ENVIRON,
-              Dirichlet(ENVIRON),
-              COLORS['green'], PLUS=0, EXPLORER=False),
+  #PigVIStrat(ENVIRON,
+              #Dirichlet(ENVIRON),
+              #COLORS['green'], PLUS=0, EXPLORER=False),
   PigVIStrat(ENVIRON,
               ChineseRProcess(ENVIRON, THETA, ALPHA),
               COLORS['red'], PLUS=0, EXPLORER=False),
-  PigVIStrat(ENVIRON,
-              ChineseRProcess(ENVIRON, THETA, ALPHA),
-              COLORS['red'], PLUS=1, EXPLORER=False),
+  #PigVIStrat(ENVIRON,
+              #ChineseRProcess(ENVIRON, THETA, ALPHA),
+              #COLORS['red'], PLUS=1, EXPLORER=False),
   #PigVIStrat(ENVIRON,
               #ChineseRProcess(ENVIRON, 3.0, 0.0),
               #COLORS['red'], PLUS=0, EXPLORER=False),
@@ -100,7 +99,7 @@ def init_strats():
 
     # Experiments
     MIN_T  = -5.0
-    MAX_T  =  5.01
+    MAX_T  = - 5.01
     STEP_T =  0.25
 
     MIN_A  = -1.0

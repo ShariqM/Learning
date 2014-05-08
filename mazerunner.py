@@ -5,6 +5,7 @@
 import string
 import argparse
 from maze import *
+from maze_3d import *
 from runner import Runner
 import config
 
@@ -44,7 +45,10 @@ class MazeRunner(Runner):
 
     def __init__(self):
         self.init_variables()
-        config.ENVIRON = Maze(self.mazef)
+        if '3d' in self.mazef:
+            config.ENVIRON = Maze3d(self.mazef)
+        else:
+            config.ENVIRON = Maze(self.mazef)
         self.strats = config.init_strats()
 
 def main():

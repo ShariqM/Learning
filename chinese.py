@@ -74,10 +74,10 @@ class ChineseRProcess(object):
                 print "\t\t(s=%d, a=%d) ->" % (i, a),  arr
             print ""
 
-        for i, node in self.nodes.items():
-            print "\tFrom Starting State=%d."% i
-            node.stats()
-            print "\n"
+        #for i, node in self.nodes.items():
+            #print "\tFrom Starting State=%d."% i
+            #node.stats()
+            #print "\n"
 
     def has_unknown_states(self):
         return True

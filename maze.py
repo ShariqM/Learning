@@ -43,7 +43,7 @@ class Maze(Model):
                     else:
                         raise Exception("Malformed Maze, pos=%d" % curr)
 
-                self.nodes.append(MazeNode(neighbors))
+                self.nodes.append(MazeNode(self.M, neighbors))
 
                 curr = curr + 1
 

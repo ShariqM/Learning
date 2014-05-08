@@ -9,18 +9,17 @@ from functions import *
 
 class MazeNode:
 
-    def __init__(self, neighbors):
+    def __init__(self, M, neighbors):
         self.neighbors = neighbors # Neighboring states
         self.actions = [] # The distribution of each action
-        self.M = config.NUM_ACTIONS
+        self.M = M
 
         for a in range(self.M):
             if config.DETERMINISTIC:
                 dist = [0] * a + [1] + [0] * (self.M - a - 1) # Generate prob=1 for a
             else:
                 dist = ran.dirichlet([1.0/self.M] * self.M) # Uniform alpha's
-                dist = realign(a, dist)
-            #print 'dist', dist
+                dist = realign(self.M, a, dist)
 
             self.actions.append(dist)
 
@@ -49,10 +48,10 @@ class MazeNode:
         return self.neighbors[sample(self.actions[a])]
 
 # Place the highest probability in position a
-def realign(a, dist):
+def realign(M, a, dist):
     highest = -1.0
     high_i = -1
-    for i in range(config.NUM_ACTIONS):
+    for i in range(M):
         if dist[i] > highest:
             highest = dist[i]
             high_i = i

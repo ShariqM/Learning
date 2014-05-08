@@ -49,7 +49,7 @@ def init_maze(w,h,l):
                 if (i-2) % 4 == 0 and (k-2) % 4 == 0 and (j-2) % 4 == 0:
                     if n == g:
                         maze[i][j][k] = 'g'
-                    else
+                    else:
                         maze[i][j][k] = str(n % 10)
                     n += 1
                 else:

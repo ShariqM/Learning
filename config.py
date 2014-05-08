@@ -65,15 +65,15 @@ def init_strats():
     arr = [
   #RandomStrat(ENVIRON,
               #Dirichlet(ENVIRON), COLORS['red']),
-  #RandomStrat(ENVIRON,
-              #ChineseRProcess(ENVIRON, THETA, ALPHA), COLORS['red2']),
+  RandomStrat(ENVIRON,
+              ChineseRProcess(ENVIRON, THETA, ALPHA), COLORS['red2']),
 
   #UnembodiedStrat(ENVIRON,
               #Dirichlet(ENVIRON),
               #COLORS['black']),
-  #UnembodiedStrat(ENVIRON,
-              #ChineseRProcess(ENVIRON, THETA, ALPHA),
-              #COLORS['grey']),
+  UnembodiedStrat(ENVIRON,
+              ChineseRProcess(ENVIRON, THETA, ALPHA),
+              COLORS['grey']),
 
   # FIXME
   #PigGreedyStrat(ENVIRON,
@@ -83,15 +83,15 @@ def init_strats():
               #ChineseRProcess(ENVIRON, THETA, ALPHA),
               #COLORS['grue2']),
 
-  #PigVIStrat(ENVIRON,
-              #Dirichlet(ENVIRON),
-              #COLORS['green'], PLUS=0, EXPLORER=False),
+  PigVIStrat(ENVIRON,
+              Dirichlet(ENVIRON),
+              COLORS['green'], PLUS=0, EXPLORER=False),
   PigVIStrat(ENVIRON,
               ChineseRProcess(ENVIRON, THETA, ALPHA),
               COLORS['red'], PLUS=0, EXPLORER=False),
-  #PigVIStrat(ENVIRON,
-              #ChineseRProcess(ENVIRON, THETA, ALPHA),
-              #COLORS['red'], PLUS=1, EXPLORER=False),
+  PigVIStrat(ENVIRON,
+              ChineseRProcess(ENVIRON, THETA, ALPHA),
+              COLORS['red'], PLUS=1, EXPLORER=False),
   #PigVIStrat(ENVIRON,
               #ChineseRProcess(ENVIRON, 3.0, 0.0),
               #COLORS['red'], PLUS=0, EXPLORER=False),
@@ -99,7 +99,7 @@ def init_strats():
 
     # Experiments
     MIN_T  = -5.0
-    MAX_T  = -5.01
+    MAX_T  =  5.01
     STEP_T =  0.25
 
     MIN_A  = -1.0

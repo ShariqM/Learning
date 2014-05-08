@@ -15,7 +15,7 @@ class Maze(Model):
 
     def __init__(self, fname):
         self.maze, self.N, self.gwell = parse_maze(fname)
-        self.M = config.NUM_ACTIONS
+        self.M = 4 # fixme?
         self.nodes = []
 
         curr = 0

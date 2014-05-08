@@ -5,7 +5,7 @@
 import string
 import argparse
 from maze import *
-from maze_3d import *
+from maze3d import *
 from runner import Runner
 import config
 

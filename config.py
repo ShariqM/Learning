@@ -36,11 +36,11 @@ from ltavistrat import *
 from chinese import ChineseRProcess
 
 # Run parameters
-ENVIRON = None      # Ignore, initialized by the runner
-MAZE    = 'maze_3d.mz' # See files in maze_files/ dir
-STEPS   = 2000       # Number of time steps to run
-RUNS    = 1         # Number of runs
-SERIAL  = True
+ENVIRON = None         # Ignore, initialized by the runner
+MAZE    = 'maze.mz'    # See files in maze_files/ dir
+STEPS   = 3000         # Number of time steps to run
+RUNS    = 25           # Number of runs
+SERIAL  = False
 
 
 # Output
@@ -99,11 +99,11 @@ def init_strats():
 
     # Experiments
     MIN_T  = -5.0
-    MAX_T  = - 5.01
+    MAX_T  = -5.01
     STEP_T =  0.25
 
     MIN_A  = -1.0
-    MAX_A  =  1.0
+    MAX_A  =  1.0 # Don't move above 1.0 o/w we have prob(prev state) = 0
     STEP_A =  0.25
 
 

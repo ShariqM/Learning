@@ -34,6 +34,8 @@ class Runner(object):
                             help="Print extra info, e.g. the posterior")
         parser.add_argument('-d', dest="dump", action='store_true',
                             help="Dump the data to stdout")
+        parser.add_argument('-c', dest="cluster", action='store_true',
+                            help="Cluster mode, assert if config is incorrect.")
 
         args = parser.parse_args()
         self.ofile   = args.ofile or config.EXPORT_FILE
@@ -42,6 +44,10 @@ class Runner(object):
         self.dump    = args.dump or config.DUMP_STDOUT
         self.elapsed = datetime.timedelta(0)
         self.nprocesses = multiprocessing.cpu_count()
+        if args.cluster:
+            assert config.DUMP_STDOUT
+            assert not SERIAL
+            assert not GRAPHICS
 
     def init_strats_data(self):
         strats_data = [[] for i in range(len(self.strats))]

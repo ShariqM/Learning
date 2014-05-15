@@ -6,6 +6,7 @@ from colors import *
 PSI           = -1 # Represents the unknown state
 ETA           = sys.maxint # Represents a new state we discovered
 SS            = 0 # Start State
+MAX_REWARD    = 1.0
 
 # Misc (don't touch)
 NULL_ARG      = -999

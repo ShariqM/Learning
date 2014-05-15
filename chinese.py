@@ -45,6 +45,8 @@ class ChineseRProcess(object):
         return self.nodes[s].get_prob(a, ns)
 
     def get_reward(self, a, s):
+        if s == config.PSI:
+            return config.MAX_REWARD
         return self.nodes[s].get_reward(a)
 
     # Update model given the data

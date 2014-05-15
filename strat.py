@@ -2,8 +2,13 @@ from ifunctions import *
 
 class Strat(object):
 
-    def init(self):
+    def init(self, tm):
         self.explorer = False
+        self.data = []
+        for s in range(tm.N):
+            self.data.append([])
+            for a in range(tm.M):
+                self.data[s].append(0)
 
     def compute_mi(self):
         return missing_information(self.tm, self.im)

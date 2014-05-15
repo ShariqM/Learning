@@ -1,5 +1,5 @@
 """
-    Runme to generate graphs for the Maze environment
+    Runme to generate graphs for the Chain environment
 """
 
 import string
@@ -12,7 +12,7 @@ import config
 from functions import *
 import sys
 
-class MazeRunner(Runner):
+class Chainunner(Runner):
 
     # Initialize variables according to arguments
     def init_variables(self):
@@ -57,3 +57,4 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
+

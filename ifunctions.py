@@ -78,6 +78,8 @@ def sm_divergence(tm, im, a, s, debug=False):
                 div += alt(tm_prob_new * log2(2 * tm_prob_new / im_prob))
             else:
                 div += alt(tm_prob * log2(tm_prob / im_prob))
+            #if s == 0:
+                #print 'a=', a, div
             #print "HYPO tm=%.2f im=%.2f s=%d a=%d div=%.2f" % \
                       #(tm_prob_new, im_prob, s, a, div)
     else:

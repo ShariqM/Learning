@@ -19,7 +19,7 @@ import datetime
 class PigVIStrat(Strat):
 
     def __init__(self, tm, im, color, PLUS=0, EXPLORER=True):
-        super(PigVIStrat, self).init()
+        super(PigVIStrat, self).init(tm)
         self.tm = tm
         self.im = im
         self.pos = config.SS
@@ -33,7 +33,7 @@ class PigVIStrat(Strat):
         self.plus = PLUS # VI+ if True (uses real model)
         self.data = {}
         self.pig_cache = [{} for a in range(self.tm.M)]
-        name = "Explorer" if EXPLORER else "Nurterer"
+        name = "Explorer" if EXPLORER else "Exploiter"
         self.graphics = MazeGraphics(name, self.tm) if config.GRAPHICS else None
         self.explorer = EXPLORER
 

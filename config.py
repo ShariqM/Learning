@@ -32,31 +32,33 @@ from piggreedystrat import *
 from pigvistrat import *
 from ltastrat import *
 from ltavistrat import *
+from cbstrat import *
+from bossstrat import *
 
 from chinese import ChineseRProcess
 
 # Run parameters
 ENVIRON = None         # Ignore, initialized by the runner
-MAZE    = 'maze.mz'    # See files in maze_files/ dir
-STEPS   = 1000         # Number of time steps to run
-RUNS    = 20           # Number of runs
-SERIAL  = False
+MAZE    = 'maze_s6b.mz'    # See files in maze_files/ dir
+STEPS   = 1000          # Number of time steps to run
+RUNS    = 1            # Number of runs
+SERIAL  = True
 
 
 # Output
-DUMP_STDOUT = True # Dump the data to stdout
+DUMP_STDOUT = False # Dump the data to stdout
 EXPORT_FILE = None # Export data to file
 IMPORT_FILE = None # Import data and graph
 
 # Graphics
-GRAPHICS      = False # Visualization of agent
+GRAPHICS      = True # Visualization of agent
 UPDATE_STEPMI = True  # Update Step, Missing Info
-UPDATE_PIG    = False # Update Pig Table
+UPDATE_PIG    = True # Update Pig Table
 UPDATE_VI     = False # Update Value Iteration Table (slow)
 
 # Default parameters to models
-ALPHA   = 0.25 # Discount parameter to a CRP
-THETA   = 0.50 # Strength (or concentration) parameter to a CRP
+ALPHA   = 0.0  # Discount parameter to a CRP
+THETA   = 1.50 # Strength (or concentration) parameter to a CRP
 D_ALPHA = 0.25 # Strength parameter to a Dirichlet model
 
 # Strats to run [Choose a (Strategy, Internal Model) pair]
@@ -65,15 +67,15 @@ def init_strats():
     arr = [
   #RandomStrat(ENVIRON,
               #Dirichlet(ENVIRON), COLORS['red']),
-  RandomStrat(ENVIRON,
-              ChineseRProcess(ENVIRON, THETA, ALPHA), COLORS['red2']),
+  #RandomStrat(ENVIRON,
+              #ChineseRProcess(ENVIRON, THETA, ALPHA), COLORS['red2']),
 
   #UnembodiedStrat(ENVIRON,
               #Dirichlet(ENVIRON),
               #COLORS['black']),
-  UnembodiedStrat(ENVIRON,
-              ChineseRProcess(ENVIRON, THETA, ALPHA),
-              COLORS['grey']),
+  #UnembodiedStrat(ENVIRON,
+              #ChineseRProcess(ENVIRON, THETA, ALPHA),
+              #COLORS['grey']),
 
   # FIXME
   #PigGreedyStrat(ENVIRON,
@@ -83,23 +85,38 @@ def init_strats():
               #ChineseRProcess(ENVIRON, THETA, ALPHA),
               #COLORS['grue2']),
 
-  PigVIStrat(ENVIRON,
-              Dirichlet(ENVIRON),
-              COLORS['green'], PLUS=0, EXPLORER=False),
+  #PigVIStrat(ENVIRON,
+              #Dirichlet(ENVIRON),
+              #COLORS['green'], PLUS=0, EXPLORER=False),
   PigVIStrat(ENVIRON,
               ChineseRProcess(ENVIRON, THETA, ALPHA),
               COLORS['red'], PLUS=0, EXPLORER=False),
-  PigVIStrat(ENVIRON,
+  CBStrat(ENVIRON,
               ChineseRProcess(ENVIRON, THETA, ALPHA),
-              COLORS['red'], PLUS=1, EXPLORER=False),
+              COLORS['red']),
+  BossStrat(ENVIRON,
+              ChineseRProcess(ENVIRON, THETA, ALPHA),
+              5, COLORS['red']),
+  #PigVIStrat(ENVIRON,
+              #ChineseRProcess(ENVIRON, THETA, ALPHA),
+              #COLORS['red'], PLUS=0, EXPLORER=True),
+  #PigVIStrat(ENVIRON,
+              #ChineseRProcess(ENVIRON, THETA, ALPHA),
+              #COLORS['red'], PLUS=1, EXPLORER=False),
   #PigVIStrat(ENVIRON,
               #ChineseRProcess(ENVIRON, 3.0, 0.0),
               #COLORS['red'], PLUS=0, EXPLORER=False),
+  #LTAStrat(ENVIRON,
+              #ChineseRProcess(ENVIRON),
+              #COLORS['yellow']),
+  #LTAVIStrat(ENVIRON,
+              #ChineseRProcess(ENVIRON),
+              #COLORS['purple3']),
         ]
 
     # Experiments
     MIN_T  = -5.0
-    MAX_T  =  5.01
+    MAX_T  = -5.01
     STEP_T =  0.25
 
     MIN_A  = -1.0
@@ -129,14 +146,8 @@ def init_strats():
 
     # Later
   #LTAStrat(ENVIRON,
-              #ChineseRProcess(ENVIRON),
-              #COLORS['yellow']),
-  #LTAStrat(ENVIRON,
               #Dirichlet(ENVIRON),
               #COLORS['yellow']),
 
-  #LTAVIStrat(ENVIRON,
-              #Dirichlet(ENVIRON),
-              #COLORS['purple3']),
            #]
     return arr

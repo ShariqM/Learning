@@ -34,6 +34,7 @@ from ltastrat import *
 from ltavistrat import *
 from cbstrat import *
 from bossstrat import *
+from dystrat import *
 
 from chinese import ChineseRProcess
 
@@ -88,15 +89,16 @@ def init_strats():
   #PigVIStrat(ENVIRON,
               #Dirichlet(ENVIRON),
               #COLORS['green'], PLUS=0, EXPLORER=False),
-  PigVIStrat(ENVIRON,
-              ChineseRProcess(ENVIRON, THETA, ALPHA),
-              COLORS['red'], PLUS=0, EXPLORER=False),
-  CBStrat(ENVIRON,
-              ChineseRProcess(ENVIRON, THETA, ALPHA),
-              COLORS['red']),
-  BossStrat(ENVIRON,
-              ChineseRProcess(ENVIRON, THETA, ALPHA),
-              5, COLORS['red']),
+  #PigVIStrat(ENVIRON,
+              #ChineseRProcess(ENVIRON, THETA, ALPHA),
+              #COLORS['red'], PLUS=0, EXPLORER=False),
+  #CBStrat(ENVIRON,
+              #ChineseRProcess(ENVIRON, THETA, ALPHA),
+              #COLORS['red']),
+  #BossStrat(ENVIRON,
+              #ChineseRProcess(ENVIRON, THETA, ALPHA),
+              #5, COLORS['red']),
+
   #PigVIStrat(ENVIRON,
               #ChineseRProcess(ENVIRON, THETA, ALPHA),
               #COLORS['red'], PLUS=0, EXPLORER=True),
@@ -113,6 +115,11 @@ def init_strats():
               #ChineseRProcess(ENVIRON),
               #COLORS['purple3']),
         ]
+
+    im = ChineseRProcess(ENVIRON, THETA, ALPHA)
+    arr.append(DyStrat(ENVIRON, im,
+                       PigVIStrat(ENVIRON, im, PLUS=0, EXPLORER=False),
+                       BossStrat(ENVIRON, im, -1), 20))
 
     # Experiments
     MIN_T  = -5.0

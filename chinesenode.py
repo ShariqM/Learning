@@ -12,6 +12,7 @@ class ChineseRProcessNode:
         self.data = []
         self.obs_num = []
         self.M = M
+        self.total_reward = [0 for i in range(self.M)]
 
         assert type(alpha) != int
         assert type(theta) != int
@@ -40,13 +41,17 @@ class ChineseRProcessNode:
                     (self.obs_num[a] + self.theta)
         return (self.data[a][ns] - self.alpha) / (self.obs_num[a] + self.theta)
 
-    def update(self, a, ns):
+    def get_reward(self, a):
+        return self.reward[a] / self.obs_num[a] # Mean reward
+
+    def update(self, a, ns, r=0):
         prev = self.data[a][ns] if self.data[a].has_key(ns) else 0
         #if self.obs_num[a] == 5 and not self.done:
             #self.done = True
             #print self.data[a]
         self.data[a][ns] = prev + 1
         self.obs_num[a] = self.obs_num[a] + 1
+        self.reward[a] += r
 
     # Used to undo hypothetical updates
     def undo_update(self, a, ns):

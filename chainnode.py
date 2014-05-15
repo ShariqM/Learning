@@ -9,8 +9,9 @@ from functions import *
 
 class ChainNode:
 
-    def __init__(self, M, neighbors):
+    def __init__(self, M, neighbors, reward):
         self.neighbors = neighbors # Neighboring states
+        self.reward = reward
         self.M = M
         self.actions = [[0.2, 0.8], [0.8, 0.2]] # The distribution of actions
 
@@ -34,4 +35,5 @@ class ChainNode:
         return self.neighbors
 
     def take_action(self, a):
-        return self.neighbors[sample(self.actions[a])]
+        action = sample(self.actions[a])
+        return self.neighbors[action], self.reward[action]

@@ -18,7 +18,7 @@ import datetime
 
 class PigVIStrat(Strat):
 
-    def __init__(self, tm, im, color, PLUS=0, EXPLORER=True):
+    def __init__(self, tm, im, color='r', PLUS=0, EXPLORER=True):
         super(PigVIStrat, self).init(tm)
         self.tm = tm
         self.im = im
@@ -129,8 +129,8 @@ class PigVIStrat(Strat):
 
         self.pig_cache[best_a].pop(self.pos) # ASSUMPTION
 
-        ns = self.tm.take_action(self.pos, best_a)
-        self.im.update(best_a, self.pos, ns)
+        ns, r = self.tm.take_action(self.pos, best_a)
+        self.im.update(best_a, self.pos, ns, r)
         self.new_data(best_a, self.pos, ns)
         self.pos = ns
 

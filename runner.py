@@ -26,6 +26,7 @@ import sys
 class Runner(object):
 
     def setup_arguments(self, parser):
+        defaults = [config.STEPS, config.RUNS]
         parser.add_argument("-o", "--ofile", dest="ofile", default=None,
                             type=str, help="Name of file to output data to (default: None)")
         parser.add_argument("-i", "--ifile", dest="ifile", default=None,
@@ -36,14 +37,27 @@ class Runner(object):
                             help="Dump the data to stdout")
         parser.add_argument('-c', dest="cluster", action='store_true',
                             help="Cluster mode, assert if config is incorrect.")
+        parser.add_argument("-s", "--steps", dest="steps", default=defaults[0], type=int,
+                          help="Number of steps to run (default: %d)" % defaults[0])
+        parser.add_argument("-r", "--runs", dest="runs", default=defaults[1], type=int,
+                          help="Number of runs to average over (default: %d)" %
+                          defaults[1])
+        parser.add_argument('-l', dest="lump", action='store_true',
+                            help="Compare (PSI'+ ETA) with PSI instead of finifying")
+
 
         args = parser.parse_args()
         self.ofile   = args.ofile or config.EXPORT_FILE
         self.ifile   = args.ifile or config.IMPORT_FILE
         self.verbose = args.verbose
         self.dump    = args.dump or config.DUMP_STDOUT
+        self.steps   = args.steps
+        self.runs    = args.runs
+        config.FINIFY = not args.lump
+
         self.elapsed = datetime.timedelta(0)
         self.nprocesses = multiprocessing.cpu_count()
+
         if args.cluster:
             assert config.DUMP_STDOUT
             assert not config.SERIAL

@@ -16,6 +16,7 @@ class ChineseRProcess(object):
         self.last_update = config.NULL_UPDATE
         self.theta = theta
         self.alpha = alpha
+        self.total_reward = 0.0
 
     def get_name(self):
         return "CRP [T=%.3f, a=%.3f]" % (self.theta, self.alpha)
@@ -43,14 +44,18 @@ class ChineseRProcess(object):
     def get_prob(self, a, s, ns):
         return self.nodes[s].get_prob(a, ns)
 
+    def get_reward(self, a, s):
+        return self.nodes[s].get_reward(a)
+
     # Update model given the data
-    def update(self, a, s, ns):
+    def update(self, a, s, ns, r=0):
         if not self.nodes.has_key(ns):
             self.last_update = ns
-            self.nodes[ns] = ChineseRProcessNode(self.M)
+            self.nodes[ns]   = ChineseRProcessNode(self.M)
         else:
             self.last_update = config.NULL_UPDATE
-        return self.nodes[s].update(a, ns)
+        self.total_reward += r
+        return self.nodes[s].update(a, ns, r)
 
     # Undo update (for hypothetical updates)
     def undo_update(self, a, s, ns):

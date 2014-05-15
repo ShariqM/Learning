@@ -10,7 +10,7 @@ from graphics import *
 
 class BossStrat(Strat):
 
-    def __init__(self, tm, im, B, color, marker=None):
+    def __init__(self, tm, im, B, color='r', marker=None):
         super(BossStrat, self).init(tm)
         self.tm = tm
         self.im = im
@@ -103,4 +103,3 @@ class BossStrat(Strat):
         self.pos = self.tm.take_action(self.pos, action)
         self.new_data(action, oldpos, self.pos)
         self.im.update(action, oldpos, self.pos)
-

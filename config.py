@@ -129,7 +129,7 @@ def init_strats():
 
     for t in numpy.arange(MIN_T, MAX_T, STEP_T):
         for a in list(numpy.arange(MIN_A, MAX_A, STEP_A)) + [0.99]:
-            max_k = 2 # Hacky...
+            max_k = 4 # Hacky...
             if a < 0.0 and not t + max_k * a > 0.0:
                 continue
             if a >= 0.0 and not t > -a:

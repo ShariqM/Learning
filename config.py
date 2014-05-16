@@ -44,7 +44,7 @@ from chinese import ChineseRProcess
 ENVIRON = None           # Ignore, initialized by the runner
 MAZE    = 'maze_s6b.mz'  # See files in maze_files/ dir
 STEPS   = 1000           # Number of time steps to run
-RUNS    = 200            # Number of runs
+RUNS    = 100            # Number of runs
 SERIAL  = False
 
 
@@ -118,15 +118,9 @@ def init_strats():
               #COLORS['purple3']),
         ]
 
-    for i in xrange(20,300,1):
-        im = ChineseRProcess(ENVIRON, 0.25, 0.0)
-        arr.append(DyStrat(ENVIRON, im,
-                           PigVIStrat(ENVIRON, im, PLUS=0, EXPLORER=False),
-                           BossSAStrat(ENVIRON, im, -1), i))
-
-    # Experiments
+        # Experiments
     MIN_T  = -5.0
-    MAX_T  = -5.01
+    MAX_T  =  5.01
     STEP_T =  0.25
 
     MIN_A  = -1.0
@@ -135,7 +129,7 @@ def init_strats():
 
     for t in numpy.arange(MIN_T, MAX_T, STEP_T):
         for a in list(numpy.arange(MIN_A, MAX_A, STEP_A)) + [0.99]:
-            max_k = 4 # Hacky...
+            max_k = 2 # Hacky...
             if a < 0.0 and not t + max_k * a > 0.0:
                 continue
             if a >= 0.0 and not t > -a:
@@ -145,10 +139,16 @@ def init_strats():
             if t == 0.0:
                 continue
 
-            arr.append(
-                PigVIStrat(ENVIRON,
-                    ChineseRProcess(ENVIRON, t, a),
-                    COLORS['red'], PLUS=0, EXPLORER=False))
+            for i in xrange(60,150,1):
+                    im = ChineseRProcess(ENVIRON, 0.25, 0.0)
+                    arr.append(DyStrat(ENVIRON, im,
+                                       PigVIStrat(ENVIRON, im, PLUS=0, EXPLORER=False),
+                                       BossSAStrat(ENVIRON, im, -1), i))
+
+            #arr.append(
+                #PigVIStrat(ENVIRON,
+                    #ChineseRProcess(ENVIRON, t, a),
+                    #COLORS['red'], PLUS=0, EXPLORER=False))
 
     for t in numpy.arange(MIN_T, MAX_T, STEP_T):
         a = 0.999

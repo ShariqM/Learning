@@ -43,8 +43,8 @@ from chinese import ChineseRProcess
 # Run parameters
 ENVIRON = None           # Ignore, initialized by the runner
 MAZE    = 'maze_s6b.mz'  # See files in maze_files/ dir
-STEPS   = 1000           # Number of time steps to run
-RUNS    = 100            # Number of runs
+STEPS   = 3000           # Number of time steps to run
+RUNS    = 20             # Number of runs
 SERIAL  = False
 
 
@@ -139,19 +139,15 @@ def init_strats():
             if t == 0.0:
                 continue
 
-            for i in xrange(60,150,1):
-                    im = ChineseRProcess(ENVIRON, 0.25, 0.0)
-                    arr.append(DyStrat(ENVIRON, im,
-                                       PigVIStrat(ENVIRON, im, PLUS=0, EXPLORER=False),
-                                       BossSAStrat(ENVIRON, im, -1), i))
-
-            #arr.append(
-                #PigVIStrat(ENVIRON,
-                    #ChineseRProcess(ENVIRON, t, a),
-                    #COLORS['red'], PLUS=0, EXPLORER=False))
-
-    for t in numpy.arange(MIN_T, MAX_T, STEP_T):
-        a = 0.999
+            #for i in xrange(60,150,1):
+                    #im = ChineseRProcess(ENVIRON, 0.25, 0.0)
+                    #arr.append(DyStrat(ENVIRON, im,
+                                       #PigVIStrat(ENVIRON, im, PLUS=0, EXPLORER=False),
+                                       #BossSAStrat(ENVIRON, im, -1), i))
+            arr.append(
+                PigVIStrat(ENVIRON,
+                    ChineseRProcess(ENVIRON, t, a),
+                    COLORS['red'], PLUS=0, EXPLORER=False))
 
     # Later
   #LTAStrat(ENVIRON,

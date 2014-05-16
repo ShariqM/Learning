@@ -88,14 +88,9 @@ class Runner(object):
         print "Running %d jobs" % len(jobs)
 
         if config.GRAPHICS or config.SERIAL:
+            assert self.runs == 1
             strat_collect_serial(strats, strats_data, self.steps)
             return strats_data
-
-        def collect_data(i):
-            def collect_data_i(data):
-                for j in range(len(data)):
-                    strats_data[i][j] += data[j]
-            return collect_data_i
 
         m = Manager()
         q = m.Queue()
@@ -118,17 +113,13 @@ class Runner(object):
             z = z + 1
             for j in range(len(data)):
                 strats_data[i][j] += data[j]
+
             if len(jobs):
                 i = jobs.pop()
                 p.apply_async(strat_collect, args=(q, i, strats[i], self.steps))
             else:
                 running -= 1
 
-        #p = Pool(self.nprocesses)
-        #i,j = (0,0)
-        #while i < self.nprocess and j < len(jobs):
-            #p.apply_async(strat_collect, args=(strats[i], self.steps),
-                          #callback=collect_data(i))
         p.close()
         p.join()
 
@@ -138,6 +129,7 @@ class Runner(object):
     # Average the data and find when MI hits 0
     def analyze_data(self, strats_data):
         for i in range(len(self.strats)):
+            print 'mi=', strats_data[i][self.steps-1]
             for s in range(self.steps):
                 strats_data[i][s] /= self.runs
         return strats_data
@@ -151,11 +143,16 @@ class Runner(object):
             sys.exit(0)
         print "Graphing data..."
 
+        mi_height = self.initial_mi
+        for i in range(len(self.strats)):
+            mi_height = max(strats_data[i][self.steps - 1], mi_height)
+        print mi_height
+
         step_points = [i for i in range(self.steps)]
         plt.xlabel('Time (steps)', fontdict={'fontsize':16})
         plt.ylabel('Missing Information (bits)', fontdict={'fontsize':16})
         plt.title(self.title + " Elapsed=%ds) " % self.elapsed.seconds)
-        plt.axis([0, self.steps, 0, self.initial_mi * 1.1])
+        plt.axis([0, self.steps, 0, mi_height * 1.1])
 
 
         for i in range(len(self.strats)):
@@ -192,7 +189,6 @@ class Runner(object):
                 continue
             if l.startswith('Summary'):
                 break
-
 
             strats_data.append([])
             step = 0
@@ -239,7 +235,7 @@ def strat_collect_serial(strats, strats_data, steps):
         i = 0
         for strat in strats:
             mi = strat.compute_mi()
-            strats_data[i][step] += mi
+            strats_data[i][step] = mi
             strat.step(step, mi)
             i += 1
 
@@ -257,11 +253,11 @@ def strat_collect(q, i, strat, steps):
         strats_data = [0 for j in range(steps)]
         while step < steps:
             mi = strat.compute_mi()
-            strats_data[step] += mi
-            strat.step(mi)
+
+            strats_data[step] = mi
+            strat.step(step, mi)
 
             #raise Exception("Hi") # Test
-            #if random.random() < 0.20:
 
             # Monitor progress at subjob level
             #if steps < 10 or step % (steps / 10) == 0:

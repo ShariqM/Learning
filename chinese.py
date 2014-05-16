@@ -5,6 +5,7 @@
 
 from chinesenode import ChineseRProcessNode
 import random
+import sys
 import config
 
 class ChineseRProcess(object):
@@ -46,14 +47,19 @@ class ChineseRProcess(object):
 
     def get_reward(self, a, s):
         if s == config.PSI:
+            return 0
             return config.MAX_REWARD
-        return self.nodes[s].get_reward(a)
+        if a not in range(self.M):
+            raise Exception("Foo")
+        r = self.nodes[s].get_reward(a)
+        #print 's=%d, a=%d, r=%f' % (s,a,r)
+        return r
 
     # Update model given the data
     def update(self, a, s, ns, r=0):
         if not self.nodes.has_key(ns):
             self.last_update = ns
-            self.nodes[ns]   = ChineseRProcessNode(self.M)
+            self.nodes[ns]   = ChineseRProcessNode(self.M, self.theta, self.alpha)
         else:
             self.last_update = config.NULL_UPDATE
         self.total_reward += r
@@ -66,11 +72,11 @@ class ChineseRProcess(object):
         return self.nodes[s].undo_update(a, ns)
 
     def display(self, strat):
-        print "*** %s Chinese Restaurant Process (Internal) Model ***" % strat
-        print "a=Action, s=Starting State, ns=New state, p=Probability"
-        print "For each (s,a) we display a list of (ns, p), the p of entering ns"
+        pr("*** %s Chinese Restaurant Process (Internal) Model ***" % strat)
+        pr("a=Action, s=Starting State, ns=New state, p=Probability")
+        pr("For each (s,a) we display a list of (ns, p), the p of entering ns")
         for i, node in self.nodes.items():
-            print "\tFrom Starting State=%d."% i
+            pr("\tFrom Starting State=%d." % i)
             for a in range(node.M):
                 arr = []
                 new_states = self.get_states(a, i)
@@ -78,13 +84,21 @@ class ChineseRProcess(object):
                     if node.get_prob(a, ns) <= 0.0:
                         continue
                     arr.append((ns, round(node.get_prob(a, ns), 3)))
-                print "\t\t(s=%d, a=%d) ->" % (i, a),  arr
-            print ""
+                r = self.get_reward(a, i)
+                pr("\t\t(s=%d, a=%d) [r=%f] ->" % (i, a, r) + str(arr))
+            pr("")
 
-        #for i, node in self.nodes.items():
-            #print "\tFrom Starting State=%d."% i
-            #node.stats()
-            #print "\n"
+        if True:
+            for i, node in self.nodes.items():
+                pr("\tFrom Starting State=%d." % i)
+                node.stats()
+                pr('\n')
+        sys.stdout.flush()
 
     def has_unknown_states(self):
         return True
+
+def pr(s):
+    sys.stdout.write(s+'\n')
+    sys.stdout.flush()
+

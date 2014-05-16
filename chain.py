@@ -16,7 +16,8 @@ class Chain(Model):
         for i in range(self.N):
             nextnode = i + (1 if i != self.N - 1 else 0)
             reward = [0 if i != self.N - 1 else 1, 0.2]
-            self.nodes.append(ChainNode(self.M, [0, nextnode], reward))
+            print 'rew', reward
+            self.nodes.append(ChainNode(self.M, [nextnode, 0], reward))
 
     def take_action(self, s, a):
         return self.nodes[s].take_action(a)

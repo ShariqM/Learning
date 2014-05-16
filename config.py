@@ -35,27 +35,28 @@ from ltastrat import *
 from ltavistrat import *
 from cbstrat import *
 from bossstrat import *
+from bossSAstrat import *
 from dystrat import *
 
 from chinese import ChineseRProcess
 
 # Run parameters
-ENVIRON = None         # Ignore, initialized by the runner
-MAZE    = 'maze_s6b.mz'    # See files in maze_files/ dir
-STEPS   = 1000          # Number of time steps to run
-RUNS    = 1            # Number of runs
-SERIAL  = True
+ENVIRON = None           # Ignore, initialized by the runner
+MAZE    = 'maze_s6b.mz'  # See files in maze_files/ dir
+STEPS   = 1000           # Number of time steps to run
+RUNS    = 200            # Number of runs
+SERIAL  = False
 
 
 # Output
-DUMP_STDOUT = False # Dump the data to stdout
+DUMP_STDOUT = True # Dump the data to stdout
 EXPORT_FILE = None # Export data to file
 IMPORT_FILE = None # Import data and graph
 
 # Graphics
-GRAPHICS      = True # Visualization of agent
+GRAPHICS      = False # Visualization of agent
 UPDATE_STEPMI = True  # Update Step, Missing Info
-UPDATE_PIG    = True # Update Pig Table
+UPDATE_PIG    = True  # Update Pig Table
 UPDATE_VI     = False # Update Value Iteration Table (slow)
 
 # Default parameters to models
@@ -117,10 +118,11 @@ def init_strats():
               #COLORS['purple3']),
         ]
 
-    im = ChineseRProcess(ENVIRON, THETA, ALPHA)
-    arr.append(DyStrat(ENVIRON, im,
-                       PigVIStrat(ENVIRON, im, PLUS=0, EXPLORER=False),
-                       BossStrat(ENVIRON, im, -1), 20))
+    for i in xrange(20,300,1):
+        im = ChineseRProcess(ENVIRON, 0.25, 0.0)
+        arr.append(DyStrat(ENVIRON, im,
+                           PigVIStrat(ENVIRON, im, PLUS=0, EXPLORER=False),
+                           BossSAStrat(ENVIRON, im, -1), i))
 
     # Experiments
     MIN_T  = -5.0
@@ -130,7 +132,6 @@ def init_strats():
     MIN_A  = -1.0
     MAX_A  =  1.0 # Don't move above 1.0 o/w we have prob(prev state) = 0
     STEP_A =  0.25
-
 
     for t in numpy.arange(MIN_T, MAX_T, STEP_T):
         for a in list(numpy.arange(MIN_A, MAX_A, STEP_A)) + [0.99]:

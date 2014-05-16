@@ -71,9 +71,6 @@ class PigVIStrat(Strat):
             print msg
 
     def step(self, step, last_mi=1):
-        if last_mi <= 0.0: # optimization: no more information to gain
-            return
-
         if self.graphics and config.UPDATE_STEPMI:
             self.graphics.step(step, last_mi, len(self.im.get_known_states()))
 

@@ -39,19 +39,22 @@ class ChineseRProcessNode:
             ntables = len(self.data[a])
             return (self.theta + ntables * self.alpha) / \
                     (self.obs_num[a] + self.theta)
+        #print "ns=%d T=%f A=%f |b|=%d n=%d" % (ns, self.theta, self.alpha, self.data[a][ns], self.obs_num[a])
         return (self.data[a][ns] - self.alpha) / (self.obs_num[a] + self.theta)
 
     def get_reward(self, a):
-        return self.reward[a] / self.obs_num[a] # Mean reward
+        if not self.obs_num[a]:
+            return 0.0
+        return self.total_reward[a] / self.obs_num[a] # Mean reward
 
-    def update(self, a, ns, r=0):
+    def update(self, a, ns, r=0.0):
         prev = self.data[a][ns] if self.data[a].has_key(ns) else 0
         #if self.obs_num[a] == 5 and not self.done:
             #self.done = True
             #print self.data[a]
         self.data[a][ns] = prev + 1
         self.obs_num[a] = self.obs_num[a] + 1
-        self.reward[a] += r
+        self.total_reward[a] += r
 
     # Used to undo hypothetical updates
     def undo_update(self, a, ns):
@@ -63,4 +66,4 @@ class ChineseRProcessNode:
 
     def stats(self):
         for a in range(self.M):
-            print self.data[a]
+            print 'a=%d ->' % a, self.data[a]

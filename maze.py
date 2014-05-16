@@ -48,8 +48,7 @@ class Maze(Model):
                 curr = curr + 1
 
     def take_action(self, s, a):
-        node = self.nodes[s]
-        return node.take_action(a)
+        return self.nodes[s].take_action(a), 0
 
     def get_prob(self, a, s, ns, new_states=None):
         return self.nodes[s].get_prob(a, ns, new_states)

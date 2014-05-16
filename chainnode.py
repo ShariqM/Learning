@@ -13,7 +13,7 @@ class ChainNode:
         self.neighbors = neighbors # Neighboring states
         self.reward = reward
         self.M = M
-        self.actions = [[0.2, 0.8], [0.8, 0.2]] # The distribution of actions
+        self.actions = [[0.8, 0.2], [0.2, 0.8]] # The distribution of actions
 
     def get_prob(self, a, ns, new_states=None):
         if ns == config.PSI and new_states:

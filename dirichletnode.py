@@ -8,7 +8,7 @@ import math
 
 class DirichletNode:
 
-    def __init__(self, M, N, neighbors):
+    def __init__(self, M, N, alpha, neighbors):
         self.M = M
         self.N = N
         self.data = []
@@ -18,7 +18,7 @@ class DirichletNode:
         # In the paper we knew the # of neighbors, we are moving away from this.
         # self.Ns = len(set(self.neighbors)) # Number of unique neighbors
         self.Ns = self.N
-        self.alpha = 0.25
+        self.alpha = alpha
 
         for action in range(M):
             self.data.append([0 for x in range(N)])

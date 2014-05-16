@@ -42,14 +42,14 @@ from chinese import ChineseRProcess
 
 # Run parameters
 ENVIRON = None           # Ignore, initialized by the runner
-MAZE    = 'maze_s6b.mz'  # See files in maze_files/ dir
+MAZE    = 'maze_s6.mz'  # See files in maze_files/ dir
 STEPS   = 3000           # Number of time steps to run
 RUNS    = 20             # Number of runs
 SERIAL  = False
 
 
 # Output
-DUMP_STDOUT = True # Dump the data to stdout
+DUMP_STDOUT = False # Dump the data to stdout
 EXPORT_FILE = None # Export data to file
 IMPORT_FILE = None # Import data and graph
 
@@ -88,10 +88,7 @@ def init_strats():
               #ChineseRProcess(ENVIRON, THETA, ALPHA),
               #COLORS['grue2']),
 
-  #PigVIStrat(ENVIRON,
-              #Dirichlet(ENVIRON),
-              #COLORS['green'], PLUS=0, EXPLORER=False),
-  #PigVIStrat(ENVIRON,
+    #PigVIStrat(ENVIRON,
               #ChineseRProcess(ENVIRON, THETA, ALPHA),
               #COLORS['red'], PLUS=0, EXPLORER=False),
   #CBStrat(ENVIRON,
@@ -120,12 +117,19 @@ def init_strats():
 
         # Experiments
     MIN_T  = -5.0
-    MAX_T  =  5.01
+    MAX_T  = -5.01
     STEP_T =  0.25
 
     MIN_A  = -1.0
     MAX_A  =  1.0 # Don't move above 1.0 o/w we have prob(prev state) = 0
     STEP_A =  0.25
+
+    for a in numpy.arange(0.01 , 1.0, 0.05):#numpy.arange(0.01, 1.0, 0.1):
+        arr.append(
+            PigVIStrat(ENVIRON,
+                Dirichlet(ENVIRON, a),
+                COLORS['green'], PLUS=0, EXPLORER=False))
+
 
     for t in numpy.arange(MIN_T, MAX_T, STEP_T):
         for a in list(numpy.arange(MIN_A, MAX_A, STEP_A)) + [0.99]:

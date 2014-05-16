@@ -13,7 +13,7 @@ class Dirichlet(Model):
     def __init__(self, tm, alpha=0.25):
         self.N = tm.N
         self.M = tm.M
-        self.nodes = [DirichletNode(self.M, self.N, tm.get_neighbors(i))
+        self.nodes = [DirichletNode(self.M, self.N, alpha, tm.get_neighbors(i))
                                     for i in range(self.N)]
         self.alpha = alpha
 
@@ -24,7 +24,7 @@ class Dirichlet(Model):
         return self.nodes[s].get_prob(a, ns)
 
     # Update model given the data
-    def update(self, a, s, ns):
+    def update(self, a, s, ns, r=0):
         return self.nodes[s].update(a, ns)
 
     # Undo update (for hypothetical updates)

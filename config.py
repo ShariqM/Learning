@@ -44,7 +44,7 @@ from chinese import ChineseRProcess
 ENVIRON = None           # Ignore, initialized by the runner
 MAZE    = 'maze.mz'  # See files in maze_files/ dir
 STEPS   = 1000           # Number of time steps to run
-RUNS    = 200            # Number of runs
+RUNS    = 100            # Number of runs
 SERIAL  = False
 
 
@@ -144,10 +144,10 @@ def init_strats():
 
             #for i in xrange(60,61,1):
             for i in xrange(60,150,1):
-                    im = ChineseRProcess(ENVIRON, t, a)
-                    arr.append(DyStrat(ENVIRON, im,
-                                       PigVIStrat(ENVIRON, im, PLUS=0, EXPLORER=False),
-                                       BossSAStrat(ENVIRON, im, -1), i))
+                im = ChineseRProcess(ENVIRON, t, a)
+                arr.append(DyStrat(ENVIRON, im,
+                                   PigVIStrat(ENVIRON, im, PLUS=0, EXPLORER=False),
+                                   BossSAStrat(ENVIRON, im, -1), i))
             #arr.append(
                 #PigVIStrat(ENVIRON,
                     #ChineseRProcess(ENVIRON, t, a),

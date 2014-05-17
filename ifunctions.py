@@ -68,20 +68,32 @@ def sm_divergence(tm, im, a, s, debug=False):
         div += alt(tm_prob * log2(tm_prob / im_prob))
 
     if config.FINIFY:
-        if tm.is_hypothetical() and im.has_unknown_states(): # If CRP model
-            # Compare PSI' with PSI/2 and ETA with PSI/2
-            im_prob = im.get_prob(a, s, config.PSI)
-            tm_prob = tm.get_prob(a, s, config.PSI)
-            if tm.ns == config.ETA:
-                tm_prob_new = tm.get_prob(a, s, config.ETA)
-                div += alt(tm_prob * log2(2 * tm_prob / im_prob))
-                div += alt(tm_prob_new * log2(2 * tm_prob_new / im_prob))
-            else:
-                div += alt(tm_prob * log2(tm_prob / im_prob))
-            #if s == 0:
-                #print 'a=', a, div
-            #print "HYPO tm=%.2f im=%.2f s=%d a=%d div=%.2f" % \
-                      #(tm_prob_new, im_prob, s, a, div)
+            if tm.is_hypothetical() and im.has_unknown_states(): # If CRP model
+                try:
+                    # Compare PSI' with PSI/2 and ETA with PSI/2
+                    im_prob = im.get_prob(a, s, config.PSI)
+                    tm_prob = tm.get_prob(a, s, config.PSI)
+                    if tm.ns == config.ETA:
+                        tm_prob_new = tm.get_prob(a, s, config.ETA)
+                        div += alt(tm_prob * log2(2 * tm_prob / im_prob))
+                        div += alt(tm_prob_new * log2(2 * tm_prob_new / im_prob))
+                except Exception as e:
+                    print 'im', im_prob, 'tm', tm_prob,
+                    print 'alpha', im.alpha, 'theta', im.theta
+                    raise e
+
+                else:
+                    try:
+                        div += alt(tm_prob * log2(tm_prob / im_prob))
+                    except Exception as e:
+                        print 'v2 im', im_prob, 'tm', tm_prob,
+                        print 'alpha', im.alpha, 'theta', im.theta
+                        raise e
+                    #if s == 0:
+                        #print 'a=', a, div
+                    #print "HYPO tm=%.2f im=%.2f s=%d a=%d div=%.2f" % \
+                              #(tm_prob_new, im_prob, s, a, div)
+
     else:
         # Compare (PSI' + ETA) with PSI
         im_prob = im.get_prob(a, s, config.PSI)

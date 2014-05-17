@@ -43,8 +43,8 @@ from chinese import ChineseRProcess
 # Run parameters
 ENVIRON = None           # Ignore, initialized by the runner
 MAZE    = 'maze.mz'  # See files in maze_files/ dir
-STEPS   = 3000           # Number of time steps to run
-RUNS    = 20             # Number of runs
+STEPS   = 1000           # Number of time steps to run
+RUNS    = 200            # Number of runs
 SERIAL  = False
 
 
@@ -117,19 +117,18 @@ def init_strats():
 
         # Experiments
     MIN_T  = -5.0
-    MAX_T  = -5.01
+    MAX_T  =  5.01
     STEP_T =  0.25
 
     MIN_A  = -1.0
     MAX_A  =  1.0 # Don't move above 1.0 o/w we have prob(prev state) = 0
     STEP_A =  0.25
 
-    for a in numpy.arange(0.01 , 1.0, 0.05):#numpy.arange(0.01, 1.0, 0.1):
-        arr.append(
-            PigVIStrat(ENVIRON,
-                Dirichlet(ENVIRON, a),
-                COLORS['green'], PLUS=0, EXPLORER=False))
-
+    #for a in numpy.arange(0.01 , 1.0, 0.05):#numpy.arange(0.01, 1.0, 0.1):
+        #arr.append(
+            #PigVIStrat(ENVIRON,
+                #Dirichlet(ENVIRON, a),
+                #COLORS['green'], PLUS=0, EXPLORER=False))
 
     for t in numpy.arange(MIN_T, MAX_T, STEP_T):
         for a in list(numpy.arange(MIN_A, MAX_A, STEP_A)) + [0.99]:
@@ -143,15 +142,16 @@ def init_strats():
             if t == 0.0:
                 continue
 
-            #for i in xrange(60,150,1):
-                    #im = ChineseRProcess(ENVIRON, 0.25, 0.0)
-                    #arr.append(DyStrat(ENVIRON, im,
-                                       #PigVIStrat(ENVIRON, im, PLUS=0, EXPLORER=False),
-                                       #BossSAStrat(ENVIRON, im, -1), i))
-            arr.append(
-                PigVIStrat(ENVIRON,
-                    ChineseRProcess(ENVIRON, t, a),
-                    COLORS['red'], PLUS=0, EXPLORER=False))
+            #for i in xrange(60,61,1):
+            for i in xrange(60,150,1):
+                    im = ChineseRProcess(ENVIRON, t, a)
+                    arr.append(DyStrat(ENVIRON, im,
+                                       PigVIStrat(ENVIRON, im, PLUS=0, EXPLORER=False),
+                                       BossSAStrat(ENVIRON, im, -1), i))
+            #arr.append(
+                #PigVIStrat(ENVIRON,
+                    #ChineseRProcess(ENVIRON, t, a),
+                    #COLORS['red'], PLUS=0, EXPLORER=False))
 
     # Later
   #LTAStrat(ENVIRON,

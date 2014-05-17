@@ -10,6 +10,9 @@ class Strat(object):
             for a in range(tm.M):
                 self.data[s].append(0)
 
+    def get_reward(self):
+        return self.im.total_reward
+
     def compute_mi(self):
         return missing_information(self.tm, self.im)
 

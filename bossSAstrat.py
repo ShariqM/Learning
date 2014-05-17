@@ -101,13 +101,8 @@ class BossSAStrat(Strat):
             self.policy    = self.compute_opt_policy()
             self.do_sample = False
             self.step_num = 0
-        #else:
 
-        #print self.step_num, self.pos
-        #print self.policy[self.step_num]
         action = self.policy[self.step_num][self.pos]
-        #self.last_action = action
-        #print "Action: ", action
         self.step_num += 1
 
         self.counts[self.pos][action] += 1

@@ -43,7 +43,7 @@ def valid_prob(t, a, K):
     return True
 
 all_clusters = [
-            [18, 44, 1], # t = 1.55 a= -0.5 r= 3.11288678331e-20
+            [8, 2], # t = 1.55 a= -0.5 r= 3.11288678331e-20
             #[37, 1], # t = 0.55 a= -0.25 r= 0.00265409298173
             #[8, 2, 2], # t = 6.61 a= -2.2 r= 2.64511878075e-05
             ]
@@ -51,8 +51,8 @@ all_clusters = [
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 
-MIN_T  =  0.0
-MAX_T  =  2.0
+MIN_T  = -1.0
+MAX_T  = 1.0
 STEP_T =  0.05
 
 MIN_A  = -1.0
@@ -64,7 +64,7 @@ T = []
 V = []
 maxr = -1
 for t in numpy.arange(MIN_T, MAX_T, STEP_T):
-    for a in numpy.arange(MIN_A, MAX_A, STEP_A):
+    for a in list(numpy.arange(MIN_A, MAX_A, STEP_A)) + [0.99]:
         for clusters in all_clusters:
             if not valid_prob(t, a, len(clusters)):
                 continue
@@ -73,7 +73,7 @@ for t in numpy.arange(MIN_T, MAX_T, STEP_T):
             V.append(r)
 i = 0
 for t in numpy.arange(MIN_T, MAX_T, STEP_T):
-    for a in numpy.arange(MIN_A, MAX_A, STEP_A):
+    for a in list(numpy.arange(MIN_A, MAX_A, STEP_A)) + [0.99]:
         for clusters in all_clusters:
             if not valid_prob(t, a, len(clusters)):
                 continue
@@ -82,10 +82,14 @@ for t in numpy.arange(MIN_T, MAX_T, STEP_T):
                 t_max = t
                 a_max = a
                 print 'MAX - t=', t, 'a=', a, 'r=', V[i]
-            if V[i]/maxr > 0.2:
-                #print 'BIG - t=', t, 'a=', a, 'r=', V[i]
-                ax.scatter(t, a, V[i], c=V[i], vmin=0, vmax=maxr, s=10)
-            elif random.random() < STEP_T/10.0:
+            #print t,a
+            if t >= 0.24 and t <= 0.26 and a>= -0.01 and a<= 0.01:
+                print 'Mine - t=', t, 'a=', a, 'r=', V[i]
+            #if V[i]/maxr > 0.9:
+                ##print 'BIG - t=', t, 'a=', a, 'r=', V[i]
+                #ax.scatter(t, a, V[i], c=V[i], vmin=0, vmax=maxr, s=10)
+            if random.random() < 0.2:
+            #elif random.random() < STEP_T/4.0:
                 ax.scatter(t, a, V[i], c=V[i], vmin=0, vmax=maxr, s=10)
             i = i + 1
 print 'max', maxr

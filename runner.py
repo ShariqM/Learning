@@ -9,6 +9,7 @@ import pdb
 import random
 import string
 import argparse
+import numpy
 from world import World
 from randomstrat import *
 from unembodiedstrat import *
@@ -63,19 +64,20 @@ class Runner(object):
             assert not config.SERIAL
             assert not config.GRAPHICS
 
+    # Records the Missing Information at each step for each strategy
     def init_strats_data(self):
-        strats_data = [[] for i in range(len(self.strats))]
+        self.strats_data = [[] for i in range(len(self.strats))]
         for i in range(len(self.strats)):
             for s in range(self.steps):
-                strats_data[i].append(0.0)
-        return strats_data
+                self.strats_data[i].append(0.0)
 
-        # Step through each strategy, record the MI at each step
+    # Run each strategy in parallel and aggregate the data together
     def collect_data(self):
-        # Missing information for each step of each strat
-        global strats_data
-        strats_data = self.init_strats_data()
         self.initial_mi = 0
+        self.init_strats_data()
+
+        self.strats_reward = [[] for i in range(len(self.strats))]
+
         start = dt.now()
 
         jobs = []
@@ -89,7 +91,7 @@ class Runner(object):
 
         if config.GRAPHICS or config.SERIAL:
             assert self.runs == 1
-            strat_collect_serial(strats, strats_data, self.steps)
+            strat_collect_serial(strats, self.strats_data, self.steps)
             return strats_data
 
         m = Manager()
@@ -105,36 +107,37 @@ class Runner(object):
 
         z = 0
         while running > 0:
-            i, data = q.get()
+            i, data, reward = q.get()
 
             print 'Job %d completed name=%s, elapsed=%ds' % (z, \
                             strats[i].get_name(), (dt.now() - start).seconds)
             sys.stdout.flush()
             z = z + 1
+
             for j in range(len(data)):
-                strats_data[i][j] += data[j]
+                self.strats_data[i][j] += data[j]
+            self.strats_reward[i].append(reward)
 
             if len(jobs):
                 i = jobs.pop()
                 p.apply_async(strat_collect, args=(q, i, strats[i], self.steps))
             else:
-                running -= 1
+                running -= 1 # Didn't start another job to replace this one
 
         p.close()
         p.join()
 
         self.elapsed = dt.now() - start
-        return strats_data
 
-    # Average the data and find when MI hits 0
-    def analyze_data(self, strats_data):
+    # Average the Missing Information, run stats on reward
+    def analyze_data(self):
         for i in range(len(self.strats)):
-            print 'mi=', strats_data[i][self.steps-1]
             for s in range(self.steps):
-                strats_data[i][s] /= self.runs
-        return strats_data
+                self.strats_data[i][s] /= self.runs
+            arr = numpy.array(self.strats_reward[i])
+            self.strats_reward[i] = [numpy.mean(arr), numpy.std(arr)]
 
-    def graph_data(self, strats_data):
+    def graph_data(self):
         try:
             import matplotlib.pyplot as plt
         except:
@@ -144,10 +147,6 @@ class Runner(object):
         print "Graphing data..."
 
         mi_height = self.initial_mi
-        for i in range(len(self.strats)):
-            mi_height = max(strats_data[i][self.steps - 1], mi_height)
-        print mi_height
-
         step_points = [i for i in range(self.steps)]
         plt.xlabel('Time (steps)', fontdict={'fontsize':16})
         plt.ylabel('Missing Information (bits)', fontdict={'fontsize':16})
@@ -156,25 +155,28 @@ class Runner(object):
 
 
         for i in range(len(self.strats)):
-            mi = strats_data[i][self.steps - 1]
-            plt.plot(step_points, strats_data[i],
+            mi = self.strats_data[i][self.steps - 1]
+            plt.plot(step_points, self.strats_data[i],
                      #color=self.strats[i].color,
                      label=self.strats[i].get_name() + "MI=" + str(mi))
 
         plt.legend(bbox_to_anchor=(0,0.8), loc=2, borderaxespad=0.)
         plt.show()
 
-    def export_data(self, strats_data, f):
-        for i in range(len(strats_data)):
-            for s in range(len(strats_data[i])):
-                f.write('%f ' % strats_data[i][s])
+    def export_data(self, f):
+        for i in range(len(self.strats_data)):
+            for s in range(len(self.strats_data[i])):
+                f.write('%f ' % self.strats_data[i][s])
             f.write('\n')
 
         f.write('Summary\n')
-        for i in range(len(strats_data)):
+        for i in range(len(self.strats_data)):
             f.write('%s ' % self.strats[i].get_name())
-            mi = strats_data[i][self.steps - 1]
-            f.write('MI=%s\n' % str(mi))
+            mi = self.strats_data[i][self.steps - 1]
+            f.write('MI=%f ' % mi)
+            [m, std] = self.strats_reward[i]
+            f.write('Mean Reward=%f (std=%f)\n' % (m, std))
+
 
     def import_data(self):
         f = open(self.ifile, 'r')
@@ -211,8 +213,8 @@ class Runner(object):
         if self.ifile:
             strats_data = self.import_data()
         else:
-            strats_data = self.collect_data()
-            strats_data = self.analyze_data(strats_data)
+            self.collect_data()
+            self.analyze_data()
 
             # Display text representation of Model
             if self.verbose:
@@ -221,10 +223,10 @@ class Runner(object):
                     self.strats[i].display()
 
             if self.ofile:
-                self.export_data(strats_data, open(self.ifile, 'r'))
+                self.export_data(open(self.ifile, 'r'))
             if self.dump:
-                self.export_data(strats_data, sys.stdout)
-                return
+                self.export_data(sys.stdout)
+                return # done
 
         self.graph_data(strats_data)
 
@@ -265,7 +267,8 @@ def strat_collect(q, i, strat, steps):
                 #sys.stdout.flush()
 
             step = step + 1
-        q.put((i, strats_data))
+        reward = strat.get_reward()
+        q.put((i, strats_data, reward))
     except Exception as e:
         traceback.print_exc()
         print 'e', e.value

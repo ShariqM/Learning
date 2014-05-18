@@ -26,11 +26,11 @@ class BossSAStrat(Strat):
         self.T = 10
         self.B = B
         self.policy = {}
-        self.step_num = 0
         self.reward = {config.PSI: 1.0}
         self.discount = config.DISCOUNT_RATE
         self.do_sample = True
         self.last_action = -1
+        self.step_optimize = 99999
 
         self.graphics = MazeGraphics(self.name, self.tm) if config.GRAPHICS else None
 
@@ -83,7 +83,7 @@ class BossSAStrat(Strat):
                         best_val = val
                         best_as = [a]
                 policy[t][s] = random.sample(best_as, 1)[0]
-        #pdb.set_trace()
+
         return policy
 
     def step(self, step=0, last_mi=1):
@@ -96,14 +96,12 @@ class BossSAStrat(Strat):
             self.reward[self.pos] = random.random()
 
         #if self.pos not in self.im.get_states() or \
-        if self.do_sample or self.step_num == self.T or \
-                    self.pos not in self.policy[self.step_num].keys():
+                                            # self.step_num == self.T or \
+        if self.do_sample or self.pos not in self.policy[0].keys():
             self.policy    = self.compute_opt_policy()
             self.do_sample = False
-            self.step_num = 0
 
-        action = self.policy[self.step_num][self.pos]
-        self.step_num += 1
+        action = self.policy[0][self.pos]
 
         self.counts[self.pos][action] += 1
         if self.counts[self.pos][action] == self.B:

@@ -135,6 +135,7 @@ class Runner(object):
             for s in range(self.steps):
                 self.strats_data[i][s] /= self.runs
             arr = numpy.array(self.strats_reward[i])
+            print 'ARR',arr
             self.strats_reward[i] = [numpy.mean(arr), numpy.std(arr)]
 
     def graph_data(self):

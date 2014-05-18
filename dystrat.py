@@ -28,9 +28,6 @@ class DyStrat(Strat):
         # We have to keep track of this b/c MultProc screw it up as arg
         self.ls = -1
 
-    def compute_mi(self):
-        return self.im.total_reward
-
     def step(self, step, last_mi):
         self.ls = step
         if step == self.step_switch:

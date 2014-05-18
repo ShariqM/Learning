@@ -154,8 +154,8 @@ def init_strats():
                     ChineseRProcess(ENVIRON, t, a),
                     COLORS['red'], PLUS=0, EXPLORER=False))
 
-    #for i in xrange(120,121,1):
-    for i in xrange(65,135,1):
+    #for i in xrange(65,135,1):
+    for i in xrange(110,111,1):
         im = ChineseRProcess(ENVIRON, 0.25, 0.0)
         arr.append(DyStrat(ENVIRON, im,
                     PigVIStrat(ENVIRON, im, PLUS=0, EXPLORER=False),

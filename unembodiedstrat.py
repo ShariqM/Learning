@@ -25,7 +25,7 @@ import multiprocessing
 class UnembodiedStrat(Strat):
 
     def __init__(self, tm, im, color, marker=None):
-        super(UnembodiedStrat, self).init()
+        super(UnembodiedStrat, self).init(tm)
         self.tm = tm
         self.im = im
         self.name = "Unembodied"
@@ -36,19 +36,16 @@ class UnembodiedStrat(Strat):
 
     # Take the (state, action) that results in the most pig
     def step(self, step=0, last_mi=1):
-        if last_mi <= 0.0: # optimization: no more information to gain
-            return
-
         max_gain, best_a, best_s = (-5.0, -5, -5)
         for a in range(self.im.M):
             for s in self.im.get_known_states():
                 if not self.pig_cache[a].has_key(s):
                     self.pig_cache[a][s] = \
-                        predicted_information_gain(self.im, a, s, False) #FIXME
+                        predicted_information_gain(self.im, a, s, False)
                 if self.pig_cache[a][s] > max_gain:
                     max_gain, best_a, best_s = (self.pig_cache[a][s], a, s)
 
-        self.pig_cache[best_a].pop(best_s) # ASSUMPTION
+        self.pig_cache[best_a].pop(best_s) # Cache invalidation assumption
 
-        ns = self.tm.take_action(best_s, best_a)
-        self.im.update(best_a, best_s, ns)
+        ns, r = self.tm.take_action(best_s, best_a)
+        self.im.update(best_a, best_s, ns, r)

@@ -52,7 +52,7 @@ class CBStrat(Strat):
 
         a = self.get_cba()
 
-        ns = self.tm.take_action(self.pos, a)
-        self.im.update(a, self.pos, ns)
+        ns, r = self.tm.take_action(self.pos, a)
+        self.im.update(a, self.pos, ns, r)
         self.debug("(a=%d, s=%d, ns=%d)" % (a,self.pos,ns))
         self.pos = ns

@@ -38,19 +38,20 @@ from bossstrat import *
 from bossSAstrat import *
 from dystrat import *
 from chainstrat import *
+from randomstrat import *
 
 from chinese import ChineseRProcess
 
 # Run parameters
 ENVIRON = None           # Ignore, initialized by the runner
 MAZE    = 'maze.mz'      # See files in maze_files/ dir
-STEPS   = 1000           # Number of time steps to run
-RUNS    = 500            # Number of runs
+STEPS   = 3000           # Number of time steps to run
+RUNS    = 10             # Number of runs
 SERIAL  = False
 
 
 # Output
-DUMP_STDOUT = True # Dump the data to stdout
+DUMP_STDOUT = False # Dump the data to stdout
 EXPORT_FILE = None # Export data to file
 IMPORT_FILE = None # Import data and graph
 
@@ -62,8 +63,8 @@ UPDATE_VI     = False # Update Value Iteration Table (slow)
 
 # Default parameters to models
 ALPHA   = 0.0  # Discount parameter to a CRP
-THETA   = 1.50 # Strength (or concentration) parameter to a CRP
-D_ALPHA = 0.25 # Strength parameter to a Dirichlet model
+THETA   = 0.25 # Strength (or concentration) parameter to a CRP
+D_ALPHA = 0.01 # Strength parameter to a Dirichlet model
 
 # Strats to run [Choose a (Strategy, Internal Model) pair]
 import numpy
@@ -71,27 +72,22 @@ def init_strats():
     arr = [
   #RandomStrat(ENVIRON,
               #Dirichlet(ENVIRON), COLORS['red']),
-  #RandomStrat(ENVIRON,
-              #ChineseRProcess(ENVIRON, THETA, ALPHA), COLORS['red2']),
+  RandomStrat(ENVIRON,
+              ChineseRProcess(ENVIRON, THETA, ALPHA), COLORS['red']),
 
   #UnembodiedStrat(ENVIRON,
               #Dirichlet(ENVIRON),
               #COLORS['black']),
-  #UnembodiedStrat(ENVIRON,
-              #ChineseRProcess(ENVIRON, THETA, ALPHA),
-              #COLORS['grey']),
+  UnembodiedStrat(ENVIRON,
+              ChineseRProcess(ENVIRON, THETA, ALPHA),
+              COLORS['black']),
 
-  # FIXME
-  #PigGreedyStrat(ENVIRON,
-              #Dirichlet(ENVIRON),
-              #COLORS['blue']),
-  #PigGreedyStrat(ENVIRON,
-              #ChineseRProcess(ENVIRON, THETA, ALPHA),
-              #COLORS['grue2']),
-
-    #PigVIStrat(ENVIRON,
-              #ChineseRProcess(ENVIRON, THETA, ALPHA),
-              #COLORS['red'], PLUS=0, EXPLORER=False),
+  PigVIStrat(ENVIRON,
+              Dirichlet(ENVIRON, D_ALPHA),
+              COLORS['blue'], PLUS=0, EXPLORER=False),
+  PigVIStrat(ENVIRON,
+              ChineseRProcess(ENVIRON, THETA, ALPHA),
+              COLORS['green'], PLUS=0, EXPLORER=False),
   #CBStrat(ENVIRON,
               #ChineseRProcess(ENVIRON, THETA, ALPHA),
               #COLORS['red']),
@@ -99,12 +95,9 @@ def init_strats():
               #ChineseRProcess(ENVIRON, THETA, ALPHA),
               #5, COLORS['red']),
 
-  #PigVIStrat(ENVIRON,
-              #ChineseRProcess(ENVIRON, THETA, ALPHA),
-              #COLORS['red'], PLUS=0, EXPLORER=True),
-  #PigVIStrat(ENVIRON,
-              #ChineseRProcess(ENVIRON, THETA, ALPHA),
-              #COLORS['red'], PLUS=1, EXPLORER=False),
+  PigVIStrat(ENVIRON,
+              ChineseRProcess(ENVIRON, THETA, ALPHA),
+              COLORS['grue2'], PLUS=1, EXPLORER=False),
   #PigVIStrat(ENVIRON,
               #ChineseRProcess(ENVIRON, 3.0, 0.0),
               #COLORS['red'], PLUS=0, EXPLORER=False),
@@ -155,11 +148,11 @@ def init_strats():
                     COLORS['red'], PLUS=0, EXPLORER=False))
 
     #for i in xrange(65,135,1):
-    for i in xrange(110,111,1):
-        im = ChineseRProcess(ENVIRON, 0.25, 0.0)
-        arr.append(DyStrat(ENVIRON, im,
-                    PigVIStrat(ENVIRON, im, PLUS=0, EXPLORER=False),
-                    BossSAStrat(ENVIRON, im, -1), i))
+    #for i in xrange(110,111,1):
+        #im = ChineseRProcess(ENVIRON, 0.25, 0.0)
+        #arr.append(DyStrat(ENVIRON, im,
+                    #PigVIStrat(ENVIRON, im, PLUS=0, EXPLORER=False),
+                    #BossSAStrat(ENVIRON, im, -1), i))
         #arr.append(ChainStrat(ENVIRON, im))
 
 
@@ -171,3 +164,11 @@ def init_strats():
 
            #]
     return arr
+
+  # FIXME if needed
+  #PigGreedyStrat(ENVIRON,
+              #Dirichlet(ENVIRON),
+              #COLORS['blue']),
+  #PigGreedyStrat(ENVIRON,
+              #ChineseRProcess(ENVIRON, THETA, ALPHA),
+              #COLORS['grue2']),

@@ -85,8 +85,8 @@ class LTAVIStrat(Strat):
 
         self.nodes[self.pos][best_a]  += 1
 
-        ns = self.tm.take_action(self.pos, best_a)
-        self.im.update(best_a, self.pos, ns)
+        ns, reward = self.tm.take_action(self.pos, best_a)
+        self.im.update(best_a, self.pos, ns, reward)
         self.debug("(a=%d, s=%d, ns=%d)" % (best_a,self.pos,ns))
         self.pos = ns
 

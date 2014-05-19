@@ -92,7 +92,7 @@ class Runner(object):
         if config.GRAPHICS or config.SERIAL:
             assert self.runs == 1
             strat_collect_serial(strats, self.strats_data, self.steps)
-            return strats_data
+            return
 
         m = Manager()
         q = m.Queue()
@@ -135,7 +135,6 @@ class Runner(object):
             for s in range(self.steps):
                 self.strats_data[i][s] /= self.runs
             arr = numpy.array(self.strats_reward[i])
-            print 'ARR',arr
             self.strats_reward[i] = [numpy.mean(arr), numpy.std(arr)]
 
     def graph_data(self):
@@ -158,7 +157,7 @@ class Runner(object):
         for i in range(len(self.strats)):
             mi = self.strats_data[i][self.steps - 1]
             plt.plot(step_points, self.strats_data[i],
-                     #color=self.strats[i].color,
+                     color=self.strats[i].color,
                      label=self.strats[i].get_name() + "MI=" + str(mi))
 
         plt.legend(bbox_to_anchor=(0,0.8), loc=2, borderaxespad=0.)
@@ -229,7 +228,7 @@ class Runner(object):
                 self.export_data(sys.stdout)
                 return # done
 
-        self.graph_data(strats_data)
+        self.graph_data()
 
 def strat_collect_serial(strats, strats_data, steps):
     step = 0

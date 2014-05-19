@@ -100,6 +100,6 @@ class BossStrat(Strat):
             self.do_sample = True
 
         oldpos   = self.pos
-        self.pos = self.tm.take_action(self.pos, action)
+        self.pos, r = self.tm.take_action(self.pos, action)
         self.new_data(action, oldpos, self.pos)
-        self.im.update(action, oldpos, self.pos)
+        self.im.update(action, oldpos, self.pos, r)

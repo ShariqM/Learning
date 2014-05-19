@@ -40,8 +40,8 @@ class PigGreedyStrat(Strat):
         # This prevents us from picking the same action forever
         best_a = random.sample(best_as, 1)[0]
 
-        ns = self.tm.take_action(self.pos, best_a)
-        self.im.update(best_a, self.pos, ns)
+        ns, reward = self.tm.take_action(self.pos, best_a)
+        self.im.update(best_a, self.pos, ns, reward)
         self.pos = ns
 
         #if not self.data.has_key((self.pos, best_a)):

@@ -1,6 +1,12 @@
 """
     An agent whos exploration strategy is determined by the Explicit Explore or
     Exploit (E3) Algorithm.
+    *** INCOMPLETE ***
+    *** INCOMPLETE ***
+    *** INCOMPLETE ***
+    *** INCOMPLETE ***
+    *** INCOMPLETE ***
+    *** INCOMPLETE ***
 """
 
 import random
@@ -88,6 +94,6 @@ class E3Strat(Strat):
             self.steps_left = self.steps_left - 1
 
         oldpos = self.pos
-        self.pos = self.tm.take_action(self.pos, action)
+        self.pos, reward = self.tm.take_action(self.pos, action)
 
-        self.im.update(action, oldpos, self.pos)
+        self.im.update(action, oldpos, self.pos, reward)

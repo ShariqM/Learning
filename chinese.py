@@ -48,12 +48,10 @@ class ChineseRProcess(object):
     def get_reward(self, a, s):
         if s == config.PSI:
             return 0
-            return config.MAX_REWARD
+            #return config.MAX_REWARD
         if a not in range(self.M):
-            raise Exception("Foo")
-        r = self.nodes[s].get_reward(a)
-        #print 's=%d, a=%d, r=%f' % (s,a,r)
-        return r
+            raise Exception("Invalid action")
+        return self.nodes[s].get_reward(a)
 
     # Update model given the data
     def update(self, a, s, ns, r=0):

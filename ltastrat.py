@@ -39,7 +39,7 @@ class LTAStrat(Strat):
         a = self.get_lta(self.nodes[self.pos])
         self.nodes[self.pos][a] += 1
 
-        ns = self.tm.take_action(self.pos, a)
-        self.im.update(a, self.pos, ns)
+        ns, reward = self.tm.take_action(self.pos, a)
+        self.im.update(a, self.pos, ns, reward)
         self.debug("(a=%d, s=%d, ns=%d)" % (a,self.pos,ns))
         self.pos = ns

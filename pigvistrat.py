@@ -24,8 +24,8 @@ class PigVIStrat(Strat):
         self.im = im
         self.pos = config.SS
         self.name = "PIG(VI%s)" % ('+' * PLUS)
-        if im.has_unknown_states():
-            self.name += " [EXPL]" if EXPLORER else " [PLAY]"
+        #if im.has_unknown_states():
+            #self.name += " [EXPL]" if EXPLORER else " [PLAY]"
         self.color = color
         self.vi_steps = config.VI_STEPS # Number of steps to look in the future
         self.debugl = False

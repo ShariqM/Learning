@@ -19,7 +19,7 @@ class Dirichlet(Model):
         self.total_reward = 0.0
 
     def get_name(self):
-        return "D [a=%.2f]" % self.alpha
+        return "DP [a=%.2f]" % self.alpha
 
     def get_prob(self, a, s, ns):
         return self.nodes[s].get_prob(a, ns)

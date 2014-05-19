@@ -69,7 +69,7 @@ class Runner(object):
         self.strats_data = [[] for i in range(len(self.strats))]
         for i in range(len(self.strats)):
             for s in range(self.steps):
-                self.strats_data[i].append(0.0)
+                self.strats_data[i].append([])
 
     # Run each strategy in parallel and aggregate the data together
     def collect_data(self):
@@ -114,8 +114,8 @@ class Runner(object):
             sys.stdout.flush()
             z = z + 1
 
-            for j in range(len(data)):
-                self.strats_data[i][j] += data[j]
+            for s in range(len(data)):
+                self.strats_data[i][s].append(data[s])
             self.strats_reward[i].append(reward)
 
             if len(jobs):
@@ -133,7 +133,9 @@ class Runner(object):
     def analyze_data(self):
         for i in range(len(self.strats)):
             for s in range(self.steps):
-                self.strats_data[i][s] /= self.runs
+                arr = numpy.array(self.strats_data[i][s])
+                mean, std = numpy.mean(arr), numpy.std(arr)
+                self.strats_data[i][s] = [mean,std]
             arr = numpy.array(self.strats_reward[i])
             self.strats_reward[i] = [numpy.mean(arr), numpy.std(arr)]
 
@@ -155,32 +157,33 @@ class Runner(object):
 
 
         for i in range(len(self.strats)):
-            mi = self.strats_data[i][self.steps - 1]
-            plt.plot(step_points, self.strats_data[i],
+            mi = self.strats_data[i][self.steps - 1][0]
+            mean_data = [data[0] for data in self.strats_data[i]]
+            plt.plot(step_points, mean_data,
                      color=self.strats[i].color,
-                     label=self.strats[i].get_name() + "MI=" + str(mi))
+                     label=self.strats[i].get_name() + " MI=" + str(mi))
 
-        plt.legend(bbox_to_anchor=(0,0.8), loc=2, borderaxespad=0.)
+        plt.legend(bbox_to_anchor=(0.55, 1.00), loc=2, borderaxespad=0.)
         plt.show()
 
     def export_data(self, f):
         for i in range(len(self.strats_data)):
             for s in range(len(self.strats_data[i])):
-                f.write('%f ' % self.strats_data[i][s])
+                #FIXME
+                f.write('%f' % self.strats_data[i][s][0])
             f.write('\n')
 
         f.write('Summary\n')
         for i in range(len(self.strats_data)):
             f.write('%s ' % self.strats[i].get_name())
             mi = self.strats_data[i][self.steps - 1]
-            f.write('MI=%f ' % mi)
+            f.write('Mean MI=%f (std=%f) | ' % (mi[0], mi[1]))
             [m, std] = self.strats_reward[i]
             f.write('Mean Reward=%f (std=%f)\n' % (m, std))
 
-
     def import_data(self):
         f = open(self.ifile, 'r')
-        strats_data = []
+        self.strats_data = []
         l = f.readline()
         i = 0
         initial_mi = 0
@@ -192,13 +195,13 @@ class Runner(object):
             if l.startswith('Summary'):
                 break
 
-            strats_data.append([])
+            self.strats_data.append([])
             step = 0
             for mi in l.split():
                 mi = float(mi)
                 if not initial_mi:
                     initial_mi = mi
-                strats_data[i].append(mi)
+                self.strats_data[i].append(mi)
                 step = step + 1
 
             self.steps = step
@@ -207,11 +210,10 @@ class Runner(object):
             l = f.readline()
 
         self.initial_mi = initial_mi
-        return strats_data
 
     def run(self):
         if self.ifile:
-            strats_data = self.import_data()
+            self.import_data()
         else:
             self.collect_data()
             self.analyze_data()

@@ -46,7 +46,7 @@ from chinese import ChineseRProcess
 ENVIRON = None           # Ignore, initialized by the runner
 MAZE    = 'maze.mz'      # See files in maze_files/ dir
 STEPS   = 3000           # Number of time steps to run
-RUNS    = 20             # Number of runs
+RUNS    = 200            # Number of runs
 SERIAL  = False
 
 
@@ -110,12 +110,12 @@ def init_strats():
         ]
 
         # Experiments
-    MIN_T  =  0.0
-    MAX_T  = -1.01
-    STEP_T =  0.1
+    MIN_T  = -1.0
+    MAX_T  =  3.01
+    STEP_T =  0.2
 
-    MIN_A  = -0.1
-    MAX_A  =  0.11 # Don't move above 1.0 o/w we have prob(prev state) = 0
+    MIN_A  = -0.5
+    MAX_A  =  0.51 # Don't move above 1.0 o/w we have prob(prev state) = 0
     STEP_A =  0.1
 
     #for a in numpy.arange(0.01 , 1.0, 0.05):#numpy.arange(0.01, 1.0, 0.1):

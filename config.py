@@ -150,12 +150,12 @@ def init_strats():
 
     #for i in xrange(80,111,1):
     #for i in xrange(65,135,1):
-    for i in xrange(99,100,1):
+    for i in xrange(120,121,1):
         im = ChineseRProcess(ENVIRON, 0.25, 0.0)
-        #arr.append(DyStrat(ENVIRON, im,
-                    #PigVIStrat(ENVIRON, im, PLUS=0, EXPLORER=False),
-                    #BossSAStrat(ENVIRON, im, -1), i))
-        arr.append(ChainStrat(ENVIRON, im))
+        arr.append(DyStrat(ENVIRON, im,
+                    PigVIStrat(ENVIRON, im, PLUS=0, EXPLORER=False),
+                    BossSAStrat(ENVIRON, im, -1), i))
+        #arr.append(ChainStrat(ENVIRON, im))
 
 
 

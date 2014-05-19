@@ -45,15 +45,15 @@ from chinese import ChineseRProcess
 # Run parameters
 ENVIRON = None           # Ignore, initialized by the runner
 MAZE    = 'maze.mz'      # See files in maze_files/ dir
-STEPS   = 1000           # Number of time steps to run
-RUNS    = 500            # Number of runs
+STEPS   = 3000           # Number of time steps to run
+RUNS    = 30             # Number of runs
 SERIAL  = False
 
 
 # Output
-DUMP_STDOUT = True # Dump the data to stdout
-EXPORT_FILE = None # Export data to file
-IMPORT_FILE = None # Import data and graph
+DUMP_STDOUT = False # Dump the data to stdout
+EXPORT_FILE = None  # Export data to file
+IMPORT_FILE = None  # Import data and graph
 
 # Graphics
 GRAPHICS      = False # Visualization of agent
@@ -150,11 +150,12 @@ def init_strats():
 
     #for i in xrange(80,111,1):
     #for i in xrange(65,135,1):
-    for i in xrange(120,121,1):
-        im = ChineseRProcess(ENVIRON, 0.25, 0.0)
-        arr.append(DyStrat(ENVIRON, im,
-                    PigVIStrat(ENVIRON, im, PLUS=0, EXPLORER=False),
-                    BossSAStrat(ENVIRON, im, -1), i))
+    for i in [2,3,5,8,15,25,50,100,500,5000,100000]:
+        im = ChineseRProcess(ENVIRON, 0.25, 0.0, i + 0.0)
+        arr.append(PigVIStrat(ENVIRON, im, PLUS=0, EXPLORER=False))
+        #arr.append(DyStrat(ENVIRON, im,
+                    #PigVIStrat(ENVIRON, im, PLUS=0, EXPLORER=False),
+                    #BossSAStrat(ENVIRON, im, -1), i))
         #arr.append(ChainStrat(ENVIRON, im))
 
 

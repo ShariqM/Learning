@@ -10,7 +10,7 @@ import config
 
 class ChineseRProcess(object):
 
-    def __init__(self, tm, theta=3.00, alpha=0.0):
+    def __init__(self, tm, theta=3.00, alpha=0.0, finify_by=2.0):
         self.M = tm.M
         self.nodes = {}
         self.nodes[config.SS] = ChineseRProcessNode(self.M, theta, alpha)
@@ -18,9 +18,15 @@ class ChineseRProcess(object):
         self.theta = theta
         self.alpha = alpha
         self.total_reward = 0.0
+        assert type(finify_by) != int
+        self.finify_by = finify_by
+
+    def get_finify_by(self):
+        return self.finify_by
 
     def get_name(self):
-        return "CRP [T=%.3f, a=%.3f]" % (self.theta, self.alpha)
+        return "CRP [T=%.3f, a=%.3f, f=%f]" % \
+                    (self.theta, self.alpha, self.finify_by)
 
     def get_known_states(self, a=config.NULL_ARG, s=config.NULL_ARG):
         if s == config.NULL_ARG:

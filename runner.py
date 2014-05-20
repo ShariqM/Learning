@@ -160,7 +160,7 @@ class Runner(object):
             mi = self.strats_data[i][self.steps - 1][0]
             mean_data = [data[0] for data in self.strats_data[i]]
             plt.plot(step_points, mean_data,
-                     #color=self.strats[i].color,
+                     color=self.strats[i].color,
                      label=self.strats[i].get_name() + " MI=" + str(mi))
 
         plt.legend(bbox_to_anchor=(0.55, 1.00), loc=2, borderaxespad=0.)
@@ -170,7 +170,7 @@ class Runner(object):
         for i in range(len(self.strats_data)):
             for s in range(len(self.strats_data[i])):
                 #FIXME
-                f.write('%f' % self.strats_data[i][s][0])
+                f.write('%f ' % self.strats_data[i][s][0])
             f.write('\n')
 
         f.write('Summary\n')

@@ -46,7 +46,7 @@ class CBStrat(Strat):
                 best_as = [a]
         return random.sample(best_as, 1)[0]
 
-    def step(self, step, last_mi=1):
+    def step(self, step=0, last_mi=1):
         if not self.nodes.has_key(self.pos):
             self.counts[self.pos] = 1
 

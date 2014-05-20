@@ -16,7 +16,7 @@ import pdb
 class LTAStrat(Strat):
 
     def __init__(self, tm, im, color, marker=None):
-        super(LTAStrat, self).init()
+        super(LTAStrat, self).init(tm)
         self.tm = tm
         self.im = im
         self.pos = 0
@@ -32,7 +32,7 @@ class LTAStrat(Strat):
             if count == max_count:
                 return a
 
-    def step(self, last_mi=1):
+    def step(self, step=0, last_mi=1):
         if not self.nodes.has_key(self.pos):
             self.nodes[self.pos] = {i:0 for i in range(self.im.M)}
 

@@ -22,7 +22,7 @@ VI_STEPS      = 10
 # Parameters to Learning
 UNK_PROB      = float("1e-5") # prob(K) for K not in your state space
 BETA          = math.log(1.0 / UNK_PROB, 2) # Information gain of discovering a new state
-
+import sys
 # Knobs
 FINIFY        = True # Break PSI into PSI' and K+1
 
@@ -45,8 +45,8 @@ from chinese import ChineseRProcess
 # Run parameters
 ENVIRON = None           # Ignore, initialized by the runner
 MAZE    = 'maze.mz'      # See files in maze_files/ dir
-STEPS   = 3000           # Number of time steps to run
-RUNS    = 30             # Number of runs
+STEPS   = 300            # Number of time steps to run
+RUNS    = 1              # Number of runs
 SERIAL  = False
 
 
@@ -72,38 +72,38 @@ def init_strats():
     arr = [
   #RandomStrat(ENVIRON,
               #Dirichlet(ENVIRON), COLORS['red']),
-  #RandomStrat(ENVIRON,
-              #ChineseRProcess(ENVIRON, THETA, ALPHA), COLORS['red']),
+  RandomStrat(ENVIRON,
+              ChineseRProcess(ENVIRON, THETA, ALPHA), COLORS['red']),
 
   #UnembodiedStrat(ENVIRON,
               #Dirichlet(ENVIRON),
               #COLORS['black']),
-  #UnembodiedStrat(ENVIRON,
-              #ChineseRProcess(ENVIRON, THETA, ALPHA),
-              #COLORS['black']),
+  UnembodiedStrat(ENVIRON,
+              ChineseRProcess(ENVIRON, THETA, ALPHA),
+              COLORS['black']),
 
-  #PigVIStrat(ENVIRON,
-              #Dirichlet(ENVIRON, D_ALPHA),
-              #COLORS['blue'], PLUS=0, EXPLORER=False),
-  #PigVIStrat(ENVIRON,
-              #ChineseRProcess(ENVIRON, THETA, ALPHA),
-              #COLORS['green'], PLUS=0, EXPLORER=False),
-  #CBStrat(ENVIRON,
-              #ChineseRProcess(ENVIRON, THETA, ALPHA),
-              #COLORS['red']),
+  PigVIStrat(ENVIRON,
+              Dirichlet(ENVIRON, D_ALPHA),
+              COLORS['blue'], PLUS=0, EXPLORER=False),
+  PigVIStrat(ENVIRON,
+              ChineseRProcess(ENVIRON, THETA, ALPHA),
+              COLORS['green'], PLUS=0, EXPLORER=False),
+  CBStrat(ENVIRON,
+              ChineseRProcess(ENVIRON, THETA, ALPHA),
+              COLORS['purple']),
   #BossStrat(ENVIRON,
               #ChineseRProcess(ENVIRON, THETA, ALPHA),
               #5, COLORS['red']),
 
-  #PigVIStrat(ENVIRON,
-              #ChineseRProcess(ENVIRON, THETA, ALPHA),
-              #COLORS['grue2'], PLUS=1, EXPLORER=False),
+  PigVIStrat(ENVIRON,
+              ChineseRProcess(ENVIRON, THETA, ALPHA),
+              COLORS['grue2'], PLUS=1, EXPLORER=False),
   #PigVIStrat(ENVIRON,
               #ChineseRProcess(ENVIRON, 3.0, 0.0),
               #COLORS['red'], PLUS=0, EXPLORER=False),
-  #LTAStrat(ENVIRON,
-              #ChineseRProcess(ENVIRON),
-              #COLORS['yellow']),
+  LTAStrat(ENVIRON,
+              ChineseRProcess(ENVIRON),
+              COLORS['yellow']),
   #LTAVIStrat(ENVIRON,
               #ChineseRProcess(ENVIRON),
               #COLORS['purple3']),
@@ -150,9 +150,9 @@ def init_strats():
 
     #for i in xrange(80,111,1):
     #for i in xrange(65,135,1):
-    for i in [2,3,5,8,15,25,50,100,500,5000,100000]:
-        im = ChineseRProcess(ENVIRON, 0.25, 0.0, i + 0.0)
-        arr.append(PigVIStrat(ENVIRON, im, PLUS=0, EXPLORER=False))
+    #for i in [2,3,5,8,15,25,50,100,500,5000,100000]:
+        #im = ChineseRProcess(ENVIRON, 0.25, 0.0, i + 0.0)
+        #arr.append(PigVIStrat(ENVIRON, im, PLUS=0, EXPLORER=False))
         #arr.append(DyStrat(ENVIRON, im,
                     #PigVIStrat(ENVIRON, im, PLUS=0, EXPLORER=False),
                     #BossSAStrat(ENVIRON, im, -1), i))

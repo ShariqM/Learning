@@ -201,7 +201,7 @@ class Runner(object):
                 mi = float(mi)
                 if not initial_mi:
                     initial_mi = mi
-                self.strats_data[i].append(mi)
+                self.strats_data[i].append([mi,0]) #FIXME
                 step = step + 1
 
             self.steps = step

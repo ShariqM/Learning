@@ -46,7 +46,7 @@ from chinese import ChineseRProcess
 ENVIRON = None           # Ignore, initialized by the runner
 MAZE    = 'maze.mz'      # See files in maze_files/ dir
 STEPS   = 300            # Number of time steps to run
-RUNS    = 10             # Number of runs
+RUNS    = 1              # Number of runs
 SERIAL  = False
 
 

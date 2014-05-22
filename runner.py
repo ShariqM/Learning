@@ -150,10 +150,11 @@ class Runner(object):
 
         mi_height = self.initial_mi
         step_points = [i for i in range(self.steps)]
-        plt.xlabel('Time (steps)', fontdict={'fontsize':16})
-        plt.ylabel('Missing Information (bits)', fontdict={'fontsize':16})
-        plt.title(self.title + " Elapsed=%ds) " % self.elapsed.seconds)
-        plt.axis([0, self.steps, 0, mi_height * 1.1])
+        plt.xlabel('Time (steps)', fontdict={'fontsize':24})
+        plt.ylabel('Missing Information (bits)', fontdict={'fontsize':24})
+        plt.title("Maze", fontsize=26)
+        #plt.title(self.title + " Elapsed=%ds) " % self.elapsed.seconds)
+        plt.axis([0, self.steps, 0, mi_height * 1.5])
 
 
         for i in range(len(self.strats)):
@@ -161,9 +162,18 @@ class Runner(object):
             mean_data = [data[0] for data in self.strats_data[i]]
             plt.plot(step_points, mean_data,
                      color=self.strats[i].color,
-                     label=self.strats[i].get_name() + " MI=" + str(mi))
+                     #label=self.strats[i].get_sname() + " MI=" + str(mi))
+                     label=self.strats[i].get_sname())
 
-        plt.legend(bbox_to_anchor=(0.55, 1.00), loc=2, borderaxespad=0.)
+
+        plt.xticks(fontsize=20)
+        plt.yticks(fontsize=20)
+
+        lg = plt.legend(fontsize=20)
+        lg.draw_frame(False)
+
+        #plt.legend(bbox_to_anchor=(0.8 , 1.00), loc=2,
+                   #fontsize=20)
         plt.show()
 
     def export_data(self, f):

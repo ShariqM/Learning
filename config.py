@@ -46,7 +46,7 @@ from chinese import ChineseRProcess
 ENVIRON = None           # Ignore, initialized by the runner
 MAZE    = 'maze.mz'      # See files in maze_files/ dir
 STEPS   = 3000           # Number of time steps to run
-RUNS    = 10             # Number of runs
+RUNS    = 200            # Number of runs
 SERIAL  = False
 
 
@@ -103,7 +103,7 @@ def init_strats():
               #COLORS['red'], PLUS=0, EXPLORER=False),
   LTAStrat(ENVIRON,
               ChineseRProcess(ENVIRON),
-              COLORS['yellow']),
+              COLORS['green3']),
   #LTAVIStrat(ENVIRON,
               #ChineseRProcess(ENVIRON),
               #COLORS['purple3']),

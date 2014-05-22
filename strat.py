@@ -16,6 +16,9 @@ class Strat(object):
     def compute_mi(self):
         return missing_information(self.tm, self.im)
 
+    def get_sname(self):
+        return "%s" % (self.name)
+
     def get_name(self):
         return "%s (%s)" % (self.name, self.im.get_name())
 

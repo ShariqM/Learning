@@ -149,9 +149,11 @@ class Runner(object):
         print "Graphing data..."
 
         mi_height = self.initial_mi
+        mi_height = 200
         step_points = [i for i in range(self.steps)]
         plt.xlabel('Time (steps)', fontdict={'fontsize':24})
-        plt.ylabel('Missing Information (bits)', fontdict={'fontsize':24})
+        plt.ylabel('Information Gain (bits)', fontdict={'fontsize':24})
+        #plt.ylabel('Missing Information (bits)', fontdict={'fontsize':24})
         plt.title("Maze", fontsize=26)
         #plt.title(self.title + " Elapsed=%ds) " % self.elapsed.seconds)
         plt.axis([0, self.steps, 0, mi_height * 1.5])
@@ -163,6 +165,7 @@ class Runner(object):
             plt.plot(step_points, mean_data,
                      color=self.strats[i].color,
                      #label=self.strats[i].get_sname() + " MI=" + str(mi))
+                     linewidth=1.5,
                      label=self.strats[i].get_sname())
 
 
@@ -248,7 +251,9 @@ def strat_collect_serial(strats, strats_data, steps):
     while step < steps:
         i = 0
         for strat in strats:
-            mi = strat.compute_mi()
+            #mi = strat.compute_mi()
+            #mi = strat.get_information_gain()
+            #print 'ig', mi
             strats_data[i][step] = mi
             strat.step(step, mi)
             i += 1
@@ -266,7 +271,8 @@ def strat_collect(q, i, strat, steps):
         mi = 0
         strats_data = [0 for j in range(steps)]
         while step < steps:
-            mi = strat.compute_mi()
+            #mi = strat.compute_mi()
+            mi = strat.get_information_gain()
 
             strats_data[step] = mi
             strat.step(step, mi)

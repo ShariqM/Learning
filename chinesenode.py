@@ -49,9 +49,6 @@ class ChineseRProcessNode:
 
     def update(self, a, ns, r=0.0):
         prev = self.data[a][ns] if self.data[a].has_key(ns) else 0
-        #if self.obs_num[a] == 5 and not self.done:
-            #self.done = True
-            #print self.data[a]
         self.data[a][ns] = prev + 1
         self.obs_num[a] = self.obs_num[a] + 1
         self.total_reward[a] += r

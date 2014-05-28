@@ -4,6 +4,7 @@
 """
 
 from chinesenode import ChineseRProcessNode
+from ifunctions import *
 import random
 import sys
 import config
@@ -20,6 +21,10 @@ class ChineseRProcess(object):
         self.total_reward = 0.0
         assert type(finify_by) != int
         self.finify_by = finify_by
+        self.information_gain = 0.0
+
+    def get_information_gain(self):
+        return self.information_gain
 
     def get_finify_by(self):
         return self.finify_by
@@ -59,13 +64,19 @@ class ChineseRProcess(object):
             raise Exception("Invalid action")
         return self.nodes[s].get_reward(a)
 
+    def update_information(self, a, s, ns):
+        new_state = not self.nodes[s].is_aware_of(a, ns)
+        self.information_gain += information_gain(self, a, s, ns, new_state)
+
     # Update model given the data
     def update(self, a, s, ns, r=0):
-        if not self.nodes.has_key(ns):
+        new_state = not self.nodes.has_key(ns)
+        if new_state:
             self.last_update = ns
             self.nodes[ns]   = ChineseRProcessNode(self.M, self.theta, self.alpha)
         else:
             self.last_update = config.NULL_UPDATE
+
         self.total_reward += r
         return self.nodes[s].update(a, ns, r)
 

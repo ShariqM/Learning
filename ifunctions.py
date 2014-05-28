@@ -50,6 +50,9 @@ def missing_information(tm, im):
             misum += ukl_divergence(tm, im, a, s)
     return misum
 
+def missing_information_as(tm, im, a, s):
+    return ukl_divergence(tm, im, a, s)
+
 def alt(val):
     #if val < 0.0:
         #return 0.0
@@ -59,13 +62,15 @@ def sm_divergence(tm, im, a, s, debug=False):
     #if not im.has_state(s):
         #return 1 / 0
 
-    div = 0
+    div = 0.0
     for ns in im.get_known_states(a, s):
         tm_prob = tm.get_prob(a, s, ns)
         if tm_prob <= 0.0:
             continue
         im_prob = im.get_prob(a, s, ns)
         div += alt(tm_prob * log2(tm_prob / im_prob))
+        if debug:
+            print '\t tm: %f, im %f div: %f' % (tm_prob, im_prob, div)
 
     if config.FINIFY:
         if tm.is_hypothetical() and im.has_unknown_states(): # If CRP model
@@ -74,12 +79,15 @@ def sm_divergence(tm, im, a, s, debug=False):
             if tm.ns == config.ETA:
                 # Compare PSI' with PSI/2 and ETA with PSI/2
                 f = im.get_finify_by()
-                #print f, (f/(f-1))
                 tm_prob_new = tm.get_prob(a, s, config.ETA)
                 div += alt(tm_prob * log2((f / (f-1)) * tm_prob / im_prob))
                 div += alt(tm_prob_new * log2(f * tm_prob_new / im_prob))
+                if debug:
+                    print '\t F - tmn: %f tm: %f, im %f div: %f' % (tm_prob_new, tm_prob, im_prob, div)
             else:
                 div += alt(tm_prob * log2(tm_prob / im_prob))
+                if debug:
+                    print '\t F - tm: %f, im %f div: %f' % (tm_prob, im_prob, div)
                 #if s == 0:
                     #print 'a=', a, div
                 #print "HYPO tm=%.2f im=%.2f s=%d a=%d div=%.2f" % \
@@ -100,6 +108,14 @@ def divergence(tm, im, a, s, debug=False):
         return sm_divergence(tm, im, a, s, debug)
     else:
         return kl_divergence(tm, im, a, s, debug)
+
+def information_gain(im, a, s, ns, new_state):
+    if new_state:
+        ns = config.ETA
+    hm = Hypothetical(im, a, s, ns)
+    #print 'Start new_state=', new_state
+    x = sm_divergence(hm, im, a, s)
+    return x
 
 def predicted_information_gain(im, a, s, explorer):
     pig = 0

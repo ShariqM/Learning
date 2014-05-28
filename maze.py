@@ -11,6 +11,7 @@ from mazenode import MazeNode
 from model import Model
 import config
 
+
 class Maze(Model):
 
     def __init__(self, fname):

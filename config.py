@@ -13,7 +13,8 @@ NULL_ARG      = -999
 NULL_UPDATE   = -9999
 
 # Maze Configuration
-DETERMINISTIC=False # Noisy actions if false
+DETERMINISTIC = False # Noisy actions if false
+WALL_CHAR     = '$'
 
 # PIG Arguments
 DISCOUNT_RATE = 0.95
@@ -49,7 +50,7 @@ MAZE    = 'maze_s30_g.txt'  # See files in maze_files/ dir
 #MAZE    = 'maze.mz'     # See files in maze_files/ dir
 STEPS   = 6000           # Number of time steps to run
 RUNS    = 1              # Number of runs
-SERIAL  = False
+SERIAL  = True
 
 
 # Output

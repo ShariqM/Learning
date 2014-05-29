@@ -10,11 +10,12 @@ import matplotlib.pyplot as plt
 BACKGROUND_COLOR = formatColor(0,0,0)
 WALL_COLOR       = formatColor(0,0,0)
 TRANSPORT_COLOR  = formatColor(0,0,0.7)
-SCALE            = 2.0
+SCALE            = 6.0
 FONTSIZE         = int(SCALE * 1.5)
 OFFSET           = 10
 DELAY            = 0.0
 WIDTH            = SCALE / 3.0
+TRANS_DIST       = int(SCALE/6.0)
 
 # Drawing
 PAUSER = False
@@ -65,15 +66,22 @@ class MazeGraphics:
 
         for y in range(len(self.maze)):
             for x in range(len(self.maze[y])):
-                if self.maze[y][x] == 'w':
+
+                if self.maze[y][x] == config.WALL_CHAR:
                     self.handle_wall(x,y)
-                elif self.maze[y][x] == 't':
-                    self.handle_transporter(x,y)
-                elif self.maze[y][x] == tm.gwell:
+                elif self.maze[y][x] in tm.gwells.values():
                     self.handle_position(x,y)
                     self.handle_well(x,y)
                 elif type(self.maze[y][x]) == int:
                     self.handle_position(x,y)
+
+        # Need transporters on top of pos
+        for y in range(len(self.maze)):
+            for x in range(len(self.maze[y])):
+                if self.maze[y][x] == config.WALL_CHAR:
+                    continue
+                if str(self.maze[y][x]) in string.ascii_lowercase:
+                    self.handle_transporter(x,y)
 
         l = SCALE
         xx, yy = OFFSET + 2 * SCALE, OFFSET + 2 * SCALE
@@ -107,33 +115,33 @@ class MazeGraphics:
         # vertical
         if x % 4 == 0:
             l0, l1 = l,l
-            if y == 0 or self.maze[y-1][x] != 'w':
+            if y == 0 or self.maze[y-1][x] != config.WALL_CHAR:
                 l0 = 0
-            if y == self.width-1 or self.maze[y+1][x] != 'w':
+            if y == self.width-1 or self.maze[y+1][x] != config.WALL_CHAR:
                 l1 = 0
             self.canvas.create_line(xx, yy - l0, xx, yy + l1, width=WIDTH)
 
         # horizontal
         if y % 4 == 0:
             l0, l1 = l,l
-            if x == 0 or self.maze[y][x-1] != 'w':
+            if x == 0 or self.maze[y][x-1] != config.WALL_CHAR:
                 l0 = 0
-            if x == self.width-1 or self.maze[y][x+1] != 'w':
+            if x == self.width-1 or self.maze[y][x+1] != config.WALL_CHAR:
                 l1 = 0
             self.canvas.create_line(xx - l0, yy, xx + l1, yy, width=WIDTH)
 
     def handle_transporter(self, x, y):
         xx,yy = x * SCALE + OFFSET, y * SCALE + OFFSET
-        l = SCALE - SCALE / 8.0
-        off = SCALE - WIDTH # put transporters close to wall
-        #off = SCALE - WIDTH - 2.0 # put transporters close to wall
+        l = SCALE - SCALE / 16.0
         width = WIDTH
         if x % 2 == 0: # horizontal
-            off = -off if self.maze[y-1][x] == 'w' else off
+            off = -TRANS_DIST if self.maze[y-1][x] == config.WALL_CHAR else TRANS_DIST
+            #print 'off', off
             self.canvas.create_line(xx - l, yy + off, xx + l, yy + off,
                                fill=TRANSPORT_COLOR, width=width)
         else: # vertical
-            off = -off if self.maze[y][x-1] == 'w' else off
+            off = -TRANS_DIST if self.maze[y][x-1] == config.WALL_CHAR else TRANS_DIST
+            #print 'off', off
             self.canvas.create_line(xx + off, yy - l, xx + off, yy + l,
                                fill=TRANSPORT_COLOR, width=width)
 

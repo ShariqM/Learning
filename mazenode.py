@@ -42,7 +42,7 @@ class MazeNode:
         return tsum
 
     def get_neighbors(self):
-        return self.neighbors
+        return set(self.neighbors)
 
     def take_action(self, a):
         return self.neighbors[sample(self.actions[a])]

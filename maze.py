@@ -15,7 +15,7 @@ import config
 class Maze(Model):
 
     def __init__(self, fname):
-        self.maze, self.N, self.gwell = parse_maze(fname)
+        self.maze, self.N, self.gwells = parse_maze(fname)
         self.M = 4 # fixme?
         self.nodes = []
 
@@ -31,17 +31,19 @@ class Maze(Model):
                 for x,y in ((0,-1), (1,0), (0, 1), (-1, 0)):
 
                     # Teleporters are 1 space away
-                    if self.maze[i+y][j+x] == 't':
-                        neighbors.append(self.gwell)
+                    if str(self.maze[i+y][j+x]) in string.letters:
+                    #if self.maze[i+y][j+x] == 't':
+                        neighbors.append(self.gwells[self.maze[i+y][j+x]])
 
                     # Walls are 2 spaces away
-                    elif self.maze[i+y*2][j+x*2] == 'w':
+                    elif self.maze[i+y*2][j+x*2] == config.WALL_CHAR:
                         neighbors.append(curr)
 
                     # Neighbors are 4 spaces away
                     elif type(self.maze[i+y*4][j+x*4]) == int:
                         neighbors.append(curr + 1 * x + cols * y)
                     else:
+                        print x,y
                         raise Exception("Malformed Maze, pos=%d" % curr)
 
                 self.nodes.append(MazeNode(self.M, neighbors))
@@ -76,15 +78,15 @@ def parse_maze(fname):
     maze = init_maze(l)
 
     nstates = 0
-    gwell = -1
+    gwells = {}
     r = 0
     while l != '' and l != '\n':
         c = 0
         for i in l:
             if i == ' ' or i == '\n':
                 continue
-            if i == 'g':
-                gwell = nstates
+            if i in string.ascii_uppercase:
+                gwells[i.lower()] = nstates
                 i = str(nstates % 10)
             if i in string.digits:
                 nstates = nstates + 1
@@ -96,7 +98,7 @@ def parse_maze(fname):
         l = desc.readline()
         r = r + 1
 
-    return maze, nstates, gwell
+    return maze, nstates, gwells
 
 """
 An example:

@@ -21,7 +21,7 @@ def kl_divergence(tm, im, a, s, debug=False):
 
     return klsum
 
-def ukl_divergence(tm, im, a, s):
+def old_ukl_divergence(tm, im, a, s):
     klsum = 0
     def_prob = 1.0 / tm.N
 
@@ -42,6 +42,29 @@ def ukl_divergence(tm, im, a, s):
         klsum += tm_prob * log2(tm_prob / im_prob)
 
     return klsum
+
+def ukl_divergence(tm, im, a, s):
+    klsum = 0
+    neighbors = tm.get_neighbors()
+    def_prob = 1.0 / len(neighbors)
+
+    for ns in neighbors:
+        tm_prob = tm.get_prob(a, s, ns)
+
+        im_prob = def_prob
+        if im.has_state(s):
+            if im.is_aware_of(a, s, ns):
+                im_prob = im.get_prob(a, s, ns)
+            else:
+                psi_prob = im.get_prob(a, s, config.PSI)
+                nunk_states = len(neighbors) - len(im.get_known_states(a, s))
+                im_prob = psi_prob / nunk_states
+
+        klsum += tm_prob * log2(tm_prob / im_prob)
+
+    return klsum
+
+
 
 def missing_information(tm, im):
     misum = 0

@@ -23,7 +23,8 @@ class PigVIStrat(Strat):
         self.tm = tm
         self.im = im
         self.pos = config.SS
-        self.name = "PY-PIG" if im.has_unknown_states() else "PIG"
+        self.name = "%s-PIG" % im.get_abbr()
+        #self.name = "%s-PIG" if im.has_unknown_states() else "PIG"
         self.name += "+" if PLUS else ""
         #if im.has_unknown_states():
             #self.name += " [EXPL]" if EXPLORER else " [PLAY]"

@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 BACKGROUND_COLOR = formatColor(0,0,0)
 WALL_COLOR       = formatColor(0,0,0)
 TRANSPORT_COLOR  = formatColor(0,0,0.7)
-SCALE            = 6.0
+SCALE            = 2.0
 FONTSIZE         = int(SCALE * 1.5)
 OFFSET           = 10
 DELAY            = 0.0
@@ -18,7 +18,7 @@ WIDTH            = SCALE / 3.0
 TRANS_DIST       = int(SCALE/6.0)
 
 # Drawing
-PAUSER = False
+PAUSER = True
 TABLES = False
 COUNTERS = False
 
@@ -184,8 +184,6 @@ class MazeGraphics:
     def step(self, step, mi, nstates):
         self.stats.set(1, 0, step)
         self.stats.set(1, 1, nstates)
-        if PAUSER and step % 500 == 0:
-            time.sleep(5)
         #self.stats.set(1, 1, "%.2f" % mi)
         #self.stats.set(1, 2, nstates)
 

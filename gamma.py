@@ -3,21 +3,20 @@
     Modeled off the Dirichlet Process or Chinese Restaurant Process
 """
 
-from chinesenode import ChineseRProcessNode
+from gammanode import GammaProcessNode
 from ifunctions import *
 import random
 import sys
 import config
 
-class ChineseRProcess(object):
+class GammaProcess(object):
 
-    def __init__(self, tm, theta=3.00, alpha=0.0, finify_by=2.0):
+    def __init__(self, tm, theta=0.25, finify_by=2.0):
         self.M = tm.M
         self.nodes = {}
-        self.nodes[config.SS] = ChineseRProcessNode(self.M, theta, alpha)
+        self.gamma = 1.0/(math.exp(theta) - 1)
+        self.nodes[config.SS] = GammaProcessNode(self.M, self.gamma)
         self.last_update = config.NULL_UPDATE
-        self.theta = theta
-        self.alpha = alpha
         self.total_reward = 0.0
         assert type(finify_by) != int
         self.finify_by = finify_by
@@ -30,11 +29,11 @@ class ChineseRProcess(object):
         return self.finify_by
 
     def get_abbr(self):
-        return "PY"
+        return "GAM"
 
     def get_name(self):
-        return "CRP [T=%.3f, a=%.3f, f=%f]" % \
-                    (self.theta, self.alpha, self.finify_by)
+        return "Gamma [G=%.3f, f=%f]" % \
+                    (self.gamma, self.finify_by)
 
     def get_known_states(self, a=config.NULL_ARG, s=config.NULL_ARG):
         if s == config.NULL_ARG:
@@ -76,7 +75,7 @@ class ChineseRProcess(object):
         new_state = not self.nodes.has_key(ns)
         if new_state:
             self.last_update = ns
-            self.nodes[ns]   = ChineseRProcessNode(self.M, self.theta, self.alpha)
+            self.nodes[ns]   = GammaProcessNode(self.M, self.gamma)
         else:
             self.last_update = config.NULL_UPDATE
 
@@ -90,7 +89,7 @@ class ChineseRProcess(object):
         return self.nodes[s].undo_update(a, ns)
 
     def display(self, strat):
-        pr("*** %s Chinese Restaurant Process (Internal) Model ***" % strat)
+        pr("*** %s Gamma Process (Internal) Model ***" % strat)
         pr("a=Action, s=Starting State, ns=New state, p=Probability")
         pr("For each (s,a) we display a list of (ns, p), the p of entering ns")
         for i, node in self.nodes.items():
@@ -119,4 +118,3 @@ class ChineseRProcess(object):
 def pr(s):
     sys.stdout.write(s+'\n')
     sys.stdout.flush()
-

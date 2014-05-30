@@ -1,24 +1,21 @@
 """
-    A DirichletProcessNode encodes the internal probability distribution model for a
-    single node. This is closely related to the Chinese Restaurant Process.
+    A GammaProcessNode encodes the internal probability distribution model for a
+    single node.
 """
 
 import random
 import math
-import config
 
-class ChineseRProcessNode:
+class GammaProcessNode:
 
-    def __init__(self, M, theta=3.0, alpha=0.0):
+    def __init__(self, M, gamma=3.5):
         self.data = []
         self.obs_num = []
         self.M = M
         self.total_reward = [0 for i in range(self.M)]
 
-        assert type(alpha) != int
-        assert type(theta) != int
-        self.theta = theta # Strength parameter
-        self.alpha = alpha # Discount parameter
+        assert type(gamma) != int
+        self.gamma = gamma
 
         for action in range(self.M):
             self.data.append({}) # Number of times (s,a,ns) has been observed
@@ -30,18 +27,20 @@ class ChineseRProcessNode:
     def is_aware_of(self, a, ns):
         return self.data[a].has_key(ns)
 
+    def get_prob_psi(self, a):
+        return 1.0 - math.pow(self.gamma/(1.0+self.gamma), 1.0/self.obs_num[a])
+
     def get_prob_first_obs(self):
-        return (1.0 - self.alpha) / (1.0 + self.theta)
+        return 1.0 - self.gamma/(1.0 + self.gamma)
 
     # Generalization of CRP
     def get_prob(self, a, ns):
+        if not self.obs_num[a]:
+            return 1.0
+        p = self.get_prob_psi(a)
         if not self.data[a].has_key(ns):
-            assert ns == config.PSI
-            ntables = len(self.data[a])
-            return (self.theta + ntables * self.alpha) / \
-                    (self.obs_num[a] + self.theta)
-        #print "ns=%d T=%f A=%f |b|=%d n=%d" % (ns, self.theta, self.alpha, self.data[a][ns], self.obs_num[a])
-        return (self.data[a][ns] - self.alpha) / (self.obs_num[a] + self.theta)
+            return p
+        return (1.0 - p) * self.data[a][ns] / self.obs_num[a]
 
     def get_reward(self, a):
         if not self.obs_num[a]:

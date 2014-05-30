@@ -38,7 +38,8 @@ class MazeNode:
         for j in range(self.M):
             if self.neighbors[j] == ns:
                 # we may have 2 neighbors that point to self
-                tsum += round(self.actions[a][j], 3)
+                #tsum += round(self.actions[a][j], 5)
+                tsum += self.actions[a][j]
         return tsum
 
     def get_neighbors(self):

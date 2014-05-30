@@ -5,7 +5,7 @@ from colors import *
 # State nums (don't touch)
 PSI           = -1 # Represents the unknown state
 ETA           = sys.maxint # Represents a new state we discovered
-SS            = 465 # Start State
+SS            = 0 # Start State
 MAX_REWARD    = 1.0
 
 # Misc (don't touch)
@@ -42,24 +42,25 @@ from chainstrat import *
 from randomstrat import *
 
 from chinese import ChineseRProcess
+from gamma import GammaProcess
 
 # Run parameters
 ENVIRON = None           # Ignore, initialized by the runner
-MAZE    = 'maze_s30_g.txt'  # See files in maze_files/ dir
+#MAZE    = 'maze_s30_g.txt'  # See files in maze_files/ dir
 #MAZE    = 'maze_s30.mz'  # See files in maze_files/ dir
-#MAZE    = 'maze.mz'     # See files in maze_files/ dir
-STEPS   = 6000           # Number of time steps to run
-RUNS    = 1              # Number of runs
-SERIAL  = True
+MAZE    = 'maze.mz'     # See files in maze_files/ dir
+STEPS   = 3000           # Number of time steps to run
+RUNS    = 200            # Number of runs
+SERIAL  = False
 
 
 # Output
-DUMP_STDOUT = False # Dump the data to stdout
+DUMP_STDOUT = False  # Dump the data to stdout
 EXPORT_FILE = None  # Export data to file
 IMPORT_FILE = None  # Import data and graph
 
 # Graphics
-GRAPHICS      = True # Visualization of agent
+GRAPHICS      = False # Visualization of agent
 UPDATE_STEPMI = True  # Update Step, Missing Info
 UPDATE_PIG    = False  # Update Pig Table
 UPDATE_VI     = False # Update Value Iteration Table (slow)
@@ -86,6 +87,9 @@ def init_strats():
   PigVIStrat(ENVIRON,
               ChineseRProcess(ENVIRON, THETA, ALPHA),
               COLORS['green'], PLUS=0, EXPLORER=False),
+  PigVIStrat(ENVIRON,
+              GammaProcess(ENVIRON, THETA),
+              COLORS['blue'], PLUS=0, EXPLORER=False),
   #CBStrat(ENVIRON,
               #ChineseRProcess(ENVIRON, THETA, ALPHA),
               #COLORS['purple']),
@@ -93,9 +97,9 @@ def init_strats():
   #PigVIStrat(ENVIRON,
               #ChineseRProcess(ENVIRON, THETA, ALPHA),
               #COLORS['grue2'], PLUS=1, EXPLORER=False),
-  LTAStrat(ENVIRON,
-              ChineseRProcess(ENVIRON),
-              COLORS['yellow2']),
+  #LTAStrat(ENVIRON,
+              #ChineseRProcess(ENVIRON),
+              #COLORS['yellow2']),
         ]
     return arr
 

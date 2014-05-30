@@ -10,6 +10,7 @@ import random
 import string
 import argparse
 import numpy
+import time
 from world import World
 from randomstrat import *
 from unembodiedstrat import *
@@ -23,6 +24,8 @@ import config
 
 from functions import *
 import sys
+
+PAUSER = True
 
 class Runner(object):
 
@@ -251,12 +254,15 @@ def strat_collect_serial(strats, strats_data, steps):
     while step < steps:
         i = 0
         for strat in strats:
-            #mi = strat.compute_mi()
+            mi = strat.compute_mi()
             #mi = strat.get_information_gain()
             #print 'ig', mi
             strats_data[i][step] = mi
             strat.step(step, mi)
             i += 1
+
+        if PAUSER and step % 500 == 0:
+            time.sleep(5)
 
         # Monitor progress at subjob level
         if steps < 10 or step % (steps / 10) == 0:
@@ -271,8 +277,8 @@ def strat_collect(q, i, strat, steps):
         mi = 0
         strats_data = [0 for j in range(steps)]
         while step < steps:
-            #mi = strat.compute_mi()
-            mi = strat.get_information_gain()
+            mi = strat.compute_mi()
+            #mi = strat.get_information_gain()
 
             strats_data[step] = mi
             strat.step(step, mi)

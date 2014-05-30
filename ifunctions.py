@@ -45,12 +45,11 @@ def old_ukl_divergence(tm, im, a, s):
 
 def ukl_divergence(tm, im, a, s):
     klsum = 0
-    neighbors = tm.get_neighbors()
+    neighbors = tm.get_neighbors(s)
     def_prob = 1.0 / len(neighbors)
 
     for ns in neighbors:
         tm_prob = tm.get_prob(a, s, ns)
-
         im_prob = def_prob
         if im.has_state(s):
             if im.is_aware_of(a, s, ns):

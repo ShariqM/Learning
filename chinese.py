@@ -11,13 +11,14 @@ import config
 
 class ChineseRProcess(object):
 
-    def __init__(self, tm, theta=3.00, alpha=0.0, finify_by=2.0):
+    def __init__(self, tm, theta=3.00, alpha=0.0, kalpha=False, finify_by=2.0):
         self.M = tm.M
         self.nodes = {}
-        self.nodes[config.SS] = ChineseRProcessNode(self.M, theta, alpha)
+        self.nodes[config.SS] = ChineseRProcessNode(self.M, theta, alpha, kalpha)
         self.last_update = config.NULL_UPDATE
         self.theta = theta
         self.alpha = alpha
+        self.kalpha = kalpha
         self.total_reward = 0.0
         assert type(finify_by) != int
         self.finify_by = finify_by
@@ -76,7 +77,8 @@ class ChineseRProcess(object):
         new_state = not self.nodes.has_key(ns)
         if new_state:
             self.last_update = ns
-            self.nodes[ns]   = ChineseRProcessNode(self.M, self.theta, self.alpha)
+            self.nodes[ns] = ChineseRProcessNode(self.M, self.theta,
+                                                 self.alpha, self.kalpha)
         else:
             self.last_update = config.NULL_UPDATE
 

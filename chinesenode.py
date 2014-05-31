@@ -9,7 +9,7 @@ import config
 
 class ChineseRProcessNode:
 
-    def __init__(self, M, theta=3.0, alpha=0.0):
+    def __init__(self, M, theta=3.0, alpha=0.0, kalpha=False):
         self.data = []
         self.obs_num = []
         self.M = M
@@ -19,6 +19,7 @@ class ChineseRProcessNode:
         assert type(theta) != int
         self.theta = theta # Strength parameter
         self.alpha = alpha # Discount parameter
+        self.kalpha = kalpha # Fix K*Alpha where K is the number of tables
 
         for action in range(self.M):
             self.data.append({}) # Number of times (s,a,ns) has been observed
@@ -35,13 +36,14 @@ class ChineseRProcessNode:
 
     # Generalization of CRP
     def get_prob(self, a, ns):
+        ntables = len(self.data[a])
+        alpha = self.alpha / ntables if self.kalpha and ntables else self.alpha
         if not self.data[a].has_key(ns):
             assert ns == config.PSI
-            ntables = len(self.data[a])
-            return (self.theta + ntables * self.alpha) / \
+            return (self.theta + ntables * alpha) / \
                     (self.obs_num[a] + self.theta)
         #print "ns=%d T=%f A=%f |b|=%d n=%d" % (ns, self.theta, self.alpha, self.data[a][ns], self.obs_num[a])
-        return (self.data[a][ns] - self.alpha) / (self.obs_num[a] + self.theta)
+        return (self.data[a][ns] - alpha) / (self.obs_num[a] + self.theta)
 
     def get_reward(self, a):
         if not self.obs_num[a]:

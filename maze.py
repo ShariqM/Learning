@@ -11,6 +11,7 @@ from mazenode import MazeNode
 from model import Model
 import config
 import random
+import math
 
 
 class Maze(Model):
@@ -21,9 +22,17 @@ class Maze(Model):
         self.nodes = []
         self.rnodes = []
 
+        width_factor = 5
+        cols = (len(self.maze[0]) - 1) / 4
+        rwidth = cols / width_factor
+        self.reward = [[0 for i in range(rwidth)] for i in range(rwidth)]
+        for i in range(rwidth):
+            for j in range(rwidth):
+                self.reward[i][j] = random.random()
+        print self.reward[0]
+
         curr = 0
         for i in range(len(self.maze)):
-            cols = (len(self.maze[i]) - 1) / 4
             for j in range(len(self.maze[i])):
                 if type(self.maze[i][j]) != int:
                     continue
@@ -49,7 +58,15 @@ class Maze(Model):
                         raise Exception("Malformed Maze, pos=%d" % curr)
 
                 self.nodes.append(MazeNode(self.M, neighbors))
-                self.rnodes.append(random.random())
+
+                #y = int(math.floor(y/width_factor))
+                #x = int(math.floor(x/width_factor))
+                y = (i - 2) / 4
+                x = (j - 2) / 4
+                dist = math.sqrt(math.pow(15-y, 2) + math.pow(15-x, 2))
+                self.rnodes.append(dist)
+                if curr == config.SS:
+                    print 'START', x, y
 
                 curr = curr + 1
 

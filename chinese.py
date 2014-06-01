@@ -34,8 +34,9 @@ class ChineseRProcess(object):
         return "PY"
 
     def get_name(self):
-        return "CRP [T=%.3f, a=%.3f, f=%f]" % \
-                    (self.theta, self.alpha, self.finify_by)
+        s = "KA" if self.kalpha else "A"
+        return "CRP [T=%.3f, %s=%.3f, f=%f]" % \
+                    (self.theta, s, self.alpha, self.finify_by)
 
     def get_known_states(self, a=config.NULL_ARG, s=config.NULL_ARG):
         if s == config.NULL_ARG:

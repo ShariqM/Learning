@@ -2,8 +2,8 @@
 import matplotlib.pyplot as plt
 import numpy
 
-steps = 5
-step_points = numpy.arange(1, 5, 1.0)
+steps = 20
+step_points = numpy.arange(1, steps, 1.0)
 
 
 MIN_T  = -5.0
@@ -28,15 +28,16 @@ def gamma(t, theta, alpha):
 
 
 plt.xlabel('Time (steps)', fontdict={'fontsize':24})
-plt.ylabel('Gamma)', fontdict={'fontsize':24})
+plt.ylabel('Gamma', fontdict={'fontsize':24})
 plt.title("Gamma", fontsize=26)
 plt.axis([0, steps, 0, 5])
 
-for t in numpy.arange(MIN_T, MAX_T, STEP_T):
-    for ka in list(numpy.arange(MIN_A, MAX_A, STEP_A)) + [0.99]:
+#for t in numpy.arange(MIN_T, MAX_T, STEP_T):
+    #for ka in list(numpy.arange(MIN_A, MAX_A, STEP_A)) + [0.99]:
+for i in range(1):
+    for (t,ka) in [(0.693, 0), (0.38, 0.31), (0.001, 0.693), (0.001, 0.25), (0.12, 0.13)]:
         #t = 0.001
         #ka = math.log(2)
-
         max_k = 4 + 1.0 # Hacky... (Plus one for hypothetical new state)
         a = ka / max_k
         if a < 0.0 and not t + max_k * a > 0.0:

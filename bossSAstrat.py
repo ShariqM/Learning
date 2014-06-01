@@ -18,12 +18,12 @@ class BossSAStrat(Strat):
         self.im = im
         self.pos = config.SS
         self.debugl = False
-        self.name = "BOSS"
+        self.name = "%d-BOSS" % B
         self.color = color
         self.marker = marker
         self.known = set([])
         self.counts = {}
-        self.T = 10
+        self.T = 50
         self.B = B
         self.policy = {}
         self.reward = {config.PSI: 1.0}

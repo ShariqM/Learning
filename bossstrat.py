@@ -21,7 +21,7 @@ class BossStrat(Strat):
         self.marker = marker
         self.known = set([])
         self.counts = {}
-        self.T = 10
+        self.T = 100
         self.B = B
         self.policy = {}
         self.step_num = 0

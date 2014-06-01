@@ -5,6 +5,7 @@ from colors import *
 # State nums (don't touch)
 PSI           = -1 # Represents the unknown state
 ETA           = sys.maxint # Represents a new state we discovered
+#SS            = 465 # Start State
 SS            = 0 # Start State
 MAX_REWARD    = 1.0
 
@@ -60,7 +61,7 @@ EXPORT_FILE = None  # Export data to file
 IMPORT_FILE = None  # Import data and graph
 
 # Graphics
-GRAPHICS      = False # Visualization of agent
+GRAPHICS      = True # Visualization of agent
 UPDATE_STEPMI = True  # Update Step, Missing Info
 UPDATE_PIG    = False  # Update Pig Table
 UPDATE_VI     = False # Update Value Iteration Table (slow)
@@ -113,9 +114,10 @@ def init_strats():
               #COLORS['yellow2']),
         ]
 
-    #for (t,ka) in [(math.log(2), 0.0), (0.38, 0.31), )]:
     #for (t,ka) in [(0.001, math.log(2))]:
-    for (t,ka) in [(0.12, 0.13)]:
+    #for (t,ka) in [(0.12, 0.13)]:
+    for i in range(2):
+        for (t,ka) in [(math.log(2), 0.0), (0.38, 0.31), (0.001, 0.693), (0.001, math.log(2)), (0.001, 0.25), (0.120, 0.13)]:
             max_k = 4 + 1.0 # Hacky... (Plus one for hypothetical new state)
             a = ka / max_k
             if a < 0.0 and not t + max_k * a > 0.0:
@@ -128,9 +130,29 @@ def init_strats():
                 continue
 
             arr.append(
-  PigVIStrat(ENVIRON,
-              ChineseRProcess(ENVIRON, t, ka, True),
-              COLORS['green'], PLUS=0, EXPLORER=False))
+      PigVIStrat(ENVIRON,
+                  ChineseRProcess(ENVIRON, t, ka, True),
+                  COLORS['green'], PLUS=0, EXPLORER=False))
 
+        arr.append(
+      PigVIStrat(ENVIRON,
+                 ChineseRProcess(ENVIRON, THETA, ALPHA),
+                 COLORS['green'], PLUS=0, EXPLORER=False))
+        arr.append(
+      PigVIStrat(ENVIRON,
+                 GammaProcess(ENVIRON, THETA),
+                 COLORS['green'], PLUS=0, EXPLORER=False))
+
+
+    #ES = int(2.0/4 * STEPS)
+    #im = ChineseRProcess(ENVIRON, THETA, ALPHA)
+    #arr.append(DyStrat(ENVIRON, im,
+                       #PigVIStrat(ENVIRON, im, PLUS=0, EXPLORER=False),
+                       #BossSAStrat(ENVIRON, im, -1), ES, True))
+#
+    #im = ChineseRProcess(ENVIRON, THETA, ALPHA)
+    #arr.append(DyStrat(ENVIRON, im,
+                       #LTAStrat(ENVIRON, im),
+                       #BossSAStrat(ENVIRON, im, -2), ES, True))
+#
     return arr
-

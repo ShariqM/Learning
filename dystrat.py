@@ -13,6 +13,7 @@ import config
 import datetime
 import pdb
 import sys
+import time
 
 class DyStrat(Strat):
 
@@ -35,6 +36,8 @@ class DyStrat(Strat):
             self.strat = self.bstrat
             if self.reset_pos:
                 self.im.pos = config.SS
+                self.im.total_reward = 0
+            time.sleep(5)
 
         self.strat.step(step, last_mi)
         #if step >= 999:

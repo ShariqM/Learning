@@ -156,10 +156,8 @@ class MazeGraphics:
 
         self.pos[s] = self.canvas.create_rectangle(xx - l, yy - l, xx + l, yy +
                 l, fill="white", width=0)
-        #self.pos[s] = self.canvas.create_rectangle(xx, yy, xx+1, yy+1, fill="blue")
         #self.pos[s] = self.canvas.create_text(xx, yy, fill='blue', text=str(s),
                             #font=("Purisa", FONTSIZE))
-        self.pos_color[s] = 60
         #self.canvas.create_oval(xx - l, yy - l, xx + l, yy + l,
                                 #fill='black', width=2.0)
 
@@ -217,7 +215,7 @@ class MazeGraphics:
         color = "#%.2lx%.2lx%.2lx" % (color[0] * 255, color[1] * 255, color[2] * 255)
         #self.canvas.itemconfig(self.pos[ns], fill="#3f0000")
         self.canvas.itemconfig(self.pos[ns], fill=color)
-        self.pos_color[ns] = min(255, self.pos_color[ns] + 5)
+        #self.pos_color[ns] = min(255, self.pos_color[ns] + 5)
 
         if COUNTERS:
             self.canvas.itemconfigure(self.data[s][a], text='%d' % count)

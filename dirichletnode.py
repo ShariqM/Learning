@@ -14,8 +14,8 @@ class DirichletNode:
 
         self.neighbors = neighbors
         # In the paper we knew the # of neighbors, we are moving away from this.
-        # self.Ns = len(set(self.neighbors)) # Number of unique neighbors
-        self.Ns = self.N
+        self.Ns = len(set(self.neighbors)) # Number of unique neighbors
+        #self.Ns = self.N
 
         assert type(alpha) != int
         self.alpha = alpha
@@ -33,8 +33,8 @@ class DirichletNode:
     # Dirichlet distribution with alpha=0.25 (Equation 14)
     def get_prob(self, a, ns):
         # See note above about neighbors
-        #if ns not in self.neighbors:
-            #return 0.0
+        if ns not in self.neighbors:
+            return 0.0
 
         return (self.data[a][ns] + self.alpha) /  \
             (self.Ns * self.alpha + self.obs_num[a])

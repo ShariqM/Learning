@@ -130,7 +130,7 @@ class PigVIStrat(Strat):
         self.pig_cache[best_a].pop(self.pos) # ASSUMPTION
 
         ns, r = self.tm.take_action(self.pos, best_a)
-        self.im.update_information(best_a, self.pos, ns)
+        #self.im.update_information(best_a, self.pos, ns)
         self.im.update(best_a, self.pos, ns, r)
         self.new_data(best_a, self.pos, ns)
         self.pos = ns

@@ -55,7 +55,7 @@ SERIAL  = False
 
 
 # Output
-DUMP_STDOUT = True  # Dump the data to stdout
+DUMP_STDOUT = False  # Dump the data to stdout
 EXPORT_FILE = None  # Export data to file
 IMPORT_FILE = None  # Import data and graph
 
@@ -68,49 +68,68 @@ UPDATE_VI     = False # Update Value Iteration Table (slow)
 # Default parameters to models
 ALPHA   = 0.0  # Discount parameter to a CRP
 THETA   = 0.25 # Strength (or concentration) parameter to a CRP
-D_ALPHA = 0.01 # Strength parameter to a Dirichlet model
+D_ALPHA = 1.00 # Strength parameter to a Dirichlet model
 
 # Strats to run [Choose a (Strategy, Internal Model) pair]
 import numpy
 def init_strats():
-    arr = []
-  #RandomStrat(ENVIRON,
-              #ChineseRProcess(ENVIRON, THETA, ALPHA), COLORS['red']),
+    arr = [
+  RandomStrat(ENVIRON,
+              ChineseRProcess(ENVIRON, THETA, ALPHA), COLORS['red']),
 
-  #UnembodiedStrat(ENVIRON,
-              #ChineseRProcess(ENVIRON, THETA, ALPHA),
-              #COLORS['black']),
+  UnembodiedStrat(ENVIRON,
+              ChineseRProcess(ENVIRON, THETA, ALPHA),
+              COLORS['black']),
 
-  #PigVIStrat(ENVIRON,
-              #Dirichlet(ENVIRON, D_ALPHA),
-              #COLORS['blue'], PLUS=0, EXPLORER=False),
-    for (t,ka) in [(math.log(2), 0.0), (0.38, 0.31), (0.001, math.log(2))]:
-            max_k = 4 + 1.0 # Hacky... (Plus one for hypothetical new state)
-            a = ka / max_k
-            if a < 0.0 and not t + max_k * a > 0.0:
-                continue
-            if a >= 0.0 and not t > -a:
-                continue
-            if a > 1.0:
-                continue
-            if t == 0.0:
-                continue
-
-            arr.append(
   PigVIStrat(ENVIRON,
-              ChineseRProcess(ENVIRON, t, ka, True),
-              COLORS['green'], PLUS=0, EXPLORER=False))
+              Dirichlet(ENVIRON, D_ALPHA),
+              COLORS['blue'], PLUS=0, EXPLORER=False),
 
-  #CBStrat(ENVIRON,
-              #ChineseRProcess(ENVIRON, THETA, ALPHA),
-              #COLORS['purple']),
+    #ES = int(3.0/4 * STEPS)
+    #im = ChineseRProcess(ENVIRON, THETA, ALPHA)
+    #arr.append(DyStrat(ENVIRON, im,
+                       #PigVIStrat(ENVIRON, im, PLUS=0, EXPLORER=False),
+                       #BossSAStrat(ENVIRON, im, -1), ES, True))
+#
+    #im = ChineseRProcess(ENVIRON, THETA, ALPHA)
+    #arr.append(DyStrat(ENVIRON, im,
+                       #LTAStrat(ENVIRON, im),
+                       #BossSAStrat(ENVIRON, im, -1), ES, True))
 
+    #for (t,ka) in [(math.log(2), 0.0), (0.38, 0.31), )]:
+    #for (t,ka) in [(0.001, math.log(2))]:
+    #for (t,ka) in [(0.001, 0.25)]:
+            #break # ** BREAK
+            #max_k = 4 + 1.0 # Hacky... (Plus one for hypothetical new state)
+            #a = ka / max_k
+            #if a < 0.0 and not t + max_k * a > 0.0:
+                #continue
+            #if a >= 0.0 and not t > -a:
+                #continue
+            #if a > 1.0:
+                #continue
+            #if t == 0.0:
+                #continue
+#
+            #arr.append(
   #PigVIStrat(ENVIRON,
-              #ChineseRProcess(ENVIRON, THETA, ALPHA),
-              #COLORS['grue2'], PLUS=1, EXPLORER=False),
-  #LTAStrat(ENVIRON,
-              #ChineseRProcess(ENVIRON),
-              #COLORS['yellow2']),
-        #]
+              #ChineseRProcess(ENVIRON, t, ka, True),
+              #COLORS['green'], PLUS=0, EXPLORER=False))
+
+  PigVIStrat(ENVIRON,
+              ChineseRProcess(ENVIRON, THETA, ALPHA),
+              COLORS['green'], PLUS=0, EXPLORER=False),
+
+  CBStrat(ENVIRON,
+              ChineseRProcess(ENVIRON, THETA, ALPHA),
+              COLORS['purple']),
+
+  PigVIStrat(ENVIRON,
+              ChineseRProcess(ENVIRON, THETA, ALPHA),
+              COLORS['grue2'], PLUS=1, EXPLORER=False),
+  LTAStrat(ENVIRON,
+              ChineseRProcess(ENVIRON, THETA, ALPHA),
+              COLORS['yellow2']),
+        ]
     return arr
 

@@ -51,7 +51,10 @@ for t in numpy.arange(MIN_T, MAX_T, STEP_T):
 
         Y = []
         for step in step_points:
-            Y.append(gamma(step, t, ka))
+            try:
+                Y.append(gamma(step, t, ka))
+            except:
+                Y.append(30)
 
         if 1 or Y[steps-1] > 5 and Y[steps-1] < 5.9:
             plt.plot(step_points, Y, label="t=%f ka=%f" % (t,ka))

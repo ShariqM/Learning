@@ -12,7 +12,7 @@ import config
 class RandomStrat(Strat):
 
     def __init__(self, tm, im, color='r', marker=None):
-        super(RandomStrat, self).init(tm)
+        super(RandomStrat, self).init(tm, im)
         self.tm = tm
         self.im = im
         self.pos = config.SS

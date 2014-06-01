@@ -18,6 +18,9 @@ class Dirichlet(Model):
         self.alpha = alpha
         self.total_reward = 0.0
 
+    def get_abbr(self):
+        return "DP"
+
     def get_name(self):
         return "DP [a=%.2f]" % self.alpha
 

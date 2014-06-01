@@ -18,7 +18,7 @@ import sys
 class CBStrat(Strat):
 
     def __init__(self, tm, im, color, marker=None):
-        super(CBStrat, self).init(tm)
+        super(CBStrat, self).init(tm, im)
         self.tm = tm
         self.im = im
         self.pos = config.SS

@@ -94,7 +94,8 @@ class Runner(object):
 
         if config.GRAPHICS or config.SERIAL:
             assert self.runs == 1
-            strat_collect_serial(strats, self.strats_data, self.steps)
+            strat_collect_serial(strats, self.strats_data,
+                                self.strats_reward, self.steps)
             return
 
         m = Manager()
@@ -152,7 +153,6 @@ class Runner(object):
         print "Graphing data..."
 
         mi_height = self.initial_mi
-        mi_height = 200
         step_points = [i for i in range(self.steps)]
         plt.xlabel('Time (steps)', fontdict={'fontsize':24})
         plt.ylabel('Information Gain (bits)', fontdict={'fontsize':24})
@@ -248,7 +248,7 @@ class Runner(object):
 
         self.graph_data()
 
-def strat_collect_serial(strats, strats_data, steps):
+def strat_collect_serial(strats, strats_data, strats_reward, steps):
     step = 0
     mi = 0
     while step < steps:
@@ -269,7 +269,12 @@ def strat_collect_serial(strats, strats_data, steps):
             sys.stdout.write('.')
             sys.stdout.flush()
 
+
         step = step + 1
+
+    for i in range(len(strats)):
+        strats_reward[i] = strats[i].get_reward()
+
 
 def strat_collect(q, i, strat, steps):
     try:

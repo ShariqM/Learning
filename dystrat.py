@@ -16,8 +16,8 @@ import sys
 
 class DyStrat(Strat):
 
-    def __init__(self, tm, im, astrat, bstrat, step_switch):
-        super(DyStrat, self).init(tm)
+    def __init__(self, tm, im, astrat, bstrat, step_switch, reset_pos=False):
+        super(DyStrat, self).init(tm, im)
         self.tm = tm
         self.im = im
         self.pos = config.SS
@@ -27,11 +27,14 @@ class DyStrat(Strat):
         self.step_switch = step_switch
         # We have to keep track of this b/c MultProc screw it up as arg
         self.ls = -1
+        self.reset_pos = reset_pos
 
     def step(self, step, last_mi):
         self.ls = step
         if step == self.step_switch:
             self.strat = self.bstrat
+            if self.reset_pos:
+                self.im.pos = config.SS
 
         self.strat.step(step, last_mi)
         #if step >= 999:

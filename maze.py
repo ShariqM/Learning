@@ -10,6 +10,7 @@ from functions import *
 from mazenode import MazeNode
 from model import Model
 import config
+import random
 
 
 class Maze(Model):
@@ -18,6 +19,7 @@ class Maze(Model):
         self.maze, self.N, self.gwells = parse_maze(fname)
         self.M = 4 # fixme?
         self.nodes = []
+        self.rnodes = []
 
         curr = 0
         for i in range(len(self.maze)):
@@ -47,11 +49,13 @@ class Maze(Model):
                         raise Exception("Malformed Maze, pos=%d" % curr)
 
                 self.nodes.append(MazeNode(self.M, neighbors))
+                self.rnodes.append(random.random())
 
                 curr = curr + 1
 
     def take_action(self, s, a):
-        return self.nodes[s].take_action(a), 0
+        ns = self.nodes[s].take_action(a)
+        return ns, self.rnodes[ns]
 
     def get_prob(self, a, s, ns, new_states=None):
         return self.nodes[s].get_prob(a, ns, new_states)

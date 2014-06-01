@@ -213,11 +213,11 @@ class MazeGraphics:
         #self.canvas.itemconfig(self.pos[ns], fill=(1.0,0.0,0.4))
         #val = self.pos_color[ns]
         color = self.cmap(val)
+        #color = self.cmap(mi_s)
         color = "#%.2lx%.2lx%.2lx" % (color[0] * 255, color[1] * 255, color[2] * 255)
         #self.canvas.itemconfig(self.pos[ns], fill="#3f0000")
         self.canvas.itemconfig(self.pos[ns], fill=color)
         self.pos_color[ns] = min(255, self.pos_color[ns] + 5)
-
 
         if COUNTERS:
             self.canvas.itemconfigure(self.data[s][a], text='%d' % count)

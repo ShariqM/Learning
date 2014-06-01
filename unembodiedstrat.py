@@ -25,7 +25,7 @@ import multiprocessing
 class UnembodiedStrat(Strat):
 
     def __init__(self, tm, im, color, marker=None):
-        super(UnembodiedStrat, self).init(tm)
+        super(UnembodiedStrat, self).init(tm, im)
         self.tm = tm
         self.im = im
         self.name = "Unembodied"

@@ -13,7 +13,7 @@ import sys
 class BossSAStrat(Strat):
 
     def __init__(self, tm, im, B, color='r', marker=None):
-        super(BossSAStrat, self).init(tm)
+        super(BossSAStrat, self).init(tm, im)
         self.tm = tm
         self.im = im
         self.pos = config.SS

@@ -22,15 +22,7 @@ class Maze(Model):
         self.nodes = []
         self.rnodes = []
 
-        width_factor = 5
         cols = (len(self.maze[0]) - 1) / 4
-        rwidth = cols / width_factor
-        self.reward = [[0 for i in range(rwidth)] for i in range(rwidth)]
-        for i in range(rwidth):
-            for j in range(rwidth):
-                self.reward[i][j] = random.random()
-        print self.reward[0]
-
         curr = 0
         for i in range(len(self.maze)):
             for j in range(len(self.maze[i])):
@@ -65,8 +57,6 @@ class Maze(Model):
                 x = (j - 2) / 4
                 dist = math.sqrt(math.pow(15-y, 2) + math.pow(15-x, 2))
                 self.rnodes.append(dist)
-                if curr == config.SS:
-                    print 'START', x, y
 
                 curr = curr + 1
 

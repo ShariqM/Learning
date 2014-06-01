@@ -61,7 +61,7 @@ EXPORT_FILE = None  # Export data to file
 IMPORT_FILE = None  # Import data and graph
 
 # Graphics
-GRAPHICS      = True # Visualization of agent
+GRAPHICS      = False # Visualization of agent
 UPDATE_STEPMI = True  # Update Step, Missing Info
 UPDATE_PIG    = False  # Update Pig Table
 UPDATE_VI     = False # Update Value Iteration Table (slow)

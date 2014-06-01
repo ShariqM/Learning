@@ -74,16 +74,16 @@ D_ALPHA = 1.00 # Strength parameter to a Dirichlet model
 import numpy
 def init_strats():
     arr = [
-  RandomStrat(ENVIRON,
-              ChineseRProcess(ENVIRON, THETA, ALPHA), COLORS['red']),
-
-  UnembodiedStrat(ENVIRON,
-              ChineseRProcess(ENVIRON, THETA, ALPHA),
-              COLORS['black']),
-
-  PigVIStrat(ENVIRON,
-              Dirichlet(ENVIRON, D_ALPHA),
-              COLORS['blue'], PLUS=0, EXPLORER=False),
+  #RandomStrat(ENVIRON,
+              #ChineseRProcess(ENVIRON, THETA, ALPHA), COLORS['red']),
+#
+  #UnembodiedStrat(ENVIRON,
+              #ChineseRProcess(ENVIRON, THETA, ALPHA),
+              #COLORS['black']),
+#
+  #PigVIStrat(ENVIRON,
+              #Dirichlet(ENVIRON, D_ALPHA),
+              #COLORS['blue'], PLUS=0, EXPLORER=False),
 
     #ES = int(3.0/4 * STEPS)
     #im = ChineseRProcess(ENVIRON, THETA, ALPHA)
@@ -96,40 +96,41 @@ def init_strats():
                        #LTAStrat(ENVIRON, im),
                        #BossSAStrat(ENVIRON, im, -1), ES, True))
 
+
+  #PigVIStrat(ENVIRON,
+              #ChineseRProcess(ENVIRON, THETA, ALPHA),
+              #COLORS['green'], PLUS=0, EXPLORER=False),
+#
+  #CBStrat(ENVIRON,
+              #ChineseRProcess(ENVIRON, THETA, ALPHA),
+              #COLORS['purple']),
+#
+  #PigVIStrat(ENVIRON,
+              #ChineseRProcess(ENVIRON, THETA, ALPHA),
+              #COLORS['grue2'], PLUS=1, EXPLORER=False),
+  #LTAStrat(ENVIRON,
+              #ChineseRProcess(ENVIRON, THETA, ALPHA),
+              #COLORS['yellow2']),
+        ]
+
     #for (t,ka) in [(math.log(2), 0.0), (0.38, 0.31), )]:
     #for (t,ka) in [(0.001, math.log(2))]:
-    #for (t,ka) in [(0.001, 0.25)]:
-            #break # ** BREAK
-            #max_k = 4 + 1.0 # Hacky... (Plus one for hypothetical new state)
-            #a = ka / max_k
-            #if a < 0.0 and not t + max_k * a > 0.0:
-                #continue
-            #if a >= 0.0 and not t > -a:
-                #continue
-            #if a > 1.0:
-                #continue
-            #if t == 0.0:
-                #continue
-#
-            #arr.append(
-  #PigVIStrat(ENVIRON,
-              #ChineseRProcess(ENVIRON, t, ka, True),
-              #COLORS['green'], PLUS=0, EXPLORER=False))
+    for (t,ka) in [(0.12, 0.13)]:
+            max_k = 4 + 1.0 # Hacky... (Plus one for hypothetical new state)
+            a = ka / max_k
+            if a < 0.0 and not t + max_k * a > 0.0:
+                continue
+            if a >= 0.0 and not t > -a:
+                continue
+            if a > 1.0:
+                continue
+            if t == 0.0:
+                continue
 
+            arr.append(
   PigVIStrat(ENVIRON,
-              ChineseRProcess(ENVIRON, THETA, ALPHA),
-              COLORS['green'], PLUS=0, EXPLORER=False),
+              ChineseRProcess(ENVIRON, t, ka, True),
+              COLORS['green'], PLUS=0, EXPLORER=False))
 
-  CBStrat(ENVIRON,
-              ChineseRProcess(ENVIRON, THETA, ALPHA),
-              COLORS['purple']),
-
-  PigVIStrat(ENVIRON,
-              ChineseRProcess(ENVIRON, THETA, ALPHA),
-              COLORS['grue2'], PLUS=1, EXPLORER=False),
-  LTAStrat(ENVIRON,
-              ChineseRProcess(ENVIRON, THETA, ALPHA),
-              COLORS['yellow2']),
-        ]
     return arr
 

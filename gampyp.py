@@ -33,7 +33,7 @@ class GamPypProcess(object):
         return "GAMPYP"
 
     def get_name(self):
-        return "GamPyp [T=%.3f, KA=$.3f, f=%f]" % \
+        return "GamPyp [T=%.3f, KA=%.3f, f=%f]" % \
                     (self.theta, self.KA, self.finify_by)
 
     def get_known_states(self, a=config.NULL_ARG, s=config.NULL_ARG):

@@ -1,13 +1,13 @@
 """
     A DirichletProcessNode encodes the internal probability distribution model for a
-    single node. This is closely related to the GamPyp Restaurant Process.
+    single node. This is closely related to the GamPyp Process.
 """
 
 import random
 import math
 import config
 
-class GamPypRProcessNode:
+class GamPypProcessNode:
 
     def __init__(self, M, theta=3.0, KA=0.0):
         self.data = []
@@ -31,17 +31,17 @@ class GamPypRProcessNode:
         return self.data[a].has_key(ns)
 
     def get_prob_first_obs(self):
-        return (1.0 - self.alpha) / (1.0 + self.theta)
+        p_psi = (self.theta + self.KA) / (1.0 + self.theta)
+        return (1.0 - p_psi)
 
     def get_prob_psi(self, a):
         return (self.theta + self.KA) / (self.obs_num[a] + self.theta)
 
-    # Generalization of CRP
     def get_prob(self, a, ns):
-        ntables = len(self.data[a])
-        alpha = self.alpha / ntables if self.kalpha and ntables else self.alpha
         if not self.data[a].has_key(ns):
             assert ns == config.PSI
+            if not self.obs_num[a]:
+                return 1.0
             return self.get_prob_psi(a)
         return (1.0 - self.get_prob_psi(a)) * self.data[a][ns] / self.obs_num[a]
 

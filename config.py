@@ -44,14 +44,15 @@ from randomstrat import *
 
 from chinese import ChineseRProcess
 from gamma import GammaProcess
+from gampyp import GamPypProcess
 
 # Run parameters
-ENVIRON = None           # Ignore, initialized by the runner
-#MAZE    = 'maze_s30_g.txt'  # See files in maze_files/ dir
-#MAZE    = 'maze_s30.mz'  # See files in maze_files/ dir
-MAZE    = 'maze.mz'     # See files in maze_files/ dir
-STEPS   = 3000           # Number of time steps to run
-RUNS    = 200            # Number of runs
+ENVIRON = None              # Ignore, initialized by the runner
+#MAZE    = 'maze_s30_g.txt' # See files in maze_files/ dir
+#MAZE    = 'maze_s30.mz'    # See files in maze_files/ dir
+MAZE    = 'maze.mz'         # See files in maze_files/ dir
+STEPS   = 3000              # Number of time steps to run
+RUNS    = 200               # Number of runs
 SERIAL  = False
 
 
@@ -116,8 +117,9 @@ def init_strats():
 
     #for (t,ka) in [(0.001, math.log(2))]:
     #for (t,ka) in [(0.12, 0.13)]:
-    for i in range(2):
+    for i in range(1):
         for (t,ka) in [(math.log(2), 0.0), (0.38, 0.31), (0.001, 0.693), (0.001, math.log(2)), (0.001, 0.25), (0.120, 0.13)]:
+            break
             max_k = 4 + 1.0 # Hacky... (Plus one for hypothetical new state)
             a = ka / max_k
             if a < 0.0 and not t + max_k * a > 0.0:
@@ -136,12 +138,16 @@ def init_strats():
 
         arr.append(
       PigVIStrat(ENVIRON,
-                 ChineseRProcess(ENVIRON, THETA, ALPHA),
+                 GamPypProcess(ENVIRON, 0.001, 0.25),
                  COLORS['green'], PLUS=0, EXPLORER=False))
         arr.append(
       PigVIStrat(ENVIRON,
-                 GammaProcess(ENVIRON, THETA),
+                 ChineseRProcess(ENVIRON, THETA, ALPHA),
                  COLORS['green'], PLUS=0, EXPLORER=False))
+        #arr.append(
+      #PigVIStrat(ENVIRON,
+                 #GammaProcess(ENVIRON, THETA),
+                 #COLORS['green'], PLUS=0, EXPLORER=False))
 
 
     #ES = int(2.0/4 * STEPS)

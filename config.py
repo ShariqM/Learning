@@ -131,19 +131,26 @@ def init_strats():
             if t == 0.0:
                 continue
 
-            arr.append(
-      PigVIStrat(ENVIRON,
-                  ChineseRProcess(ENVIRON, t, ka, True),
-                  COLORS['green'], PLUS=0, EXPLORER=False))
-
-        arr.append(
-      PigVIStrat(ENVIRON,
-                 GamPypProcess(ENVIRON, 0.001, 0.25),
-                 COLORS['green'], PLUS=0, EXPLORER=False))
         arr.append(
       PigVIStrat(ENVIRON,
                  ChineseRProcess(ENVIRON, THETA, ALPHA),
-                 COLORS['green'], PLUS=0, EXPLORER=False))
+                 COLORS['blue'], PLUS=0, EXPLORER=False))
+        arr.append(
+      PigVIStrat(ENVIRON,
+                  ChineseRProcess(ENVIRON, 0.001, 0.25, True),
+                  COLORS['green'], PLUS=0, EXPLORER=False))
+        arr.append(
+      PigVIStrat(ENVIRON,
+                 GamPypProcess(ENVIRON, 0.001, 0.25),
+                 COLORS['red'], PLUS=0, EXPLORER=False))
+        arr.append(
+      PigVIStrat(ENVIRON,
+                  ChineseRProcess(ENVIRON, 0.12, 0.13, True),
+                  COLORS['purple'], PLUS=0, EXPLORER=False))
+        arr.append(
+      PigVIStrat(ENVIRON,
+                 GammaProcess(ENVIRON, 0.25),
+                 COLORS['grue'], PLUS=0, EXPLORER=False))
         #arr.append(
       #PigVIStrat(ENVIRON,
                  #GammaProcess(ENVIRON, THETA),

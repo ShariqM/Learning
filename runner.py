@@ -88,7 +88,7 @@ class Runner(object):
 
         for i in range(len(strats)):
             self.initial_mi = max(self.initial_mi, strats[i].compute_mi())
-            jobs += [i] * self.runs
+            jobs += [(i,j) for j in range(self.runs)]
 
         print "Running %d jobs" % len(jobs)
 
@@ -105,7 +105,8 @@ class Runner(object):
         for j in range(self.nprocesses):
             if len(jobs) == 0:
                 break
-            i = jobs.pop()
+            i,j = jobs.pop()
+            strats[i].update_tm(config.ENVIRON[j])
             p.apply_async(strat_collect, args=(q, i, strats[i], self.steps))
             running += 1
 
@@ -123,7 +124,8 @@ class Runner(object):
             self.strats_reward[i].append(reward)
 
             if len(jobs):
-                i = jobs.pop()
+                i,j = jobs.pop()
+                strats[i].update_tm(config.ENVIRON[j])
                 p.apply_async(strat_collect, args=(q, i, strats[i], self.steps))
             else:
                 running -= 1 # Didn't start another job to replace this one

@@ -36,9 +36,11 @@ class MazeRunner(Runner):
     def __init__(self):
         self.init_variables()
         if '3d' in self.mazef:
-            config.ENVIRON = Maze3d(self.mazef)
+            for i in range(config.RUNS):
+                config.ENVIRON.append(Maze3d(self.mazef))
         else:
-            config.ENVIRON = Maze(self.mazef)
+            for i in range(config.RUNS):
+                config.ENVIRON.append(Maze(self.mazef))
         self.strats = config.init_strats()
 
 def main():

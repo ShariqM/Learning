@@ -14,7 +14,7 @@ import config
 class Maze3d(Model):
 
     def __init__(self, fname):
-        self.maze, self.N, self.M, self.gwell = parse_maze(fname)
+        self.maze, self.N, self.M, self.gwells = parse_maze(fname)
 
         self.nodes = []
 
@@ -33,11 +33,11 @@ class Maze3d(Model):
                          (0,0,-1), (0,0,1))
                     for x,y,z in d:
                         # Teleporters are 1 space away
-                        if self.maze[k+z][j+y][i+x] == 't':
-                            neighbors.append(self.gwell)
+                        if str(self.maze[k+z][j+y][i+x]) in string.letters:
+                            neighbors.append(self.gwells[self.maze[k+z][j+y][i+x]])
 
                         # Walls are 2 spaces away
-                        elif self.maze[k+z*2][j+y*2][i+x*2] == 'w':
+                        elif self.maze[k+z*2][j+y*2][i+x*2] == config.WALL_CHAR:
                             neighbors.append(curr)
 
                         # Neighbors are 4 spaces away
@@ -45,6 +45,7 @@ class Maze3d(Model):
                             neighbors.append(curr + (1 * x) + (n * y) +
                                              (n * n * z))
                         else:
+                            print x,y,z
                             raise Exception("Malformed Maze, pos=%d" % curr)
                     print "Curr=%d, neighbors=" % curr, neighbors
                     self.nodes.append(MazeNode(self.M, neighbors))
@@ -53,7 +54,7 @@ class Maze3d(Model):
 
     def take_action(self, s, a):
         node = self.nodes[s]
-        return node.take_action(a)
+        return node.take_action(a), 0
 
     def get_prob(self, a, s, ns, new_states=None):
         return self.nodes[s].get_prob(a, ns, new_states)
@@ -83,7 +84,7 @@ def parse_maze(fname):
     nactions = 6
 
     nstates = 0
-    gwell = -1
+    gwells = {}
     z = 0
     r = 0
     while l != '':
@@ -96,8 +97,8 @@ def parse_maze(fname):
         for i in l:
             if i == ' ' or i == '\n':
                 continue
-            if i == 'g':
-                gwell = nstates
+            if i in string.ascii_uppercase:
+                gwells[i.lower()] = nstates
                 i = str(nstates % 10)
             if i in string.digits:
                 nstates = nstates + 1
@@ -113,7 +114,7 @@ def parse_maze(fname):
         maze = maze[0]
         nactions = 4
 
-    return maze, nstates, nactions, gwell
+    return maze, nstates, nactions, gwells
 
 """
 An example:

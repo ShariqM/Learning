@@ -15,6 +15,9 @@ class Strat(object):
                             range(tm.M)]
         self.mi = {config.SS: list(self.init_mi)}
 
+    def update_tm(self, tm):
+        self.tm = tm
+
     def get_information_gain(self):
         return self.im.get_information_gain()
 

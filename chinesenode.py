@@ -9,17 +9,12 @@ import config
 
 class ChineseRProcessNode:
 
-    def __init__(self, M, theta=3.0, alpha=0.0, kalpha=False):
+    def __init__(self, im):
         self.data = []
         self.obs_num = []
-        self.M = M
+        self.im = im
+        self.M = im.M
         self.total_reward = [0 for i in range(self.M)]
-
-        assert type(alpha) != int
-        assert type(theta) != int
-        self.theta = theta # Strength parameter
-        self.alpha = alpha # Discount parameter
-        self.kalpha = kalpha # Fix K*Alpha where K is the number of tables
 
         for action in range(self.M):
             self.data.append({}) # Number of times (s,a,ns) has been observed
@@ -32,18 +27,32 @@ class ChineseRProcessNode:
         return self.data[a].has_key(ns)
 
     def get_prob_first_obs(self):
-        return (1.0 - self.alpha) / (1.0 + self.theta)
+        return (1.0 - self.im.alpha) / (1.0 + self.im.theta)
+
+    def harm_approx(self, N):
+        return math.log(N) + config.MASC + 1.0/(2 * N) - 1.0/(12 * math.pow(N, 2))
+
+    def get_theta(self, a):
+        ntables = len(self.data[a])
+        theta = self.im.theta
+        if self.im.mle and self.obs_num[a]:
+            if self.obs_num[a] == 1:
+                theta = config.THETA_OBS_TWO
+            else:
+                theta = ntables / self.harm_approx(self.obs_num[a])
+        return theta
 
     # Generalization of CRP
     def get_prob(self, a, ns):
         ntables = len(self.data[a])
-        alpha = self.alpha / ntables if self.kalpha and ntables else self.alpha
+        alpha = self.im.alpha / ntables if self.im.kalpha and ntables else self.im.alpha
+        theta = self.get_theta(a)
+
         if not self.data[a].has_key(ns):
             assert ns == config.PSI
-            return (self.theta + ntables * alpha) / \
-                    (self.obs_num[a] + self.theta)
-        #print "ns=%d T=%f A=%f |b|=%d n=%d" % (ns, self.theta, self.alpha, self.data[a][ns], self.obs_num[a])
-        return (self.data[a][ns] - alpha) / (self.obs_num[a] + self.theta)
+            return (theta + ntables * alpha) / (self.obs_num[a] + theta)
+
+        return (self.data[a][ns] - alpha) / (self.obs_num[a] + self.im.theta)
 
     def get_reward(self, a):
         if not self.obs_num[a]:

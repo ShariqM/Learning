@@ -159,7 +159,7 @@ class Runner(object):
         plt.xlabel('Time (steps)', fontdict={'fontsize':24})
         plt.ylabel('Information Gain (bits)', fontdict={'fontsize':24})
         #plt.ylabel('Missing Information (bits)', fontdict={'fontsize':24})
-        plt.title("Maze", fontsize=26)
+        plt.title("3D Maze", fontsize=26)
         #plt.title(self.title + " Elapsed=%ds) " % self.elapsed.seconds)
         plt.axis([0, self.steps, 0, mi_height * 1.5])
 
@@ -171,7 +171,7 @@ class Runner(object):
                      color=self.strats[i].color,
                      #label=self.strats[i].get_sname() + " MI=" + str(mi))
                      linewidth=1.5,
-                     label=self.strats[i].get_sname())
+                     label=self.strats[i].get_name())
 
 
         plt.xticks(fontsize=20)
@@ -238,7 +238,7 @@ class Runner(object):
 
             # Display text representation of Model
             if self.verbose:
-                config.ENVIRON.display()
+                config.ENVIRON[0].display()
                 for i in range(len(self.strats)):
                     self.strats[i].display()
 

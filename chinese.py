@@ -11,17 +11,24 @@ import config
 
 class ChineseRProcess(object):
 
-    def __init__(self, tm, theta=3.00, alpha=0.0, kalpha=False, finify_by=2.0):
+    def __init__(self, tm, theta=3.00, alpha=0.0, kalpha=False, mle=False, finify_by=2.0):
         self.M = tm.M
         self.nodes = {}
-        self.nodes[config.SS] = ChineseRProcessNode(self.M, theta, alpha, kalpha)
+        self.nodes[config.SS] = ChineseRProcessNode(self)
         self.last_update = config.NULL_UPDATE
-        self.theta = theta
-        self.alpha = alpha
-        self.kalpha = kalpha
-        self.total_reward = 0.0
+
+        assert type(alpha) != int
+        assert type(theta) != int
         assert type(finify_by) != int
+        self.theta = theta # Strength parameter
+        self.alpha = alpha # Discount parameter
+        self.kalpha = kalpha # Fix K*Alpha where K is the number of tables
+        if mle:
+            assert self.alpha == 0, "MLE only for CRP not PYP"
+        self.mle = mle
         self.finify_by = finify_by
+
+        self.total_reward = 0.0
         self.information_gain = 0.0
 
     def get_information_gain(self):
@@ -35,8 +42,8 @@ class ChineseRProcess(object):
 
     def get_name(self):
         s = "KA" if self.kalpha else "A"
-        return "CRP [T=%.3f, %s=%.3f, f=%f]" % \
-                    (self.theta, s, self.alpha, self.finify_by)
+        return "CRP [T=%.3f, %s=%.3f, f=%.2f, mle=%d]" % \
+                    (self.theta, s, self.alpha, self.finify_by, self.mle)
 
     def get_known_states(self, a=config.NULL_ARG, s=config.NULL_ARG):
         if s == config.NULL_ARG:
@@ -78,8 +85,8 @@ class ChineseRProcess(object):
         new_state = not self.nodes.has_key(ns)
         if new_state:
             self.last_update = ns
-            self.nodes[ns] = ChineseRProcessNode(self.M, self.theta,
-                                                 self.alpha, self.kalpha)
+            self.nodes[ns] = ChineseRProcessNode(self)
+
         else:
             self.last_update = config.NULL_UPDATE
 
@@ -93,7 +100,7 @@ class ChineseRProcess(object):
         return self.nodes[s].undo_update(a, ns)
 
     def display(self, strat):
-        pr("*** %s Chinese Restaurant Process (Internal) Model ***" % strat)
+        pr("*** %s MLE=%d, Chinese Restaurant Process (Internal) Model ***" % (strat, self.mle))
         pr("a=Action, s=Starting State, ns=New state, p=Probability")
         pr("For each (s,a) we display a list of (ns, p), the p of entering ns")
         for i, node in self.nodes.items():

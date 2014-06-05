@@ -5,8 +5,8 @@ from colors import *
 # State nums (don't touch)
 PSI           = -1 # Represents the unknown state
 ETA           = sys.maxint # Represents a new state we discovered
-#SS            = 465 # Start State
-SS            = 0 # Start State
+SS            = 465 # Start State
+#SS            = 0 # Start State
 MAX_REWARD    = 1.0
 MASC          = 0.57721
 THETA_OBS_TWO = 9999
@@ -50,12 +50,12 @@ from gampyp import GamPypProcess
 
 # Run parameters
 ENVIRON = []                # Ignore, initialized by the runner
-#MAZE    = 'maze_s30_g.txt' # See files in maze_files/ dir
+MAZE    = 'maze_s30_g.txt' # See files in maze_files/ dir
 #MAZE    = 'maze_s30.mz'    # See files in maze_files/ dir
-MAZE    = 'maze.mz'         # See files in maze_files/ dir
+#MAZE    = 'maze.mz'         # See files in maze_files/ dir
 #MAZE    = 'maze_3d.mz'     # See files in maze_files/ dir
 STEPS   = 1000              # Number of time steps to run
-RUNS    = 500               # Number of runs
+RUNS    = 8                 # Number of runs
 SERIAL  = False
 
 
@@ -171,6 +171,7 @@ def init_strats():
 
     #for i in xrange(110,120,1):
     for r in range(30):
+        break
         for i in (120,124):
             im = ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True)
             arr.append(DyStrat(ENVIRON[0], im,
@@ -179,15 +180,14 @@ def init_strats():
 
 
 
-    #ES = int(2.0/4 * STEPS)
-    #im = ChineseRProcess(ENVIRON[0], THETA, ALPHA)
-    #arr.append(DyStrat(ENVIRON[0], im,
-                       #PigVIStrat(ENVIRON[0], im, PLUS=0, EXPLORER=False),
-                       #BossSAStrat(ENVIRON[0], im, -1), ES, True))
-#
-    #im = ChineseRProcess(ENVIRON[0], THETA, ALPHA)
-    #arr.append(DyStrat(ENVIRON[0], im,
-                       #LTAStrat(ENVIRON[0], im),
-                       #BossSAStrat(ENVIRON[0], im, -2), ES, True))
-#
+    ES = int(3.0/4 * STEPS)
+    im = ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True)
+    arr.append(DyStrat(ENVIRON[0], im,
+                       PigVIStrat(ENVIRON[0], im, PLUS=0, EXPLORER=False),
+                       BossSAStrat(ENVIRON[0], im, -1), ES, True))
+
+    im = ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True)
+    arr.append(DyStrat(ENVIRON[0], im,
+                       LTAStrat(ENVIRON[0], im),
+                       BossSAStrat(ENVIRON[0], im, -2), ES, True))
     return arr

@@ -170,7 +170,7 @@ def init_strats():
                  #COLORS['green'], PLUS=0, EXPLORER=False))
 
     #for i in xrange(110,120,1):
-    for j in xrange(70,130,2):
+    for i in xrange(70,130,2):
         im = ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True)
         arr.append(DyStrat(ENVIRON[0], im,
                             PigVIStrat(ENVIRON[0], im, PLUS=0, EXPLORER=False),

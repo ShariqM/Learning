@@ -34,6 +34,10 @@ class BossSAStrat(Strat):
 
         self.graphics = MazeGraphics(self.name, self.tm) if config.GRAPHICS else None
 
+    def prepare_as_bstrat(self, pos):
+        self.pos = pos
+        self.mi[pos] = list(self.init_mi)
+
     def max_reward(self, s, a, V):
         max_exp_rew = -1
         new_states = self.im.get_known_states(a, s)

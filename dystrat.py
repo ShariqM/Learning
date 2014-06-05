@@ -30,13 +30,21 @@ class DyStrat(Strat):
         self.ls = -1
         self.reset_pos = reset_pos
 
+    def update_tm(self, tm):
+        self.strat.tm = tm
+        self.bstrat.tm = tm
+        self.tm = tm
+
     def step(self, step, last_mi):
         self.ls = step
         if step == self.step_switch:
+            pos = self.strat.pos
             self.strat = self.bstrat
             if self.reset_pos:
                 self.im.pos = config.SS
                 self.im.total_reward = 0
+            else:
+                self.strat.prepare_as_bstrat(pos) # perserve position
             time.sleep(5)
 
         self.strat.step(step, last_mi)

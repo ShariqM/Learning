@@ -26,7 +26,8 @@ class ChainRunner(Runner):
 
     def __init__(self):
         self.init_variables()
-        config.ENVIRON = Chain()
+        for i in range(config.RUNS):
+            config.ENVIRON.append(Chain())
         self.strats = config.init_strats()
 
 def main():

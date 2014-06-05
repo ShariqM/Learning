@@ -9,7 +9,6 @@ ETA           = sys.maxint # Represents a new state we discovered
 SS            = 0 # Start State
 MAX_REWARD    = 1.0
 MASC          = 0.57721
-THETA_OBS_TWO = 9999
 
 # Misc (don't touch)
 NULL_ARG      = -999
@@ -106,15 +105,15 @@ def init_strats():
   PigVIStrat(ENVIRON[0],
               ChineseRProcess(ENVIRON[0], THETA, ALPHA),
               COLORS['green'], PLUS=0, EXPLORER=False),
-
+#
   PigVIStrat(ENVIRON[0],
               ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
-              COLORS['green3'], PLUS=0, EXPLORER=False),
-
+              COLORS['green2'], PLUS=0, EXPLORER=False),
+#
   CBStrat(ENVIRON[0],
               ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
               COLORS['purple']),
-
+#
   PigVIStrat(ENVIRON[0],
               ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
               COLORS['grue2'], PLUS=1, EXPLORER=False),

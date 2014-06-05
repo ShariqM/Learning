@@ -36,10 +36,7 @@ class ChineseRProcessNode:
         ntables = len(self.data[a])
         theta = self.im.theta
         if self.im.mle and self.obs_num[a]:
-            if self.obs_num[a] == 1:
-                theta = config.THETA_OBS_TWO
-            else:
-                theta = ntables / self.harm_approx(self.obs_num[a])
+            theta = ntables / self.harm_approx(self.obs_num[a])
         return theta
 
     # Generalization of CRP

@@ -159,7 +159,7 @@ class Runner(object):
         plt.xlabel('Time (steps)', fontdict={'fontsize':24})
         plt.ylabel('Information Gain (bits)', fontdict={'fontsize':24})
         #plt.ylabel('Missing Information (bits)', fontdict={'fontsize':24})
-        plt.title("3D Maze", fontsize=26)
+        plt.title("Maze", fontsize=26)
         #plt.title(self.title + " Elapsed=%ds) " % self.elapsed.seconds)
         plt.axis([0, self.steps, 0, mi_height * 1.5])
 

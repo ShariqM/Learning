@@ -9,6 +9,7 @@ ETA           = sys.maxint # Represents a new state we discovered
 SS            = 0 # Start State
 MAX_REWARD    = 1.0
 MASC          = 0.57721
+THETA_OBS_TWO = 9999
 
 # Misc (don't touch)
 NULL_ARG      = -999
@@ -53,13 +54,13 @@ ENVIRON = []                # Ignore, initialized by the runner
 #MAZE    = 'maze_s30.mz'    # See files in maze_files/ dir
 MAZE    = 'maze.mz'         # See files in maze_files/ dir
 #MAZE    = 'maze_3d.mz'     # See files in maze_files/ dir
-STEPS   = 1500              # Number of time steps to run
-RUNS    = 5                 # Number of runs
+STEPS   = 1000              # Number of time steps to run
+RUNS    = 500               # Number of runs
 SERIAL  = False
 
 
 # Output
-DUMP_STDOUT = False  # Dump the data to stdout
+DUMP_STDOUT = True  # Dump the data to stdout
 EXPORT_FILE = None  # Export data to file
 IMPORT_FILE = None  # Import data and graph
 
@@ -78,17 +79,17 @@ D_ALPHA = 1.00 # Strength parameter to a Dirichlet model
 import numpy
 def init_strats():
     arr = [
-  RandomStrat(ENVIRON[0],
-              ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
-              COLORS['red']),
+  #RandomStrat(ENVIRON[0],
+              #ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
+              #COLORS['red']),
+#
+  #UnembodiedStrat(ENVIRON[0],
+              #ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
+              #COLORS['black']),
 
-  UnembodiedStrat(ENVIRON[0],
-              ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
-              COLORS['black']),
-
-  PigVIStrat(ENVIRON[0],
-              Dirichlet(ENVIRON[0], D_ALPHA),
-              COLORS['blue'], PLUS=0, EXPLORER=False),
+  #PigVIStrat(ENVIRON[0],
+              #Dirichlet(ENVIRON[0], D_ALPHA),
+              #COLORS['blue'], PLUS=0, EXPLORER=False),
 
     #ES = int(3.0/4 * STEPS)
     #im = ChineseRProcess(ENVIRON[0], THETA, ALPHA)
@@ -102,24 +103,24 @@ def init_strats():
                        #BossSAStrat(ENVIRON[0], im, -1), ES, True))
 
 
-  PigVIStrat(ENVIRON[0],
-              ChineseRProcess(ENVIRON[0], THETA, ALPHA),
-              COLORS['green'], PLUS=0, EXPLORER=False),
+  #PigVIStrat(ENVIRON[0],
+              #ChineseRProcess(ENVIRON[0], THETA, ALPHA),
+              #COLORS['green'], PLUS=0, EXPLORER=False),
 #
-  PigVIStrat(ENVIRON[0],
-              ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
-              COLORS['green2'], PLUS=0, EXPLORER=False),
+  #PigVIStrat(ENVIRON[0],
+              #ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
+              #COLORS['green3'], PLUS=0, EXPLORER=False),
 #
-  CBStrat(ENVIRON[0],
-              ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
-              COLORS['purple']),
+  #CBStrat(ENVIRON[0],
+              #ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
+              #COLORS['purple']),
 #
-  PigVIStrat(ENVIRON[0],
-              ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
-              COLORS['grue2'], PLUS=1, EXPLORER=False),
-  LTAStrat(ENVIRON[0],
-              ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
-              COLORS['yellow2']),
+  #PigVIStrat(ENVIRON[0],
+              #ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
+              #COLORS['grue2'], PLUS=1, EXPLORER=False),
+  #LTAStrat(ENVIRON[0],
+              #ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
+              #COLORS['yellow2']),
         ]
 
     #for (t,ka) in [(0.001, math.log(2))]:
@@ -167,6 +168,15 @@ def init_strats():
       #PigVIStrat(ENVIRON[0],
                  #GammaProcess(ENVIRON[0], THETA),
                  #COLORS['green'], PLUS=0, EXPLORER=False))
+
+    #for i in xrange(110,120,1):
+    for r in range(30):
+        for i in (120,124):
+            im = ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True)
+            arr.append(DyStrat(ENVIRON[0], im,
+                                PigVIStrat(ENVIRON[0], im, PLUS=0, EXPLORER=False),
+                                BossSAStrat(ENVIRON[0], im, -1), i))
+
 
 
     #ES = int(2.0/4 * STEPS)

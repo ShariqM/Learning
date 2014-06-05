@@ -164,6 +164,7 @@ def predicted_information_gain(im, a, s, explorer):
         if explorer:
             pig += im.get_prob(a, s, ns) * config.BETA if ns == config.PSI else 0
 
+    assert pig > 0, "Pig was %f for s=%d, a=%d" % (pig, s, a)
     return pig
 
 # Notes

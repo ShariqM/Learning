@@ -193,7 +193,7 @@ class Runner(object):
                    #fontsize=20)
         plt.show()
 
-        ns_height = 10
+        ns_height = 50
         step_points = [i for i in range(self.steps)]
         plt.xlabel('Time (steps)', fontdict={'fontsize':24})
         plt.ylabel('States Discovered', fontdict={'fontsize':24})
@@ -239,6 +239,10 @@ class Runner(object):
             f.write('%s ' % self.strats[i].get_name())
             mi = self.strats_data[i][self.steps - 1][0]
             f.write('Mean MI=%f (std=%f) | ' % (mi[0], mi[1]))
+
+            ns = self.strats_data[i][self.steps - 1][1]
+            f.write('Mean NS=%f (std=%f) | ' % (ns[0], ns[1]))
+
             [m, std] = self.strats_reward[i]
             f.write('Mean Reward=%f (std=%f)\n' % (m, std))
 

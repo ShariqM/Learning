@@ -72,7 +72,7 @@ UPDATE_VI     = False # Update Value Iteration Table (slow)
 # Default parameters to models
 ALPHA   = 0.0  # Discount parameter to a CRP
 THETA   = 0.25 # Strength (or concentration) parameter to a CRP
-D_ALPHA = 1.00 # Strength parameter to a Dirichlet model
+D_ALPHA = 0.20 # Strength parameter to a Dirichlet model
 
 # Strats to run [Choose a (Strategy, Internal Model) pair]
 import numpy

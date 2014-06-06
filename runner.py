@@ -139,9 +139,17 @@ class Runner(object):
     def analyze_data(self):
         for i in range(len(self.strats)):
             for s in range(self.steps):
-                arr = numpy.array(self.strats_data[i][s])
-                mean, std = numpy.mean(arr), numpy.std(arr)
-                self.strats_data[i][s] = [mean,std]
+                length = len(self.strats_data[i][s])
+
+                mi_arr = [self.strats_data[i][s][j][0] for j in range(length)]
+                mi_arr = numpy.array(mi_arr)
+                mi_mean, mi_std = numpy.mean(mi_arr), numpy.std(mi_arr)
+
+                ns_arr = [self.strats_data[i][s][j][1] for j in range(length)]
+                ns_arr = numpy.array(ns_arr)
+                ns_mean, ns_std = numpy.mean(ns_arr), numpy.std(ns_arr)
+
+                self.strats_data[i][s] = [(mi_mean, mi_std), (ns_mean, ns_std)]
             arr = numpy.array(self.strats_reward[i])
             self.strats_reward[i] = [numpy.mean(arr), numpy.std(arr)]
 
@@ -161,17 +169,18 @@ class Runner(object):
         #plt.ylabel('Missing Information (bits)', fontdict={'fontsize':24})
         plt.title("Maze", fontsize=26)
         #plt.title(self.title + " Elapsed=%ds) " % self.elapsed.seconds)
-        plt.axis([0, self.steps, 0, mi_height * 1.5])
+        plt.axis([0, self.steps, 2700, mi_height * 1.1])
 
 
         for i in range(len(self.strats)):
-            mi = self.strats_data[i][self.steps - 1][0]
-            mean_data = [data[0] for data in self.strats_data[i]]
+            #mi = self.strats_data[i][self.steps - 1][0][0]
+            mean_data = [data[0][0] - 0 for data in self.strats_data[i]]
             plt.plot(step_points, mean_data,
                      color=self.strats[i].color,
                      #label=self.strats[i].get_sname() + " MI=" + str(mi))
                      linewidth=1.5,
-                     label=self.strats[i].get_name())
+                     #label=self.strats[i].get_name())
+                     label=self.strats[i].get_sname())
 
 
         plt.xticks(fontsize=20)
@@ -184,17 +193,51 @@ class Runner(object):
                    #fontsize=20)
         plt.show()
 
+        ns_height = 10
+        step_points = [i for i in range(self.steps)]
+        plt.xlabel('Time (steps)', fontdict={'fontsize':24})
+        plt.ylabel('States Discovered', fontdict={'fontsize':24})
+        #plt.ylabel('Missing Information (bits)', fontdict={'fontsize':24})
+        plt.title("Maze", fontsize=26)
+        #plt.title(self.title + " Elapsed=%ds) " % self.elapsed.seconds)
+        plt.axis([0, self.steps, 0, ns_height * 1.1])
+
+
+        for i in range(len(self.strats)):
+            #mi = self.strats_data[i][self.steps - 1][1][0]
+            mean_data = [data[1][0] - 0 for data in self.strats_data[i]]
+            plt.plot(step_points, mean_data,
+                     color=self.strats[i].color,
+                     #label=self.strats[i].get_sname() + " MI=" + str(mi))
+                     linewidth=1.5,
+                     #label=self.strats[i].get_name())
+                     label=self.strats[i].get_sname())
+
+
+        plt.xticks(fontsize=20)
+        plt.yticks(fontsize=20)
+
+        lg = plt.legend(fontsize=20)
+        lg.draw_frame(False)
+
+        #plt.legend(bbox_to_anchor=(0.8 , 1.00), loc=2,
+                   #fontsize=20)
+        plt.show()
+
+
+
     def export_data(self, f):
         for i in range(len(self.strats_data)):
             for s in range(len(self.strats_data[i])):
                 #FIXME
-                f.write('%f ' % self.strats_data[i][s][0])
+                f.write('%f %d ' % (self.strats_data[i][s][0][0],
+                                   self.strats_data[i][s][1][0]))
             f.write('\n')
 
         f.write('Summary\n')
         for i in range(len(self.strats_data)):
             f.write('%s ' % self.strats[i].get_name())
-            mi = self.strats_data[i][self.steps - 1]
+            mi = self.strats_data[i][self.steps - 1][0]
             f.write('Mean MI=%f (std=%f) | ' % (mi[0], mi[1]))
             [m, std] = self.strats_reward[i]
             f.write('Mean Reward=%f (std=%f)\n' % (m, std))
@@ -215,12 +258,19 @@ class Runner(object):
 
             self.strats_data.append([])
             step = 0
-            for mi in l.split():
-                mi = float(mi)
-                if not initial_mi:
-                    initial_mi = mi
-                self.strats_data[i].append([mi,0]) #FIXME
-                step = step + 1
+            mi_turn = True
+            last_mi = -1
+            for value in l.split():
+                if mi_turn:
+                    last_mi = float(value)
+                    if not initial_mi:
+                        initial_mi = last_mi
+                    mi_turn = False
+                else:
+                    ns = int(value)
+                    mi_turn = True
+                    self.strats_data[i].append([(last_mi,0), (ns, 0)]) #FIXME
+                    step = step + 1
 
             self.steps = step
 
@@ -285,9 +335,10 @@ def strat_collect(q, i, strat, steps):
         strats_data = [0 for j in range(steps)]
         while step < steps:
             mi = strat.compute_mi()
+            nstates = len(strat.im.get_known_states())
             #mi = strat.get_information_gain()
 
-            strats_data[step] = mi
+            strats_data[step] = (mi, nstates)
             strat.step(step, mi)
 
             #raise Exception("Hi") # Test

@@ -5,11 +5,10 @@ from colors import *
 # State nums (don't touch)
 PSI           = -1 # Represents the unknown state
 ETA           = sys.maxint # Represents a new state we discovered
-SS            = 465 # Start State
-#SS            = 0 # Start State
+#SS            = 465 # Start State
+SS            = 0 # Start State
 MAX_REWARD    = 1.0
 MASC          = 0.57721
-THETA_OBS_TWO = 9999
 
 # Misc (don't touch)
 NULL_ARG      = -999
@@ -54,8 +53,8 @@ MAZE    = 'maze_s30_g.txt' # See files in maze_files/ dir
 #MAZE    = 'maze_s30.mz'    # See files in maze_files/ dir
 #MAZE    = 'maze.mz'         # See files in maze_files/ dir
 #MAZE    = 'maze_3d.mz'     # See files in maze_files/ dir
-STEPS   = 1000              # Number of time steps to run
-RUNS    = 200               # Number of runs
+STEPS   = 20                # Number of time steps to run
+RUNS    = 1                 # Number of runs
 SERIAL  = False
 
 
@@ -73,7 +72,7 @@ UPDATE_VI     = False # Update Value Iteration Table (slow)
 # Default parameters to models
 ALPHA   = 0.0  # Discount parameter to a CRP
 THETA   = 0.25 # Strength (or concentration) parameter to a CRP
-D_ALPHA = 1.00 # Strength parameter to a Dirichlet model
+D_ALPHA = 0.20 # Strength parameter to a Dirichlet model
 
 # Strats to run [Choose a (Strategy, Internal Model) pair]
 import numpy
@@ -86,11 +85,11 @@ def init_strats():
   #UnembodiedStrat(ENVIRON[0],
               #ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
               #COLORS['black']),
-
+#
   #PigVIStrat(ENVIRON[0],
               #Dirichlet(ENVIRON[0], D_ALPHA),
               #COLORS['blue'], PLUS=0, EXPLORER=False),
-
+#
     #ES = int(3.0/4 * STEPS)
     #im = ChineseRProcess(ENVIRON[0], THETA, ALPHA)
     #arr.append(DyStrat(ENVIRON[0], im,
@@ -103,18 +102,18 @@ def init_strats():
                        #BossSAStrat(ENVIRON[0], im, -1), ES, True))
 
 
-  #PigVIStrat(ENVIRON[0],
-              #ChineseRProcess(ENVIRON[0], THETA, ALPHA),
-              #COLORS['green'], PLUS=0, EXPLORER=False),
-#
-  #PigVIStrat(ENVIRON[0],
-              #ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
-              #COLORS['green3'], PLUS=0, EXPLORER=False),
-#
+  PigVIStrat(ENVIRON[0],
+              ChineseRProcess(ENVIRON[0], THETA, ALPHA),
+              COLORS['green'], PLUS=0, EXPLORER=False),
+
+  PigVIStrat(ENVIRON[0],
+              ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
+              COLORS['green2'], PLUS=0, EXPLORER=False),
+##
   #CBStrat(ENVIRON[0],
               #ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
               #COLORS['purple']),
-#
+##
   #PigVIStrat(ENVIRON[0],
               #ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
               #COLORS['grue2'], PLUS=1, EXPLORER=False),
@@ -169,25 +168,16 @@ def init_strats():
                  #GammaProcess(ENVIRON[0], THETA),
                  #COLORS['green'], PLUS=0, EXPLORER=False))
 
-    #for i in xrange(110,120,1):
-    for r in range(30):
-        break
-        for i in (120,124):
-            im = ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True)
-            arr.append(DyStrat(ENVIRON[0], im,
-                                PigVIStrat(ENVIRON[0], im, PLUS=0, EXPLORER=False),
-                                BossSAStrat(ENVIRON[0], im, -1), i))
 
-
-
-    ES = int(3.0/4 * STEPS)
-    im = ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True)
-    arr.append(DyStrat(ENVIRON[0], im,
-                       PigVIStrat(ENVIRON[0], im, PLUS=0, EXPLORER=False),
-                       BossSAStrat(ENVIRON[0], im, -1), ES, True))
-
-    im = ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True)
-    arr.append(DyStrat(ENVIRON[0], im,
-                       LTAStrat(ENVIRON[0], im),
-                       BossSAStrat(ENVIRON[0], im, -2), ES, True))
+    #ES = int(2.0/4 * STEPS)
+    #im = ChineseRProcess(ENVIRON[0], THETA, ALPHA)
+    #arr.append(DyStrat(ENVIRON[0], im,
+                       #PigVIStrat(ENVIRON[0], im, PLUS=0, EXPLORER=False),
+                       #BossSAStrat(ENVIRON[0], im, -1), ES, True))
+#
+    #im = ChineseRProcess(ENVIRON[0], THETA, ALPHA)
+    #arr.append(DyStrat(ENVIRON[0], im,
+                       #LTAStrat(ENVIRON[0], im),
+                       #BossSAStrat(ENVIRON[0], im, -2), ES, True))
+#
     return arr

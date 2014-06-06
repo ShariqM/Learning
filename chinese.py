@@ -38,7 +38,7 @@ class ChineseRProcess(object):
         return self.finify_by
 
     def get_abbr(self):
-        return "PY"
+        return "CRP" if not self.mle else "EB-CRP"
 
     def get_name(self):
         s = "KA" if self.kalpha else "A"

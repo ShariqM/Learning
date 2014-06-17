@@ -270,9 +270,9 @@ class Runner(object):
                         initial_mi = last_mi
                     mi_turn = False
                 else:
-                    ns = int(value)
+                    ns = float(value)
                     mi_turn = True
-                    self.strats_data[i].append([(last_mi,0), (ns, 0)]) #FIXME
+                    self.strats_data[i].append([(last_mi, 0), (ns, 0)]) #FIXME
                     step = step + 1
 
             self.steps = step

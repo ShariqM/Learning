@@ -165,18 +165,15 @@ class Runner(object):
         mi_height = self.initial_mi
         step_points = [i for i in range(self.steps)]
         plt.xlabel('Time (steps)', fontdict={'fontsize':24})
-        #plt.ylabel('Information Gain (bits)', fontdict={'fontsize':24})
         plt.ylabel('Missing Information (bits)', fontdict={'fontsize':24})
         plt.title("Maze", fontsize=26)
         #plt.title(self.title + " Elapsed=%ds) " % self.elapsed.seconds)
-        plt.axis([0, self.steps, 0, mi_height * 1.1])
+        plt.axis([0, self.steps, 2700, mi_height * 1.01])
 
 
         for i in range(len(self.strats)):
             #mi = self.strats_data[i][self.steps - 1][0][0]
-            print self.strats_data[i]
-            mean_data = [data[0] - 0 for data in self.strats_data[i]]
-            #mean_data = [data[0][0] - 0 for data in self.strats_data[i]]
+            mean_data = [data[0][0] - 0 for data in self.strats_data[i]]
             plt.plot(step_points, mean_data,
                      color=self.strats[i].color,
                      #label=self.strats[i].get_sname() + " MI=" + str(mi))
@@ -194,8 +191,6 @@ class Runner(object):
         #plt.legend(bbox_to_anchor=(0.8 , 1.00), loc=2,
                    #fontsize=20)
         plt.show()
-
-        return
 
         ns_height = 150
         step_points = [i for i in range(self.steps)]
@@ -269,12 +264,16 @@ class Runner(object):
             mi_turn = True
             last_mi = -1
             for value in l.split():
-                last_mi = float(value)
-                if not initial_mi:
-                    initial_mi = last_mi
-                self.strats_data[i].append([last_mi,0])
-                print last_mi
-                step = step + 1
+                if mi_turn:
+                    last_mi = float(value)
+                    if not initial_mi:
+                        initial_mi = last_mi
+                    mi_turn = False
+                else:
+                    ns = int(value)
+                    mi_turn = True
+                    self.strats_data[i].append([(last_mi,0), (ns, 0)]) #FIXME
+                    step = step + 1
 
             self.steps = step
 

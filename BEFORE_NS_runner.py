@@ -165,8 +165,8 @@ class Runner(object):
         mi_height = self.initial_mi
         step_points = [i for i in range(self.steps)]
         plt.xlabel('Time (steps)', fontdict={'fontsize':24})
-        #plt.ylabel('Information Gain (bits)', fontdict={'fontsize':24})
-        plt.ylabel('Missing Information (bits)', fontdict={'fontsize':24})
+        plt.ylabel('Information Gain (bits)', fontdict={'fontsize':24})
+        #plt.ylabel('Missing Information (bits)', fontdict={'fontsize':24})
         plt.title("Maze", fontsize=26)
         #plt.title(self.title + " Elapsed=%ds) " % self.elapsed.seconds)
         plt.axis([0, self.steps, 0, mi_height * 1.1])

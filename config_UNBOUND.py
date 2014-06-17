@@ -49,12 +49,12 @@ from gampyp import GamPypProcess
 
 # Run parameters
 ENVIRON = []                # Ignore, initialized by the runner
-#MAZE    = 'maze_s30_g.txt' # See files in maze_files/ dir
+MAZE    = 'maze_s30_g.txt' # See files in maze_files/ dir
 #MAZE    = 'maze_s30.mz'    # See files in maze_files/ dir
-MAZE    = 'maze.mz'         # See files in maze_files/ dir
+#MAZE    = 'maze.mz'         # See files in maze_files/ dir
 #MAZE    = 'maze_3d.mz'     # See files in maze_files/ dir
 STEPS   = 3000              # Number of time steps to run
-RUNS    = 200               # Number of runs
+RUNS    = 100               # Number of runs
 SERIAL  = False
 
 
@@ -78,18 +78,18 @@ D_ALPHA = 0.20 # Strength parameter to a Dirichlet model
 import numpy
 def init_strats():
     arr = [
-  RandomStrat(ENVIRON[0],
-              ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
-              COLORS['red']),
-
-  UnembodiedStrat(ENVIRON[0],
-              ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
-              COLORS['black']),
-
-  PigVIStrat(ENVIRON[0],
-              Dirichlet(ENVIRON[0], D_ALPHA),
-              COLORS['blue'], PLUS=0, EXPLORER=False),
-
+  #RandomStrat(ENVIRON[0],
+              #ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
+              #COLORS['red']),
+#
+  #UnembodiedStrat(ENVIRON[0],
+              #ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
+              #COLORS['black']),
+#
+  #PigVIStrat(ENVIRON[0],
+              #Dirichlet(ENVIRON[0], D_ALPHA),
+              #COLORS['blue'], PLUS=0, EXPLORER=False),
+#
     #ES = int(3.0/4 * STEPS)
     #im = ChineseRProcess(ENVIRON[0], THETA, ALPHA)
     #arr.append(DyStrat(ENVIRON[0], im,
@@ -105,21 +105,21 @@ def init_strats():
   PigVIStrat(ENVIRON[0],
               ChineseRProcess(ENVIRON[0], THETA, ALPHA),
               COLORS['green'], PLUS=0, EXPLORER=False),
-#
+
   PigVIStrat(ENVIRON[0],
               ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
               COLORS['purple'], PLUS=0, EXPLORER=False),
-#
-  CBStrat(ENVIRON[0],
-              ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
-              COLORS['purple3']),
-#
+##
+  #CBStrat(ENVIRON[0],
+              #ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
+              #COLORS['purple']),
+##
   #PigVIStrat(ENVIRON[0],
               #ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
               #COLORS['grue2'], PLUS=1, EXPLORER=False),
-  LTAStrat(ENVIRON[0],
-              ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
-              COLORS['yellow2']),
+  #LTAStrat(ENVIRON[0],
+              #ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
+              #COLORS['yellow2']),
         ]
 
     #for (t,ka) in [(0.001, math.log(2))]:

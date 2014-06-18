@@ -162,13 +162,18 @@ class Runner(object):
             sys.exit(0)
         print "Graphing data..."
 
-        mi_height = self.initial_mi
+        mi_top = self.initial_mi
+        mi_bot = mi_top
+        for i in range(len(self.strats)):
+            if self.strats_data[i][self.steps - 1][0][0] < mi_bot:
+                mi_bot = self.strats_data[i][self.steps - 1][0][0]
+
         step_points = [i for i in range(self.steps)]
         plt.xlabel('Time (steps)', fontdict={'fontsize':24})
         plt.ylabel('Missing Information (bits)', fontdict={'fontsize':24})
         plt.title("Maze", fontsize=26)
         #plt.title(self.title + " Elapsed=%ds) " % self.elapsed.seconds)
-        plt.axis([0, self.steps, 2700, mi_height * 1.01])
+        plt.axis([0, self.steps, mi_bot * 0.9, mi_top * 1.01])
 
 
         for i in range(len(self.strats)):
@@ -192,14 +197,19 @@ class Runner(object):
                    #fontsize=20)
         plt.show()
 
-        ns_height = 30
+        ns_bot = 0
+        ns_top = ns_bot
+        for i in range(len(self.strats)):
+            if self.strats_data[i][self.steps - 1][1][0] > ns_top:
+                ns_top = self.strats_data[i][self.steps - 1][1][0]
+
         step_points = [i for i in range(self.steps)]
         plt.xlabel('Time (steps)', fontdict={'fontsize':24})
         plt.ylabel('States Discovered', fontdict={'fontsize':24})
         #plt.ylabel('Missing Information (bits)', fontdict={'fontsize':24})
         plt.title("Maze", fontsize=26)
         #plt.title(self.title + " Elapsed=%ds) " % self.elapsed.seconds)
-        plt.axis([0, self.steps, 0, ns_height * 1.1])
+        plt.axis([0, self.steps, ns_bot, ns_top * 1.1])
 
 
         for i in range(len(self.strats)):
@@ -229,7 +239,7 @@ class Runner(object):
         for i in range(len(self.strats_data)):
             for s in range(len(self.strats_data[i])):
                 #FIXME
-                f.write('%f %d ' % (self.strats_data[i][s][0][0],
+                f.write('%f %f ' % (self.strats_data[i][s][0][0],
                                    self.strats_data[i][s][1][0]))
             f.write('\n')
 

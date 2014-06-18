@@ -49,12 +49,12 @@ from gampyp import GamPypProcess
 
 # Run parameters
 ENVIRON = []                # Ignore, initialized by the runner
-#MAZE    = 'maze_s30_g.txt' # See files in maze_files/ dir
+MAZE    = 'maze_s30_g.txt' # See files in maze_files/ dir
 #MAZE    = 'maze_s30.mz'    # See files in maze_files/ dir
-MAZE    = 'maze.mz'         # See files in maze_files/ dir
+#MAZE    = 'maze.mz'         # See files in maze_files/ dir
 #MAZE    = 'maze_3d.mz'     # See files in maze_files/ dir
-STEPS   = 200               # Number of time steps to run
-RUNS    = 4                 # Number of runs
+STEPS   = 9000              # Number of time steps to run
+RUNS    = 200               # Number of runs
 SERIAL  = False
 
 

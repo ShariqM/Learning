@@ -21,19 +21,21 @@ class Graph(Model):
         self.graph = nx.barabasi_albert_graph(10, 2)
         self.N = self.graph.number_of_nodes()
         self.nodes = []
-        self.rnodes = []
 
-        for neighbors in self.graph.adjacency_list();
-            self.nodes.append(GraphNode(self.M, neighbors))
+        for neighbors in self.graph.adjacency_list():
+            print 's', len(self.nodes), neighbors
+            self.nodes.append(GraphNode(neighbors))
 
     def take_action(self, s, a):
         ns = self.nodes[s].take_action(a)
-        return ns, self.rnodes[ns]
+        return ns, 0
 
     def get_prob(self, a, s, ns, new_states=None):
         return self.nodes[s].get_prob(a, ns, new_states)
 
     def get_num_actions(self, s):
+        if s == config.ETA or s == config.PSI:
+            return 4 # Doesn't matter (happens on hypothetical)
         return self.nodes[s].M
 
     def get_neighbors(self, s):

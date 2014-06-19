@@ -54,8 +54,8 @@ ENVIRON = []                # Ignore, initialized by the runner
 MAZE    = 'maze.mz'         # See files in maze_files/ dir
 #MAZE    = 'maze_3d.mz'     # See files in maze_files/ dir
 STEPS   = 1000               # Number of time steps to run
-RUNS    = 4                 # Number of runs
-SERIAL  = False
+RUNS    = 1                 # Number of runs
+SERIAL  = True
 
 
 # Output

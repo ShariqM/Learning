@@ -16,7 +16,7 @@ class GraphRunner(Runner):
     # Initialize variables according to arguments
     def init_variables(self):
         args = self.setup_arguments()
-        self.title = '[Graph, NRuns=%d]' % (args.mazef, self.runs)
+        self.title = '[Graph, NRuns=%d]' % (self.runs)
         config.GRAPHICS = False # Not supported
 
     def setup_arguments(self):

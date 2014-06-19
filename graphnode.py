@@ -7,7 +7,7 @@ import numpy.random as ran
 import config
 from functions import *
 
-class MazeNode:
+class GraphNode:
 
     def __init__(self, neighbors):
         self.neighbors = neighbors # Neighboring states

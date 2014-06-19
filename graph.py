@@ -17,8 +17,8 @@ import networkx as nx
 
 class Graph(Model):
 
-    def __init__(self):
-        self.graph = nx.barabasi_albert_graph(10, 2)
+    def __init__(self, graph):
+        self.graph = graph
         self.N = self.graph.number_of_nodes()
         self.nodes = []
 

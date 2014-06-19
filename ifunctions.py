@@ -63,8 +63,6 @@ def ukl_divergence(tm, im, a, s):
 
     return klsum
 
-
-
 def missing_information(tm, im):
     misum = 0
     for s in range(tm.N):

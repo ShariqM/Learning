@@ -60,7 +60,10 @@ class ChineseRProcess(object):
         return self.nodes.has_key(s)
 
     def is_aware_of(self, a, s, ns):
-        return self.nodes[s].is_aware_of(a, ns)
+        try:
+            return self.nodes[s].is_aware_of(a, ns)
+        except:
+            raise Exception("s=%d, a=%d, ns=%d" % (s,a,ns))
 
     def get_prob_first_obs(self):
         return self.nodes[config.SS].get_prob_first_obs()
@@ -85,6 +88,8 @@ class ChineseRProcess(object):
         new_state = not self.nodes.has_key(ns)
         if new_state:
             self.last_update = ns
+            #if ns != config.ETA:
+                #print 'sF', ns, self.tm.get_num_actions(ns)
             self.nodes[ns] = ChineseRProcessNode(self, self.tm.get_num_actions(ns))
         else:
             self.last_update = config.NULL_UPDATE

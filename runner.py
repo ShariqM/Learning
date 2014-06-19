@@ -139,6 +139,7 @@ class Runner(object):
     def analyze_data(self):
         for i in range(len(self.strats)):
             for s in range(self.steps):
+                print self.strats_data[i][s]
                 length = len(self.strats_data[i][s])
 
                 mi_arr = [self.strats_data[i][s][j][0] for j in range(length)]

@@ -5,6 +5,7 @@
 import math
 import numpy.random as ran
 import config
+import random
 from functions import *
 
 class GraphNode:
@@ -17,9 +18,11 @@ class GraphNode:
         for a in range(self.M):
             if config.DETERMINISTIC:
                 dist = [0] * a + [1] + [0] * (self.M - a - 1) # Generate prob=1 for a
-            else:
+            elif random.random() < 0.5:
                 dist = ran.dirichlet([1.0/self.M] * self.M) # Uniform alpha's
                 dist = realign(self.M, a, dist)
+            else:
+                dist = [1.0/self.M] * self.M
 
             self.actions.append(dist)
 

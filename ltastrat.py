@@ -39,7 +39,7 @@ class LTAStrat(Strat):
         if self.graphics and config.UPDATE_STEPMI:
             self.graphics.step(step, last_mi, len(self.im.get_known_states()))
         if not self.nodes.has_key(self.pos):
-            self.nodes[self.pos] = {i:0 for i in range(self.im.M)}
+            self.nodes[self.pos] = {i:0 for i in range(self.tm.get_num_actions(self.pos))}
 
         a = self.get_lta(self.nodes[self.pos])
         self.nodes[self.pos][a] += 1

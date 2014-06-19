@@ -68,7 +68,7 @@ def ukl_divergence(tm, im, a, s):
 def missing_information(tm, im):
     misum = 0
     for s in range(tm.N):
-        for a in range(tm.M):
+        for a in range(tm.get_num_actions(s)):
             misum += ukl_divergence(tm, im, a, s)
     return misum
 

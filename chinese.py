@@ -12,9 +12,9 @@ import config
 class ChineseRProcess(object):
 
     def __init__(self, tm, theta=3.00, alpha=0.0, kalpha=False, mle=False, finify_by=2.0):
-        self.M = tm.M
+        self.tm = tm
         self.nodes = {}
-        self.nodes[config.SS] = ChineseRProcessNode(self)
+        self.nodes[config.SS] = ChineseRProcessNode(self, tm.get_num_actions(config.SS))
         self.last_update = config.NULL_UPDATE
 
         assert type(alpha) != int
@@ -72,7 +72,7 @@ class ChineseRProcess(object):
         if s == config.PSI:
             return 0
             #return config.MAX_REWARD
-        if a not in range(self.M):
+        if a not in range(self.tm.get_num_actions(s)):
             raise Exception("Invalid action")
         return self.nodes[s].get_reward(a)
 
@@ -85,8 +85,7 @@ class ChineseRProcess(object):
         new_state = not self.nodes.has_key(ns)
         if new_state:
             self.last_update = ns
-            self.nodes[ns] = ChineseRProcessNode(self)
-
+            self.nodes[ns] = ChineseRProcessNode(self, self.tm.get_num_actions(ns))
         else:
             self.last_update = config.NULL_UPDATE
 
@@ -105,7 +104,7 @@ class ChineseRProcess(object):
         pr("For each (s,a) we display a list of (ns, p), the p of entering ns")
         for i, node in self.nodes.items():
             pr("\tFrom Starting State=%d." % i)
-            for a in range(node.M):
+            for a in range(self.tm.get_num_actions(i)):
                 arr = []
                 new_states = self.get_states(a, i)
                 for ns in new_states:

@@ -9,11 +9,11 @@ import config
 
 class ChineseRProcessNode:
 
-    def __init__(self, im):
+    def __init__(self, im, M):
         self.data = []
         self.obs_num = []
         self.im = im
-        self.M = im.M
+        self.M = M
         self.total_reward = [0 for i in range(self.M)]
 
         for action in range(self.M):

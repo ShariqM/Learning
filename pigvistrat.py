@@ -34,7 +34,7 @@ class PigVIStrat(Strat):
         self.discount = config.DISCOUNT_RATE # Discount factor for gains in future
         self.plus = PLUS # VI+ if True (uses real model)
         self.data = {}
-        self.pig_cache = [{} for a in range(self.tm.M)]
+        self.pig_cache = {}
         #name = "Explorer" if EXPLORER else "Exploiter"
         self.graphics = MazeGraphics(self.name, self.tm) if config.GRAPHICS else None
         self.explorer = EXPLORER
@@ -43,7 +43,7 @@ class PigVIStrat(Strat):
         self.data = []
         for s in range(self.tm.N):
             self.data.append([])
-            for a in range(self.tm.M):
+            for a in range(self.tm.get_num_actions(s)):
                 self.data[s].append(0)
 
     def future_gain(self, i, future_v, a, s):
@@ -80,13 +80,15 @@ class PigVIStrat(Strat):
         self.debug("Iter")
         start = datetime.datetime.now()
 
-        for a in range(self.im.M):
-            for s in self.im.get_states():
-                if not self.pig_cache[a].has_key(s):
-                    self.pig_cache[a][s] = \
+        for s in self.im.get_states():
+            if not self.pig_cache.has_key(s):
+                self.pig_cache[s] = [0] * self.tm.get_num_actions(s)
+            for a in range(self.tm.get_num_actions(s)):
+                if not self.pig_cache[s][a]:
+                    self.pig_cache[s][a] = \
                         predicted_information_gain(self.im, a, s, self.explorer)
                     if self.graphics and config.UPDATE_PIG:
-                        self.graphics.update_pig(a, s, self.pig_cache[a][s])
+                        self.graphics.update_pig(a, s, self.pig_cache[s][a])
                 #print "(a=%d, s=%d) pig=%f" % (a, s, self.pig_cache[a][s])
                 #else: Validation
                     #assert self.pig_cache[a][s] ==
@@ -96,17 +98,17 @@ class PigVIStrat(Strat):
 
         future_v = None
         for i in range(self.vi_steps):
-            last_future = [] # List of Q's from the paper
+            last_future = {} # List of Q's from the paper
             next_future_v = {}
-            for a in range(self.im.M):
-                last_future.append({})
-                for s in self.im.get_states():
-                    v = self.pig_cache[a][s] + self.future_gain(i, future_v, a, s)
-                    last_future[a][s] = v
+            for s in self.im.get_states():
+                last_future[s] = []
+                for a in range(self.tm.get_num_actions(s)):
+                    v = self.pig_cache[s][a] + self.future_gain(i, future_v, a, s)
+                    last_future[s].append(v)
                     if self.graphics and config.UPDATE_VI and \
                                             i == self.vi_steps - 1:
                         self.graphics.update_vi(a, s, last_future[a][s])
-                    next_future_v[s] = max(next_future_v[s], v) if next_future_v.has_key(s) else v
+                next_future_v[s] = max(last_future[s])
             future_v = next_future_v
 
         self.debug("\t future - %d" % (datetime.datetime.now() - start).microseconds)
@@ -114,12 +116,11 @@ class PigVIStrat(Strat):
         max_fgain = -10000
         best_as = []
         #print 'Start ', self.im.get_name()
-        for a in range(self.im.M):
-            #print '\t', last_future[a][self.pos]
-            if last_future[a][self.pos] == max_fgain:
+        for a in range(self.tm.get_num_actions(self.pos)):
+            if last_future[self.pos][a] == max_fgain:
                 best_as.append(a)
-            if last_future[a][self.pos] > max_fgain:
-                max_fgain = last_future[a][self.pos]
+            if last_future[self.pos][a] > max_fgain:
+                max_fgain = last_future[self.pos][a]
                 best_as = [a]
         best_a = random.sample(best_as, 1)[0]
 
@@ -127,7 +128,7 @@ class PigVIStrat(Strat):
         #print "(s=%d, a=%d) FUTURE -" % (self.pos, best_a)
         #print_future(last_future)
 
-        self.pig_cache[best_a].pop(self.pos) # ASSUMPTION
+        self.pig_cache[self.pos][best_a] = 0 # Cache invalidation
 
         ns, r = self.tm.take_action(self.pos, best_a)
         #self.im.update_information(best_a, self.pos, ns)

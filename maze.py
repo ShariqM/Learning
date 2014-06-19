@@ -67,6 +67,9 @@ class Maze(Model):
     def get_prob(self, a, s, ns, new_states=None):
         return self.nodes[s].get_prob(a, ns, new_states)
 
+    def get_num_actions(self, s):
+        return self.M
+
     def get_neighbors(self, s):
         return self.nodes[s].get_neighbors()
 

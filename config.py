@@ -49,17 +49,17 @@ from gampyp import GamPypProcess
 
 # Run parameters
 ENVIRON = []                # Ignore, initialized by the runner
-MAZE    = 'maze_s30_g.txt' # See files in maze_files/ dir
+#MAZE    = 'maze_s30_g.txt' # See files in maze_files/ dir
 #MAZE    = 'maze_s30.mz'    # See files in maze_files/ dir
-#MAZE    = 'maze.mz'         # See files in maze_files/ dir
+MAZE    = 'maze.mz'         # See files in maze_files/ dir
 #MAZE    = 'maze_3d.mz'     # See files in maze_files/ dir
-STEPS   = 9000              # Number of time steps to run
-RUNS    = 200               # Number of runs
+STEPS   = 1000               # Number of time steps to run
+RUNS    = 4                 # Number of runs
 SERIAL  = False
 
 
 # Output
-DUMP_STDOUT = True  # Dump the data to stdout
+DUMP_STDOUT = False  # Dump the data to stdout
 EXPORT_FILE = None  # Export data to file
 IMPORT_FILE = None  # Import data and graph
 
@@ -102,9 +102,9 @@ def init_strats():
                        #BossSAStrat(ENVIRON[0], im, -1), ES, True))
 
 
-  PigVIStrat(ENVIRON[0],
-              ChineseRProcess(ENVIRON[0], THETA, ALPHA),
-              COLORS['green'], PLUS=0, EXPLORER=False),
+  #PigVIStrat(ENVIRON[0],
+              #ChineseRProcess(ENVIRON[0], THETA, ALPHA),
+              #COLORS['green'], PLUS=0, EXPLORER=False),
 
   PigVIStrat(ENVIRON[0],
               ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
@@ -117,9 +117,9 @@ def init_strats():
   #PigVIStrat(ENVIRON[0],
               #ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
               #COLORS['grue2'], PLUS=1, EXPLORER=False),
-  LTAStrat(ENVIRON[0],
-              ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
-              COLORS['yellow2']),
+  #LTAStrat(ENVIRON[0],
+              #ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
+              #COLORS['yellow2']),
         ]
 
     #for (t,ka) in [(0.001, math.log(2))]:

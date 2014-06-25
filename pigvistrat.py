@@ -67,7 +67,7 @@ class PigVIStrat(Strat):
                 m_prob = self.tm.get_prob(a, s, ns, new_states)
             tsum += m_prob * future_v[ns]
 
-        return self.discount * tsum
+            return self.discount * tsum
 
     def debug(self, msg):
         if False:

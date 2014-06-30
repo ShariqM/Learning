@@ -1,0 +1,26 @@
+Legend
+$ - Wall
+[0-9] - Represent states
+[a-z] - represent transporters (usually t)
+[A-Z] - represent corresponding gravity well for transporter (usually T)
+
+
+
+If you use vim you can create a file: ~/.vim/mz.syntax.vim
+
+with the following contents:
+
+syn keyword Wall \$
+syn keyword Well T
+syn keyword Tran t
+syn match Num '\d\+'
+syn match Space '\.'
+
+
+hi Wall ctermfg=magenta
+hi Well ctermfg=cyan
+hi Tran ctermfg=blue
+hi Num  ctermfg=green
+hi Space ctermfg=yellow
+
+To get pretty colors. It makes things painfully slow for large files though.

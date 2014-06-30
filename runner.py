@@ -11,8 +11,6 @@ import string
 import argparse
 import numpy
 import time
-from world import World
-from maze import *
 import datetime
 from datetime import datetime as dt
 

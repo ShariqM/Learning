@@ -4,8 +4,8 @@
 
 import string
 import argparse
-from maze import *
-from maze3d import *
+from environments.maze import *
+from environments.maze_3d import *
 from runner import Runner
 import config
 

@@ -8,13 +8,12 @@ import string
 import sys
 from functions import *
 from mazenode import MazeNode
-from model import Model
 import config
 import random
 import math
 
 
-class Maze(Model):
+class Maze():
 
     def __init__(self, fname):
         self.maze, self.N, self.gwells = parse_maze(fname)

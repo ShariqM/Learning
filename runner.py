@@ -12,10 +12,8 @@ import argparse
 import numpy
 import time
 from world import World
-from randomstrat import *
-from unembodiedstrat import *
-from piggreedystrat import *
 from maze import *
+import datetime
 from datetime import datetime as dt
 
 from multiprocessing import Pool, Queue, Manager

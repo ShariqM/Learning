@@ -31,18 +31,17 @@ import sys
 FINIFY        = True # Break PSI into PSI' and K+1
 
 # ------------ Common Arguments ------------ #
-from randomstrat import *
-from unembodiedstrat import *
-from piggreedystrat import *
-from pigvistrat import *
-from ltastrat import *
-from ltavistrat import *
-from cbstrat import *
-from bossstrat import *
-from bossSAstrat import *
-from dystrat import *
-from chainstrat import *
-from randomstrat import *
+from strats.randomstrat import *
+from strats.unembodiedstrat import *
+from strats.piggreedystrat import *
+from strats.pigvistrat import *
+from strats.ltastrat import *
+from strats.ltavistrat import *
+from strats.cbstrat import *
+from strats.bossstrat import *
+from strats.bossSAstrat import *
+from strats.dystrat import *
+from strats.chainstrat import *
 
 from chinese import ChineseRProcess
 from gamma import GammaProcess
@@ -83,9 +82,9 @@ def init_strats():
               #ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
               #COLORS['red']),
 #
-  #UnembodiedStrat(ENVIRON[0],
-              #ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
-              #COLORS['black']),
+  UnembodiedStrat(ENVIRON[0],
+              ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
+              COLORS['black']),
 #
   PigVIStrat(ENVIRON[0],
               Dirichlet(ENVIRON[0], D_ALPHA),

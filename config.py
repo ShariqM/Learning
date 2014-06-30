@@ -42,15 +42,14 @@ from strats.bossstrat import *
 from strats.dystrat import *
 from strats.chainstrat import *
 
-from models.chinese import *
-from models.dirichlet import *
+from imodels.chinese import *
+from imodels.dirichlet import *
 #from models.gamma import *
 #from models.gammapyp import *
 
 # Run parameters
 ENVIRON = []                # Ignore, initialized by the runner
-#MAZE    = 'maze_s30_g.txt' # See files in maze_files/ dir
-#MAZE    = 'maze_s30.mz'    # See files in maze_files/ dir
+#MAZE    = 'maze_s30.txt'   # See files in maze_files/ dir
 MAZE    = 'maze.mz'         # See files in maze_files/ dir
 #MAZE    = 'maze_3d.mz'     # See files in maze_files/ dir
 STEPS   = 300               # Number of time steps to run

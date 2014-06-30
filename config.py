@@ -39,13 +39,13 @@ from strats.ltastrat import *
 from strats.ltavistrat import *
 from strats.cbstrat import *
 from strats.bossstrat import *
-from strats.bossSAstrat import *
 from strats.dystrat import *
 from strats.chainstrat import *
 
-from chinese import ChineseRProcess
-from gamma import GammaProcess
-from gampyp import GamPypProcess
+from models.chinese import *
+from models.dirichlet import *
+#from models.gamma import *
+#from models.gammapyp import *
 
 # Run parameters
 ENVIRON = []                # Ignore, initialized by the runner
@@ -94,12 +94,12 @@ def init_strats():
     #im = ChineseRProcess(ENVIRON[0], THETA, ALPHA)
     #arr.append(DyStrat(ENVIRON[0], im,
                        #PigVIStrat(ENVIRON[0], im, PLUS=0, EXPLORER=False),
-                       #BossSAStrat(ENVIRON[0], im, -1), ES, True))
+                       #BossStrat(ENVIRON[0], im, -1), ES, True))
 #
     #im = ChineseRProcess(ENVIRON[0], THETA, ALPHA)
     #arr.append(DyStrat(ENVIRON[0], im,
                        #LTAStrat(ENVIRON[0], im),
-                       #BossSAStrat(ENVIRON[0], im, -1), ES, True))
+                       #BossStrat(ENVIRON[0], im, -1), ES, True))
 
 
   #PigVIStrat(ENVIRON[0],
@@ -173,11 +173,11 @@ def init_strats():
     #im = ChineseRProcess(ENVIRON[0], THETA, ALPHA)
     #arr.append(DyStrat(ENVIRON[0], im,
                        #PigVIStrat(ENVIRON[0], im, PLUS=0, EXPLORER=False),
-                       #BossSAStrat(ENVIRON[0], im, -1), ES, True))
+                       #BossStrat(ENVIRON[0], im, -1), ES, True))
 #
     #im = ChineseRProcess(ENVIRON[0], THETA, ALPHA)
     #arr.append(DyStrat(ENVIRON[0], im,
                        #LTAStrat(ENVIRON[0], im),
-                       #BossSAStrat(ENVIRON[0], im, -2), ES, True))
+                       #BossStrat(ENVIRON[0], im, -2), ES, True))
 #
     return arr

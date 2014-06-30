@@ -4,7 +4,7 @@
 
 import math
 import config
-from hypothetical import *
+from models.hypothetical import *
 from functions import *
 
 # Given a true model and an internal model with the same state space,

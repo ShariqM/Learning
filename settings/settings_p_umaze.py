@@ -15,6 +15,7 @@ from imodels.dirichlet import *
 from config import *
 
 # Run parameters
+SS      = 465
 MAZE    = 'maze_s30.txt'    # See files in maze_files/ dir
 STEPS   = 3000              # Number of time steps to run
 RUNS    = 200               # Number of runs

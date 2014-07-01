@@ -5,8 +5,6 @@ from colors import *
 # State nums (don't touch)
 PSI           = -1 # Represents the unknown state
 ETA           = sys.maxint # Represents a new state we discovered
-#SS            = 465 # Start State
-SS            = 0 # Start State
 MAX_REWARD    = 1.0
 MASC          = 0.57721
 
@@ -92,6 +90,7 @@ settings = __import__('settings.%s' % SETTINGS, fromlist=['settings'])
 MAZE     = settings.MAZE
 STEPS    = settings.STEPS
 RUNS     = settings.RUNS
+SS       = settings.SS      # Start State
 
 # Strats to run [Choose a (Strategy, Internal Model) pair]
 import numpy

@@ -87,8 +87,7 @@ ALPHA   = 0.0  # Discount parameter to a CRP
 THETA   = 0.25 # Strength (or concentration) parameter to a CRP
 D_ALPHA = 0.20 # Strength parameter to a Dirichlet model
 
-#'settings_p_maze'
-SETTINGS = 'settings_p_chain'
+SETTINGS = 'settings_simple'
 settings = __import__('settings.%s' % SETTINGS, fromlist=['settings'])
 MAZE     = settings.MAZE
 STEPS    = settings.STEPS

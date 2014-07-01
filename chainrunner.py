@@ -4,7 +4,7 @@
 
 import string
 import argparse
-from chain import *
+from environments.chain import *
 from runner import Runner
 import config
 

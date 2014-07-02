@@ -149,6 +149,8 @@ python mazerunner.py --help
         # maze.mz - representation of maze described in paper (default maze)
         # maze_s30.txt - 'unbounded' maze with multiple gravity wells
 
+        # You can generate more mazes by using maze_gen.py
+
 #TODO
 # - Continuous state space
 # - maze_gen with transporters

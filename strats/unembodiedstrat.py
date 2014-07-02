@@ -1,20 +1,11 @@
 """
     An unembodied agent explores the world without limitation on a position. It
     picks a (a,s) that maximizes its PIG
-
-    Notes
-    - MultiProcess results in a
-        - ~30% performance gain with 4 CPUs on 123World
-        - ~100% performance gain with 4 CPUs on Maze
-    - There is no concurrency control so we are assuming concurrent PIG
-      computations are independent.
 """
 
 import random
-from dirichlet import Dirichlet
 from functions import *
 from ifunctions import *
-from bayesworld import *
 from strat import Strat
 import datetime
 import pdb

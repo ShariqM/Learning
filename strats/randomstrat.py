@@ -3,8 +3,6 @@
 """
 
 import random
-from dirichlet import Dirichlet
-from bayesworld import *
 from functions import *
 from strat import Strat
 import config

@@ -5,8 +5,6 @@
 
 import random
 import config
-from dirichlet import Dirichlet
-from bayesworld import *
 from strat import Strat
 
 class PigGreedyStrat(Strat):

@@ -4,14 +4,9 @@
 """
 
 import random
-from dirichlet import Dirichlet
-from bayesworld import *
 from strat import Strat
 from graphics import *
 import config
-
-from multiprocessing import Pool
-import multiprocessing
 import datetime
 import pdb
 

@@ -7,6 +7,8 @@
 # Use
 python worldrunner.py
 python mazerunner.py
+# In config.py you can change the SETTINGS variable to different file names in
+# settings/ to run different experiments.
 
 # Help
 python worldrunner.py --help
@@ -22,40 +24,66 @@ python mazerunner.py --help
 
 # Descriptions and Organization of files
 
-    # Config File
-        # config.py - Set the parameters of the experiment, e.g.
-            # - Which Strategies to run
-            # - What parameters to use
-            # - How many steps? how many runs?
-            # - etc.
+    # Configuration Files
 
-    # Model Files
+        # config.py - Parameters that are generally fixed are located in this
+            # file, the rest are loaded from a settings file which is specified here
+            # (in config.py). Included here are:
+            # - Graphics, Parallelization switch, dump to stdout, etc.
+            # - Settings file to load (see beloow)
+            # - etc.
+        # settings/ - Various files in this directory contain parameters for
+            # different experiments. Parameters include
+                # Number of steps and runs
+                # Maze file
+                # etc
+            # Files ( _p_ signifies experiments from the (P)aper)
+                # settings.py - custom test
+                # settings_simple.py - short quick experiment
+                # settings_p_chain.py - chain experiment from paper
+                # settings_p_maze.py - maze experiment from paper
+                # settings_p_umaze.py - unbounded maze experiment from paper
+
+    # True Model Files in environment/
+        # World.py - 123 World representation
+            # WorldNode.py - 123 World Node representation
+
+        # Maze.py - Maze representation
+            # MazeNode.py - Maze Node representation
+
+        # Maze3d.py - 3d Maze representation
+
+        # Chain.py - 5 state chain problem from Sterns 2000
+            # ChainNode.py - Chain node representation
+
+        # Graph.py - Experimental environment with varied out edge degree for each node
+            # GraphNode.py - Graph node representation
+
+    # Internal Model Files in imodels/
         # model.py - The model super class, implements methods all models have
 
-        # Real Model Files
-            # World.py - 123 World representation
-                # WorldNode.py - 123 World Node representation
+        # BayesWorld.py - Internal Model used to learn 123World
+            # BayesWorldNode.py - Node of Internal Model
 
-            # Maze.py - Maze representation
-                # MazeNode.py - Maze Node representation
+        # Dirichlet.py - Internal Model used to learn Mazes and Dense Worlds
+            # DirichletNode.py - Node of Internal Model
 
-        # Internal Model Files
-            # BayesWorld.py - Internal Model used to learn 123World
-                # BayesWorldNode.py - Node of Internal Model
+        # Chinese.py - Internal Model built from the Chinese Restaurant Process
+            # ChineseNode.py - Node of Internal Model
 
-            # Dirichlet.py - Internal Model used to learn Mazes and Dense Worlds
-                # DirichletNode.py - Node of Internal Model
+        # Hypothetical.py - Wrapper around Internal Models that is used to
+        #                   create hypothetical updates so that PIG can be
+        #                   calculated
 
-            # Chinese.py - Internal Model used to learn Mazes, follows the
-            #                       Chinese Restaurant Process Model
-                # ChineseNode.py - Node of Internal Model
+        # Gamma.py - Experimental PSI ratio model
+            # GammaNode.py - Node of Internal Model
 
-            # Hypothetical.py - This wraps around an Internal Model and is used to
-            #                   create hypothetical updates to the model so that
-            #                   PIG can be calculate
-
+        # GammaPYP.py - Experimental Mix of Gamma and CRP/PYP model model
+            # GammaPYPNode.py - Node of Internal Model
 
     # Strategy Files
+        # strat.py - The strat super class, implements common methods
+
         # RandomStrat.py - Chooses actions randomely (Negative Control)
 
         # UnembodiedStrat.py - An agent that can move to any state it wants.
@@ -72,9 +100,19 @@ python mazerunner.py --help
         # strategy allows it to use the real model when calculating PIG, this
         # strategy is known as PIGVI+ in the paper.
 
-        # LTA.py - An agent takes the action least taken in the current state
+        # CBstrat.py - Tries to keep the count of each state equal
 
-        # LTAVI.py - An agent does (V)alue ()Iteration with the LTA strategy
+        # LTAstrat.py - An agent takes the action least taken in the current state
+
+        # LTAVIstrat.py - An agent does (V)alue ()Iteration with the LTA strategy
+
+        # e3strat.py - Abandoned strategy
+
+        # bosstrat.py - BOSS algorithm strategy
+
+        # dystrat.py - A combination of two strategies
+
+        # chainstrat.py - strat that does the best on chain environment
 
     # Graphics (Visualizing the strategies exploration)
         # graphics.py - Responsible for drawing how the agent explores the
@@ -87,6 +125,7 @@ python mazerunner.py --help
 
             # WorldRunner.py - Generate graphs for 123World environment
             # MazeRunner.py  - Generate graphs for Maze environment
+            # ChainRunner.py - Generate graphs for Chain environment
 
     # ifunctions.py - (I)nformation Functions (Key ones in paper)
     #                   - KL Divergence
@@ -97,10 +136,9 @@ python mazerunner.py --help
 
     # colors.py - maps color name to RGB triplet
 
-    # Maze format files
+    # Maze format files (in maze_files/ dir)
         # - Mazes are constructed from .mz files which specify the format
         # - Mazes can be generated by running maze_gen.py
-        # - Maze.mz files are stored in the maze_files/ directory
 
         # - Maze file names are described as follows:
         #   - [sN] indicates it's a NxN maze
@@ -109,12 +147,12 @@ python mazerunner.py --help
         #   e.g. maze_s3b.py is a 3x3 maze with no transporters
 
         # maze.mz - representation of maze described in paper (default maze)
+        # maze_s30.txt - 'unbounded' maze with multiple gravity wells
 
 #TODO
 # - Continuous state space
 # - maze_gen with transporters
 # - maze_gen with no walls
-# - fix FIXME's in pigvistrat
 # - fix piggreedy to work with graphics
 # - fix piggreedy to have explorer arg
 # - fix unembodied to have explorer?

@@ -26,9 +26,9 @@ def init_strats():
               #ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
               #COLORS['red']),
 #
-  UnembodiedStrat(ENVIRON[0],
-              ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
-              COLORS['black']),
+  #UnembodiedStrat(ENVIRON[0],
+              #ChineseRProcess(ENVIRON[0], THETA, ALPHA, False, True),
+              #COLORS['black']),
 #
   PigVIStrat(ENVIRON[0],
               Dirichlet(ENVIRON[0], D_ALPHA),

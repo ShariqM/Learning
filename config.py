@@ -14,8 +14,9 @@ NULL_UPDATE   = -9999
 
 # Maze Configuration
 DETERMINISTIC = False # Noisy actions if false
-RAN_UNIFORM   = False # Noisy actions if false
+#RAN_UNIFORM   = False # Noisy actions if false
 WALL_CHAR     = '$'
+UNIFORM_CHAR  = '!' # Uniform distrbution
 
 # PIG Arguments
 DISCOUNT_RATE = 0.95
@@ -67,7 +68,7 @@ ALPHA   = 0.0  # Discount parameter to a CRP
 THETA   = 0.25 # Strength (or concentration) parameter to a CRP
 D_ALPHA = 0.20 # Strength parameter to a Dirichlet model
 
-SETTINGS = 'settings_new_kl'
+SETTINGS = 'settings_eb_test'
 settings = __import__('settings.%s' % SETTINGS, fromlist=['settings'])
 MAZE     = settings.MAZE
 STEPS    = settings.STEPS

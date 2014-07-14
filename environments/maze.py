@@ -16,7 +16,7 @@ import math
 class Maze():
 
     def __init__(self, fname):
-        self.maze, self.N, self.gwells = parse_maze(fname)
+        self.maze, self.N, uniforms, self.gwells = parse_maze(fname)
         self.M = 4 # fixme?
         self.nodes = []
         self.rnodes = []
@@ -48,7 +48,8 @@ class Maze():
                         print x,y
                         raise Exception("Malformed Maze, pos=%d" % curr)
 
-                self.nodes.append(MazeNode(self.M, neighbors))
+                uniform = curr in uniforms
+                self.nodes.append(MazeNode(self.M, neighbors, uniform))
 
                 #y = int(math.floor(y/width_factor))
                 #x = int(math.floor(x/width_factor))
@@ -91,6 +92,7 @@ def parse_maze(fname):
     maze = init_maze(l)
 
     nstates = 0
+    uniforms = set()
     gwells = {}
     r = 0
     while l != '' and l != '\n':
@@ -101,6 +103,11 @@ def parse_maze(fname):
             if i in string.ascii_uppercase:
                 gwells[i.lower()] = nstates
                 i = str(nstates % 10)
+
+            if i == '!':
+                uniforms.add(nstates)
+                i = str(nstates % 10)
+
             if i in string.digits:
                 nstates = nstates + 1
                 i = nstates - 1
@@ -111,7 +118,7 @@ def parse_maze(fname):
         l = desc.readline()
         r = r + 1
 
-    return maze, nstates, gwells
+    return maze, nstates, uniforms, gwells
 
 """
 An example:

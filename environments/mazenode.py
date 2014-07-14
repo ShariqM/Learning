@@ -9,7 +9,7 @@ from functions import *
 
 class MazeNode:
 
-    def __init__(self, M, neighbors):
+    def __init__(self, M, neighbors, uniform=False):
         self.neighbors = neighbors # Neighboring states
         self.actions = [] # The distribution of each action
         self.M = M
@@ -17,7 +17,8 @@ class MazeNode:
         for a in range(self.M):
             if config.DETERMINISTIC:
                 dist = [0] * a + [1] + [0] * (self.M - a - 1) # Generate prob=1 for a
-            elif not config.RAN_UNIFORM or random.random() < 0.5:
+            #elif not uniform or (not config.RAN_UNIFORM or random.random() < 0.5):
+            elif not uniform:
                 dist = ran.dirichlet([1.0/self.M] * self.M) # Uniform alpha's
                 dist = realign(self.M, a, dist)
             else:

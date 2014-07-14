@@ -27,6 +27,8 @@ BETA          = math.log(1.0 / UNK_PROB, 2) # Information gain of discovering a 
 
 # Knobs
 FINIFY        = True # Break PSI into PSI' and K+1
+SNEW_KL        = -4.0
+FNEW_KL        = -5.0
 
 # Run parameters
 ENVIRON = []                # Ignore, initialized by the runner
@@ -85,7 +87,7 @@ ALPHA   = 0.0  # Discount parameter to a CRP
 THETA   = 0.25 # Strength (or concentration) parameter to a CRP
 D_ALPHA = 0.20 # Strength parameter to a Dirichlet model
 
-SETTINGS = 'settings_simple'
+SETTINGS = 'settings_new_kl'
 settings = __import__('settings.%s' % SETTINGS, fromlist=['settings'])
 MAZE     = settings.MAZE
 STEPS    = settings.STEPS

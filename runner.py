@@ -180,7 +180,7 @@ class Runner(object):
                      #label=self.strats[i].get_sname() + " MI=" + str(mi))
                      linewidth=1.5,
                      #label=self.strats[i].get_name())
-                     label=self.strats[i].get_sname())
+                     label=self.strats[i].get_name())
 
 
         plt.xticks(fontsize=20)
@@ -216,7 +216,7 @@ class Runner(object):
                      #label=self.strats[i].get_sname() + " MI=" + str(mi))
                      linewidth=1.5,
                      #label=self.strats[i].get_name())
-                     label=self.strats[i].get_sname())
+                     label=self.strats[i].get_name())
 
 
         plt.xticks(fontsize=20)

@@ -78,6 +78,9 @@ def alt(val):
         #return 0.0
     return val
 
+def info(p):
+    return - p * log2(p)
+
 def sm_divergence(tm, im, a, s, debug=False):
     #if not im.has_state(s):
         #return 1 / 0
@@ -100,8 +103,18 @@ def sm_divergence(tm, im, a, s, debug=False):
                 # Compare PSI' with PSI/2 and ETA with PSI/2
                 f = im.get_finify_by()
                 tm_prob_new = tm.get_prob(a, s, config.ETA)
-                div += alt(tm_prob * log2((f / (f-1)) * tm_prob / im_prob))
-                div += alt(tm_prob_new * log2(f * tm_prob_new / im_prob))
+
+                if f == config.SNEW_KL:
+                    tm_coarse = tm_prob + tm_prob_new
+                    div += tm_coarse * log2(tm_coarse / im_prob)
+                    div += info(tm_prob) + info(tm_prob_new) - info(tm_coarse)
+                elif f == config.FNEW_KL:
+                    tm_coarse = tm_prob + tm_prob_new
+                    div += tm_coarse * log2(tm_coarse / im_prob)
+                    div += info(tm_prob_new / tm_coarse)
+                else:
+                    div += alt(tm_prob * log2((f / (f-1)) * tm_prob / im_prob))
+                    div += alt(tm_prob_new * log2(f * tm_prob_new / im_prob))
                 if debug:
                     print '\t F - tmn: %f tm: %f, im %f div: %f' % (tm_prob_new, tm_prob, im_prob, div)
             else:

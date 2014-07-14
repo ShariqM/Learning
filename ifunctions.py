@@ -111,7 +111,7 @@ def sm_divergence(tm, im, a, s, debug=False):
                 elif f == config.FNEW_KL:
                     tm_coarse = tm_prob + tm_prob_new
                     div += tm_coarse * log2(tm_coarse / im_prob)
-                    div += info(tm_prob_new / tm_coarse)
+                    div += info(tm_prob_new / tm_coarse) + info(tm_prob / tm_coarse)
                 else:
                     div += alt(tm_prob * log2((f / (f-1)) * tm_prob / im_prob))
                     div += alt(tm_prob_new * log2(f * tm_prob_new / im_prob))

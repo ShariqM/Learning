@@ -30,26 +30,6 @@ FINIFY        = True # Break PSI into PSI' and K+1
 SNEW_KL        = -4.0
 FNEW_KL        = -5.0
 
-# Run parameters
-ENVIRON = []                # Ignore, initialized by the runner
-SERIAL  = False
-
-# Output
-DUMP_STDOUT = False  # Dump the data to stdout
-EXPORT_FILE = None  # Export data to file
-IMPORT_FILE = None  # Import data and graph
-
-# Graphics
-GRAPHICS      = False # Visualization of agent
-UPDATE_STEPMI = True  # Update Step, Missing Info
-UPDATE_PIG    = False  # Update Pig Table
-UPDATE_VI     = False # Update Value Iteration Table (slow)
-
-# Default parameters to models
-ALPHA   = 0.0  # Discount parameter to a CRP
-THETA   = 0.25 # Strength (or concentration) parameter to a CRP
-D_ALPHA = 0.20 # Strength parameter to a Dirichlet model
-
 # ------------ Common Arguments ------------ #
 from strats.randomstrat import *
 from strats.unembodiedstrat import *

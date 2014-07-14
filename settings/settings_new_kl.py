@@ -18,7 +18,7 @@ from config import *
 SS      = 0
 MAZE    = 'maze.mz'         # See files in maze_files/ dir
 STEPS   = 3000              # Number of time steps to run
-RUNS    = 20                # Number of runs
+RUNS    = 200               # Number of runs
 
 def init_strats():
     arr = [

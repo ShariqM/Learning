@@ -37,7 +37,6 @@ class PigVIStrat(Strat):
         self.graphics = MazeGraphics(self.name, self.tm) if config.GRAPHICS else None
         self.explorer = EXPLORER
 
-
         self.data = []
         for s in range(self.tm.N):
             self.data.append([])

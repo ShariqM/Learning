@@ -17,8 +17,8 @@ from config import *
 # Run parameters
 SS      = 0
 MAZE    = 'maze_complex_s10b.mz'    # See files in maze_files/ dir
-STEPS   = 3000              # Number of time steps to run
-RUNS    = 20                # Number of runs
+STEPS   = 3000                      # Number of time steps to run
+RUNS    = 200                       # Number of runs
 
 def init_strats():
     arr = [

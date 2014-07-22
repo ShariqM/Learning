@@ -19,16 +19,16 @@ import numpy
 # Run parameters
 SS      = 0
 MAZE    = 'maze_complex_s10b.mz'    # See files in maze_files/ dir
-STEPS   = 300                      # Number of time steps to run
-RUNS    = 2                         # Number of runs
+STEPS   = 3000                     # Number of time steps to run
+RUNS    = 200                       # Number of runs
 
 
 def init_strats():
     arr = []
 
     MIN_T  =  0.01
-    MAX_T  =  5.02
-    STEP_T =  1.0
+    MAX_T  =  1.52
+    STEP_T =  0.05
 
     for t in numpy.arange(MIN_T, MAX_T, STEP_T):
         if t == 0.0:

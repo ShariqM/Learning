@@ -38,7 +38,10 @@ class ChineseRProcess(object):
         return self.finify_by
 
     def get_abbr(self):
-        return "CRP" if not self.mle else "EB-CRP"
+        x = "CRP" if not self.mle else "EB-CRP"
+        if self.finify_by == config.FNEW_KL:
+            x += "-ENTROPY"
+        return x
 
     def get_name(self):
         s = "KA" if self.kalpha else "A"

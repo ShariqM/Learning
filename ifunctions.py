@@ -7,6 +7,9 @@ import config
 from imodels.hypothetical import *
 from functions import *
 
+def info(p):
+    return - p * log2(p)
+
 # Given a true model and an internal model with the same state space,
 # compute the kl divergence
 def kl_divergence(tm, im, a, s, debug=False):
@@ -63,11 +66,37 @@ def ukl_divergence(tm, im, a, s):
 
     return klsum
 
+# Unbounded information KL divergence
+def ui_kl_divergence(tm, im, a, s):
+    klsum = 0
+    neighbors = tm.get_neighbors(s)
+
+    tm_coarse = 0.0
+    unaware = []
+    for ns in neighbors:
+        tm_prob = tm.get_prob(a, s, ns)
+        if im.has_state(s) and im.is_aware_of(a, s, ns):
+            klsum += tm_prob * log2(tm_prob / im.get_prob(a, s, ns))
+        else:
+            unaware.append(ns)
+            tm_coarse += tm_prob
+
+    if len(unaware) != 0:
+        im_prob = 1.0
+        if im.has_state(s):
+            im_prob = im.get_prob(a, s, config.PSI)
+        klsum += tm_coarse * log2(tm_coarse / im_prob)
+
+        for ns in unaware:
+            klsum += info(tm.get_prob(a, s, ns) / tm_coarse)
+
+    return klsum
+
 def missing_information(tm, im):
     misum = 0
     for s in range(tm.N):
         for a in range(tm.get_num_actions(s)):
-            misum += ukl_divergence(tm, im, a, s)
+            misum += ui_kl_divergence(tm, im, a, s)
     return misum
 
 def missing_information_as(tm, im, a, s):
@@ -77,9 +106,6 @@ def alt(val):
     #if val < 0.0:
         #return 0.0
     return val
-
-def info(p):
-    return - p * log2(p)
 
 def sm_divergence(tm, im, a, s, debug=False):
     #if not im.has_state(s):
